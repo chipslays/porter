@@ -7,7 +7,7 @@ Simple wrapper over Workerman Websockets.
 **Stable**
 
 ```bash
-composer require chipslays/porter
+composer require chipslays/porter ^1.x
 ```
 
 **Nightly**
