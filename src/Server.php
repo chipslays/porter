@@ -2,16 +2,18 @@
 
 namespace Porter;
 
-use Exception;
-use Porter\Connection\Channels as ConnectionChannels;
 use Porter\Events\Event;
-use Workerman\Worker;
+use Porter\Connection\Channels as ConnectionChannels;
+use Sauce\Traits\Mappable;
 use Sauce\Traits\Singleton;
+use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
+use Exception;
 
 class Server
 {
     use Singleton;
+    use Mappable;
 
     protected Worker $worker;
 
