@@ -2,6 +2,7 @@
 
 use Porter\Channel;
 use Porter\Server;
+use Workerman\Worker;
 
 if (!function_exists('server')) {
     /**
@@ -12,12 +13,21 @@ if (!function_exists('server')) {
     }
 }
 
+if (!function_exists('worker')) {
+    /**
+     * @return Worker
+     */
+    function worker(): Worker {
+        return Server::getInstance()->getWorker();
+    }
+}
+
 if (!function_exists('channel')) {
     /**
      * @param string $id
      * @param string|array|null $key
      * @param mixed $default
-     * @return Group|mixed
+     * @return Channel|mixed
      */
     function channel(string $id, string|array $key = null, mixed $default = null): mixed {
         if ($key === null) {

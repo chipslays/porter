@@ -12,7 +12,7 @@ trait Payloadable
     protected function makePayload(string $event, array $data): string
     {
         $payload = [
-            'event' => $event,
+            'eventId' => $event,
             'timestamp' => time(),
             'data' => $data,
         ];

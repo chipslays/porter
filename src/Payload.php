@@ -24,7 +24,14 @@ class Payload
         $this->timestamp = time();
     }
 
-    public function get(string $key, mixed $default = null)
+    /**
+     * Get valu from data.
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function get(string $key, mixed $default = null): mixed
     {
         return $this->data->get($key, $default);
     }

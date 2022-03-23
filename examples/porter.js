@@ -28,7 +28,7 @@ class Porter {
 
         this.ws.onmessage = event => {
             let payload = JSON.parse(event.data);
-            let handler = this.events[payload.event] || null;
+            let handler = this.events[payload.eventId] || null;
 
             if (handler) {
                 handler(payload);

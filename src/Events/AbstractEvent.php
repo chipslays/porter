@@ -50,11 +50,11 @@ abstract class AbstractEvent
      * @param TcpConnection $connection
      * @param string $event
      * @param array $data
-     * @return void
+     * @return bool|null
      */
-    public function to(TcpConnection $connection, string $event, array $data = []): void
+    public function to(TcpConnection $connection, string $event, array $data = []): bool|null
     {
-        $connection->send($this->makePayload($event, $data));
+        return $connection->send($this->makePayload($event, $data));
     }
 
     /**
@@ -62,11 +62,22 @@ abstract class AbstractEvent
      *
      * @param string $event
      * @param array $data
-     * @return void
+     * @return bool|null
      */
-    public function reply(string $event, array $data = [])
+    public function reply(string $event, array $data = []): bool|null
     {
-        $this->to($this->connection, $event, $data);
+        return $this->to($this->connection, $event, $data);
+    }
+
+    /**
+     * Send raw data to connection.
+     *
+     * @param string $string
+     * @return bool|null
+     */
+    public function raw(string $string): bool|null
+    {
+        return $this->connection->send($string);
     }
 
     /**

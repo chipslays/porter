@@ -16,8 +16,9 @@
 
         client.connected = () => {
             client.event('ping');
+
             client.event('say hello', {
-                username: 'Alexey',
+                username: 'John Doe',
             });
         }
 

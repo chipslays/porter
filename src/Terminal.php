@@ -64,7 +64,7 @@ class Terminal
      */
     public static function ask($text, $variants = ['y', 'N'])
     {
-        echo self::print($text . ' {yellow}[' . implode('/', $variants) . ']{reset}: ');
+        echo self::print($text . ' {text:yellow}[' . implode('/', $variants) . ']{reset}: ');
         return trim(fgets(STDIN));
     }
 }

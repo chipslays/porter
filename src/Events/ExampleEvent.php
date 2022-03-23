@@ -1,5 +1,7 @@
 <?php
 
+namespace Porter\Events;
+
 use Porter\Server;
 use Porter\Payload;
 use Porter\Events\AbstractEvent;
