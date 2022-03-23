@@ -124,7 +124,6 @@ class Server
     public function onStop(callable $handler): void
     {
         $this->getWorker()->onWorkerStop = function (Worker $worker) use ($handler) {
-            $this->storage->saveData();
             call_user_func_array($handler, [$worker]);
         };
     }
