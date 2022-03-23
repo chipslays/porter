@@ -48,3 +48,9 @@ if (!function_exists('channel')) {
         return $channel->data->get($key, $default);
     }
 }
+
+if (!function_exists('porterJsScripts')) {
+    function porterJsScripts(): void {
+        echo file_get_contents(__DIR__ . '/stubs/porter.js-script.html');
+    }
+}
