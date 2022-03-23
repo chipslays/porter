@@ -1,6 +1,7 @@
 {
-    "name": "chipslays/socket",
+    "name": "chipslays/porter",
     "type": "library",
+    "keywords": ["websocket", "realtime", "chat", "sockets"],
     "license": "MIT",
     "require": {
         "workerman/workerman": "^4.0",
