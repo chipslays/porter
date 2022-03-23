@@ -1,5 +1,6 @@
 <?php
 
+use Porter\Events\Event;
 use Porter\Server;
 use Porter\Terminal;
 use Workerman\Connection\TcpConnection;
@@ -28,7 +29,11 @@ $server->onError(function (TcpConnection $connection, $code, $message) {
     Terminal::print("{bg:red}{text:white}Error {$code} {$message}");
 });
 
-$server->addEvent(Ping::class);
+// $server->addEvent(Ping::class);
 $server->addEvent(SayHello::class);
+
+$server->on('ping', function (Event $event) {
+    $event->reply('pong', [123]);
+});
 
 $server->start();

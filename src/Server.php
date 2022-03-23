@@ -2,7 +2,9 @@
 
 namespace Porter;
 
+use Exception;
 use Porter\Connection\Channels as ConnectionChannels;
+use Porter\Events\Event;
 use Workerman\Worker;
 use Sauce\Traits\Singleton;
 use Workerman\Connection\TcpConnection;
@@ -134,8 +136,21 @@ class Server
      */
     public function addEvent(string $event): self
     {
+        if (isset($this->events[$event::$id])) {
+            throw new Exception("Event '{$event::$id}' already exists.");
+        }
+
         $this->events[$event::$id] = $event;
         return $this;
+    }
+
+    public function on(string $eventId, callable $handler): void
+    {
+        if (isset($this->events[$eventId])) {
+            throw new Exception("Event '{$eventId}' already exists.");
+        }
+
+        $this->events[$eventId] = $handler;
     }
 
     /**
@@ -154,8 +169,16 @@ class Server
 
             if (!$event) return;
 
-            $event = new $event($connection, $payload);
+            if (is_callable($event)) {
 
+                $handler = $event;
+                $event = new Event($connection, $payload);
+                $event->setHandler($handler);
+                $event->altHandle($event);
+                return;
+            }
+
+            $event = new $event($connection, $payload);
             call_user_func_array([$event, 'handle'], [$connection, $payload, self::getInstance()]);
         };
 
