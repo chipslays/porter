@@ -14,8 +14,14 @@ require __DIR__ . '/Events/SayHello.php';
 $worker = new Worker('websocket://0.0.0.0:3030');
 
 $server = Server::getInstance();
-
 $server->setWorker($worker);
+
+$server->storage->path = __DIR__ . '/Storage/storage.hub';
+
+$server->storage->put('foo', 'bar');
+dump($server->storage->get('foo'));
+dump($server->storage->get('foo1', 'baz'));
+
 
 $server->onConnected(function (TcpConnection $connection) {
     Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
@@ -29,11 +35,12 @@ $server->onError(function (TcpConnection $connection, $code, $message) {
     Terminal::print("{bg:red}{text:white}Error {$code} {$message}");
 });
 
-// $server->addEvent(Ping::class);
-$server->addEvent(SayHello::class);
+$server->addEvent(Ping::class);
+// Or:
+// $server->on('ping', function (Event $event) {
+//     $event->reply('pong');
+// });
 
-$server->on('ping', function (Event $event) {
-    $event->reply('pong', [123]);
-});
+$server->addEvent(SayHello::class);
 
 $server->start();

@@ -19,6 +19,8 @@ class Server
 
     public Channels $channels;
 
+    public Storage $storage;
+
     /** @var string[] */
     protected array $events = [];
 
@@ -31,6 +33,8 @@ class Server
     public function setWorker(Worker $worker):void
     {
         $this->worker = $worker;
+
+        $this->bootServer();
     }
 
     /**
@@ -48,6 +52,7 @@ class Server
      */
     protected function bootServer(): void
     {
+        $this->storage = new Storage;
         $this->channels = new Channels($this);
     }
 
@@ -105,7 +110,9 @@ class Server
      */
     public function onStart(callable $handler): void
     {
-        $this->getWorker()->onWorkerStart = $handler;
+        $this->getWorker()->onWorkerStart = function (Worker $worker) use ($handler) {
+            call_user_func_array($handler, [$worker]);
+        };
     }
 
     /**
@@ -116,7 +123,10 @@ class Server
      */
     public function onStop(callable $handler): void
     {
-        $this->getWorker()->onWorkerStop = $handler;
+        $this->getWorker()->onWorkerStop = function (Worker $worker) use ($handler) {
+            $this->storage->saveData();
+            call_user_func_array($handler, [$worker]);
+        };
     }
 
     /**
@@ -162,8 +172,6 @@ class Server
      */
     public function start()
     {
-        $this->bootServer();
-
         $this->getWorker()->onMessage = function (TcpConnection $connection, string $payload) {
             $payload = new Payload(json_decode($payload, true));
 
