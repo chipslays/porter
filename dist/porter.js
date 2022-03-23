@@ -1,8 +1,7 @@
 class Porter {
     events = {};
 
-    constructor(ws)
-    {
+    constructor(ws) {
         this.ws = ws;
     }
 
@@ -17,7 +16,7 @@ class Porter {
     event(eventId, data) {
         this.ws.send(JSON.stringify({
             eventId: eventId,
-            data: data ?? {},
+            data: data ? ? {},
         }));
     }
 
