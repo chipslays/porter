@@ -267,6 +267,8 @@ server()->onReload(function (Worker $worker) {
 });
 ```
 
+*More to come later...*
+
 # Credit
 
 * [`Workerman`](https://github.com/walkor/workerman) by [walkor](https://github.com/walkor)
