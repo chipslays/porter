@@ -91,6 +91,8 @@ See more in [examples](/examples) folder.
 
 > **Notice:** Documentation in progress...
 
+## Basics
+
 ### Local development
 
 ```php
@@ -117,7 +119,7 @@ $worker = new Worker('websocket://0.0.0.0:3030', $context);
 $worker->transport = 'ssl';
 ```
 
-### `Server::class`
+## `Server::class`
 
 Can be used anywhere as function `server()` or `Server::getInstance()`.
 
@@ -140,12 +142,6 @@ use Workerman\Worker;
 
 $worker = new Worker('websocket://0.0.0.0:3030');
 server()->setWorker($worker);
-```
-
-### `getWorker(): Worker`
-
-```php
-server()->getWorker();
 ```
 
 ### `getWorker(): Worker`
@@ -189,4 +185,82 @@ $server->on('ping', function (Event $event) {
 
 ```php
 server()->start();
+```
+
+### `onConnected(callable $handler): void`
+
+Emitted when a socket connection is successfully established.
+
+```php
+use Porter\Terminal;
+use Workerman\Connection\TcpConnection;
+
+server()->onConnected(function (TcpConnection $connection) {
+    Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
+});
+```
+
+### `onDisconnected(callable $handler): void`
+
+Emitted when the other end of the socket sends a FIN packet.
+
+```php
+use Porter\Terminal;
+use Workerman\Connection\TcpConnection;
+
+server()->onDisconnected(function (TcpConnection $connection) {
+    Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
+});
+```
+
+### `onError(callable $handler): void`
+
+Emitted when an error occurs with connection.
+
+```php
+use Porter\Terminal;
+use Workerman\Connection\TcpConnection;
+
+server()->onError(function (TcpConnection $connection, $code, $message) {
+    Terminal::print("{bg:red}{text:white}Error {$code} {$message}");
+});
+```
+
+### `onStart(callable $handler): void`
+
+Emitted when worker processes start.
+
+```php
+use Porter\Terminal;
+use Workerman\Worker;
+
+server()->onStart(function (Worker $worker) {
+    // do something
+});
+```
+
+### `onStop(callable $handler): void`
+
+Emitted when worker processes stoped.
+
+```php
+use Porter\Terminal;
+use Workerman\Worker;
+
+server()->omStop(function (Worker $worker) {
+    // do something
+});
+```
+
+### `onReload(callable $handler): void`
+
+Emitted when worker processes get reload signal.
+
+```php
+use Porter\Terminal;
+use Workerman\Worker;
+
+server()->onReload(function (Worker $worker) {
+    // do something
+});
 ```

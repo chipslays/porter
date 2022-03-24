@@ -11,7 +11,7 @@ require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/Events/Ping.php';
 require __DIR__ . '/Events/SayHello.php';
 
-$worker = new Worker('websocket://0.0.0.0:3030');
+$worker = new Worker('websocket://z0.0.0.0:3030');
 
 $server = Server::getInstance();
 $server->setWorker($worker);

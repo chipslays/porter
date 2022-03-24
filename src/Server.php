@@ -136,7 +136,9 @@ class Server
      */
     public function onReload(callable $handler): void
     {
-        $this->getWorker()->onWorkerReload = $handler;
+        $this->getWorker()->onReload = function (Worker $worker) use ($handler) {
+            call_user_func_array($handler, [$worker]);
+        };
     }
 
     /**
