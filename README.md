@@ -136,6 +136,9 @@ server()->doSomething();
 ### `setWorker(Worker $worker): void`
 
 ```php
+use Workerman\Worker;
+
+$worker = new Worker('websocket://0.0.0.0:3030');
 server()->setWorker($worker);
 ```
 
