@@ -30,7 +30,7 @@ class Server
      * @param Worker $worker
      * @return void
      */
-    public function setWorker(Worker $worker):void
+    public function setWorker(Worker $worker): void
     {
         $this->worker = $worker;
 
@@ -169,7 +169,7 @@ class Server
      *
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         $this->getWorker()->onMessage = function (TcpConnection $connection, string $payload) {
             $payload = new Payload(json_decode($payload, true));

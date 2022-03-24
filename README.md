@@ -86,3 +86,104 @@ Send `ping` event on established connection.
 ```
 
 See more in [examples](/examples) folder.
+
+# Documentation
+
+> **Notice:** Documentation in progress...
+
+### Local development
+
+```php
+use Workerman\Worker;
+
+$worker = new Worker('websocket://0.0.0.0:3030');
+```
+
+### On server with SSL
+
+```php
+use Workerman\Worker;
+
+$context = [
+    // More see http://php.net/manual/zh/context.ssl.php
+    'ssl' => array(
+        'local_cert'                 => '/path/to/cert.pem',
+        'local_pk'                   => '/path/to/privkey.pem',
+        'verify_peer'                => false,
+        // 'allow_self_signed' => true,
+    )
+];
+$worker = new Worker('websocket://0.0.0.0:3030', $context);
+$worker->transport = 'ssl';
+```
+
+### `Server`
+
+Can be used anywhere as function `server()` or `Server::getInstance()`.
+
+```php
+use Porter\Server;
+
+$server = Server::getInstance();
+$server->doSomething();
+```
+
+```php
+server()->doSomething();
+```
+
+
+### `setWorker(Worker $worker): void`
+
+```php
+server()->setWorker($worker);
+```
+
+### `getWorker(): Worker`
+
+```php
+server()->getWorker();
+```
+
+### `getWorker(): Worker`
+
+```php
+server()->getWorker();
+```
+
+### `addEvent(string $event): self`
+
+```php
+use Porter\Server;
+use Porter\Payload;
+use Porter\Events\AbstractEvent;
+use Workerman\Connection\TcpConnection;
+
+class Ping extends AbstractEvent
+{
+    public static string $id = 'ping';
+
+    public function handle(TcpConnection $connection, Payload $payload, Server $server): void
+    {
+        $this->reply('pong');
+    }
+}
+
+server()->addEvent(Ping::class);
+```
+
+### `on(string $eventId, callable $handler): void`
+
+> **Notice:** `Event` class extends `AbstractEvent`.
+
+```php
+$server->on('ping', function (Event $event) {
+    $event->reply('pong');
+});
+```
+
+### `start(): void`
+
+```php
+server()->start();
+```
