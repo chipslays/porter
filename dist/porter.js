@@ -16,7 +16,7 @@ class Porter {
     event(eventId, data) {
         this.ws.send(JSON.stringify({
             eventId: eventId,
-            data: data ? ? {},
+            data: data || {},
         }));
     }
 
