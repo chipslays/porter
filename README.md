@@ -117,7 +117,7 @@ $worker = new Worker('websocket://0.0.0.0:3030', $context);
 $worker->transport = 'ssl';
 ```
 
-### `Server`
+### `Server::class`
 
 Can be used anywhere as function `server()` or `Server::getInstance()`.
 
