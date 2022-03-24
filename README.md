@@ -106,12 +106,12 @@ use Workerman\Worker;
 
 $context = [
     // More see http://php.net/manual/zh/context.ssl.php
-    'ssl' => array(
-        'local_cert'                 => '/path/to/cert.pem',
-        'local_pk'                   => '/path/to/privkey.pem',
-        'verify_peer'                => false,
+    'ssl' => [
+        'local_cert' => '/path/to/cert.pem',
+        'local_pk' => '/path/to/privkey.pem',
+        'verify_peer' => false,
         // 'allow_self_signed' => true,
-    )
+    ],
 ];
 $worker = new Worker('websocket://0.0.0.0:3030', $context);
 $worker->transport = 'ssl';
