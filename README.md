@@ -1,6 +1,6 @@
 # 🤵‍ Porter
 
-Simple wrapper over Workerman Websockets.
+A simple wrapper over Workerman websockets with channels and other stuff.
 
 # Installation
 
@@ -264,3 +264,10 @@ server()->onReload(function (Worker $worker) {
     // do something
 });
 ```
+
+# Credit
+
+* [`Workerman`](https://github.com/walkor/workerman) by [walkor](https://github.com/walkor)
+
+# License
+MIT
