@@ -25,7 +25,7 @@ composer require chipslays/porter dev-master
 Via CDN:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/chipslays/porter/dist/porter.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/chipslays/porter/dist/porter.min.js"></script>
 ```
 
 # Usage
