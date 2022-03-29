@@ -9,11 +9,13 @@ use Sauce\Traits\Singleton;
 use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
 use Exception;
+use Porter\Traits\Payloadable;
 
 class Server
 {
     use Singleton;
     use Mappable;
+    use Payloadable;
 
     protected Worker $worker;
 
@@ -194,5 +196,18 @@ class Server
         };
 
         $this->getWorker()->runAll();
+    }
+
+    /**
+     * Send event by connection.
+     *
+     * @param TcpConnection $connection
+     * @param string $event
+     * @param array $data
+     * @return bool|null
+     */
+    public function to(TcpConnection $connection, string $event, array $data = []): bool|null
+    {
+        return $connection->send($this->makePayload($event, $data));
     }
 }

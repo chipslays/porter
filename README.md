@@ -28,12 +28,6 @@ Via CDN:
 <script src="https://cdn.jsdelivr.net/gh/chipslays/porter/dist/porter.js"></script>
 ```
 
-Minify:
-
-```html
-<script src="https://cdn.jsdelivr.net/gh/chipslays/porter/dist/porter.min.js"></script>
-```
-
 # Usage
 
 ### Server

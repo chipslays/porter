@@ -22,7 +22,7 @@ class Channels
     /**
      * Get array of channels.
      *
-     * @return array
+     * @return Channel[]
      */
     public function all(): array
     {
