@@ -13,7 +13,7 @@ class Channels
 
     public function __construct(protected TcpConnection $connection)
     {
-
+        //
     }
 
     /**
@@ -54,7 +54,7 @@ class Channels
     }
 
     /**
-     * When connection join to channel should detach channel id from connection.
+     * Method for when connection join to channel should detach channel id from connection.
      *
      * @param string $channelId
      * @return void
@@ -65,7 +65,7 @@ class Channels
     }
 
     /**
-     * Leave all connection channels.
+     * Leave all channels for this connection.
      *
      * @return void
      */
