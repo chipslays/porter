@@ -17,7 +17,7 @@ class Payload
      *
      * @param array $payload
      */
-    public function __construct(protected array $payload)
+    public function __construct(public array $payload)
     {
         $this->eventId = $payload['eventId'];
         $this->data = new Collection($payload['data'] ?? []);
@@ -25,7 +25,7 @@ class Payload
     }
 
     /**
-     * Get valu from data.
+     * Get value from data.
      *
      * @param string $key
      * @param mixed $default
