@@ -230,4 +230,15 @@ class Server
     {
         return $this->channels;
     }
+
+    /**
+     * Get connection instance by id.
+     *
+     * @param integer $connectionId
+     * @return TcpConnection|null
+     */
+    public function getConnection(int $connectionId): ?TcpConnection
+    {
+        return $this->getWorker()->connections[$connectionId] ?? null;
+    }
 }
