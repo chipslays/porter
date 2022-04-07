@@ -67,7 +67,6 @@ class Storage
      */
     protected function saveData(): void
     {
-
         $path = rtrim($this->path, '/\\');
 
         if ($path == '') return;

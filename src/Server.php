@@ -35,7 +35,6 @@ class Server
     public function setWorker(Worker $worker): void
     {
         $this->worker = $worker;
-
         $this->bootServer();
     }
 
@@ -156,6 +155,7 @@ class Server
         }
 
         $this->events[$event::$id] = $event;
+
         return $this;
     }
 
@@ -183,11 +183,11 @@ class Server
             if (!$event) return;
 
             if (is_callable($event)) {
-
                 $handler = $event;
                 $event = new Event($connection, $payload);
                 $event->setHandler($handler);
                 $event->altHandle($event);
+
                 return;
             }
 
