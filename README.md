@@ -54,34 +54,19 @@ server()->start();
 
 Send `ping` event on established connection.
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Porter</title>
-</head>
-<body>
-    <script src="https://cdn.jsdelivr.net/gh/chipslays/porter@1/dist/porter.js"></script>
+```javascript
+const ws = new WebSocket('ws://localhost:3030');
+const client = new Porter(ws);
 
-    <script>
-        const ws = new WebSocket('ws://localhost:3030');
-        const client = new Porter(ws);
+client.connected = () => {
+    client.event('ping');
+}
 
-        client.connected = () => {
-            client.event('ping');
-        }
+client.on('pong', payload => {
+    console.log(payload);
+});
 
-        client.on('pong', payload => {
-            console.log(payload);
-        });
-
-        client.listen();
-    </script>
-</body>
-</html>
+client.listen();
 ```
 
 See more in [examples](/examples) folder.
