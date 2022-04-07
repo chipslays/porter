@@ -90,4 +90,14 @@ class Channel
             $connection->send($this->makePayload($event, $data));
         }
     }
+
+    /**
+     * Delete this channel from channels.
+     *
+     * @return void
+     */
+    public function destroy(): void
+    {
+        Server::getInstance()->channels->delete($this->id);
+    }
 }
