@@ -69,6 +69,8 @@ client.on('pong', payload => {
 client.listen();
 ```
 
+> Don't forget include [PorterJS](#javascript) script via CDN.
+
 See more in [examples](/examples) folder.
 
 # Documentation
