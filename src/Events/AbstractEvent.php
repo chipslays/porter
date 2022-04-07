@@ -2,6 +2,7 @@
 
 namespace Porter\Events;
 
+use Porter\Channel;
 use Porter\Server;
 use Porter\Payload;
 use Porter\Traits\Payloadable;
@@ -17,6 +18,20 @@ abstract class AbstractEvent
      * @var string
      */
     public static string $name;
+
+    /**
+     * Available if client passed `channelId`.
+     *
+     * @var Channel|null
+     */
+    public ?Channel $channel;
+
+    /**
+     * Available if client passed `targetId`.
+     *
+     * @var TcpConnection|null
+     */
+    public ?TcpConnection $target;
 
     /**
      * @var Server
@@ -35,6 +50,12 @@ abstract class AbstractEvent
     )
     {
         $this->server = Server::getInstance();
+
+        // Get channel instance by `channelId` parameter.
+        $this->channel = $this->server->channels->get($payload->data['channelId'] ?? '');
+
+        // Get target connection instance by `targetId` parameter.
+        $this->target = isset($payload->data['targetId']) ? $this->server->getConnection((int) $payload->data['targetId']) : null;
     }
 
     /**
@@ -100,5 +121,25 @@ abstract class AbstractEvent
             if (in_array($connection->id, $excepts)) continue;
             $this->to($connection, $event, $data);
         }
+    }
+
+    /**
+     * Getter for channel (available if client passed `channelId`).
+     *
+     * @return Channel|null
+     */
+    public function channel(): ?Channel
+    {
+        return $this->channel;
+    }
+
+    /**
+     * Getter for target (available if client passed `targetId`).
+     *
+     * @return TcpConnection|null
+     */
+    public function target(): ?TcpConnection
+    {
+        return $this->target;
     }
 }
