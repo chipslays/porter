@@ -109,7 +109,7 @@ $worker = new Worker('websocket://0.0.0.0:3030');
 use Workerman\Worker;
 
 $context = [
-    // More see http://php.net/manual/zh/context.ssl.php
+    // More see http://php.net/manual/en/context.ssl.php
     'ssl' => [
         'local_cert' => '/path/to/cert.pem',
         'local_pk' => '/path/to/privkey.pem',
