@@ -249,7 +249,7 @@ Emitted when worker processes stoped.
 use Porter\Terminal;
 use Workerman\Worker;
 
-server()->omStop(function (Worker $worker) {
+server()->onStop(function (Worker $worker) {
     // do something
 });
 ```
