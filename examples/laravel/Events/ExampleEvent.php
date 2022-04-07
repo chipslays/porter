@@ -5,9 +5,9 @@ use Porter\Payload;
 use Porter\Events\AbstractEvent;
 use Workerman\Connection\TcpConnection;
 
-class Ping extends AbstractEvent
+class ExampleEvent extends AbstractEvent
 {
-    public static string $id = 'ping';
+    public static string $eventId = 'ping';
 
     public function handle(TcpConnection $connection, Payload $payload, Server $server): void
     {
@@ -15,4 +15,4 @@ class Ping extends AbstractEvent
     }
 }
 
-server()->addEvent(Ping::class);
+server()->addEvent(ExampleEvent::class);

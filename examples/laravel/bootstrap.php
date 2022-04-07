@@ -24,6 +24,6 @@ $worker->count = 1;
 
 server()->setWorker($worker);
 
-foreach (glob(__DIR__  . '/Events/*.event.php') as $file) {
+foreach (glob(__DIR__  . '/Events/*Event.php') as $file) {
     require_once $file;
 }

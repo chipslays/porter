@@ -150,11 +150,11 @@ class Server
      */
     public function addEvent(string $event): self
     {
-        if (isset($this->events[$event::$id])) {
-            throw new Exception("Event '{$event::$id}' already exists.");
+        if (isset($this->events[$event::$eventId])) {
+            throw new Exception("Event '{$event::$eventId}' already exists.");
         }
 
-        $this->events[$event::$id] = $event;
+        $this->events[$event::$eventId] = $event;
 
         return $this;
     }

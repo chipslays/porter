@@ -7,7 +7,7 @@ use Workerman\Connection\TcpConnection;
 
 class Ping extends AbstractEvent
 {
-    public static string $id = 'ping';
+    public static string $eventId = 'ping';
 
     public function handle(TcpConnection $connection, Payload $payload, Server $server): void
     {
