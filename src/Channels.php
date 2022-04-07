@@ -91,15 +91,15 @@ class Channels
      * Join or create and join to channel.
      *
      * @param string $id
-     * @param TcpConnection $connection
+     * @param TcpConnection|TcpConnection[] $connections
      * @return Channel
      */
-    public function join(string $id, TcpConnection $connection): Channel
+    public function join(string $id, TcpConnection|array $connections): Channel
     {
         if ($this->exists($id)) {
-            $channel = $this->get($id)->join($connection);
+            $channel = $this->get($id)->join($connections);
         } else {
-            $channel = $this->create($id)->join($connection);
+            $channel = $this->create($id)->join($connections);
         }
 
         return $channel;

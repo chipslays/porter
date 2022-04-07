@@ -27,14 +27,16 @@ class Channel
     }
 
     /**
-     * Join given connection to channel.
+     * Join given connections to channel.
      *
-     * @param TcpConnection|TcpConnection[] $connection
+     * @param TcpConnection|TcpConnection[] $connections
      * @return self
      */
     public function join(TcpConnection|array $connections): self
     {
-        foreach ((array) $connections as $connection) {
+        $connections = is_array($connections) ?: [$connections];
+
+        foreach ($connections as $connection) {
             $this->connections[$connection->id] = $connection;
             $connection->channels->add($this->id);
         }
