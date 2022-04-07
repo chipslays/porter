@@ -16,7 +16,7 @@ class Channels
      */
     public function __construct(protected Server $server)
     {
-
+        //
     }
 
     /**

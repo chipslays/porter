@@ -6,7 +6,7 @@ use Porter\Terminal;
 use Workerman\Connection\TcpConnection;
 use Workerman\Worker;
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 require __DIR__ . '/Events/Ping.php';
 require __DIR__ . '/Events/SayHello.php';

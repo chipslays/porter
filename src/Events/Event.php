@@ -18,14 +18,23 @@ class Event extends AbstractEvent
      */
     public function handle(TcpConnection $connection, Payload $payload, Server $server): void
     {
-
+        //
     }
 
+    /**
+     * @param Event $event
+     * @return void
+     */
     public function altHandle(Event $event): void
     {
         if (!$this->handler) return;
         call_user_func_array($this->handler, [$event]);
     }
+
+    /**
+     * @param callable $handler
+     * @return self
+     */
     public function setHandler(callable $handler): self
     {
         $this->handler = $handler;

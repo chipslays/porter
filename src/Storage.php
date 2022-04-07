@@ -15,7 +15,6 @@ class Storage
      */
     public function __construct(public string $path = '')
     {
-        $this->path = rtrim($this->path, '/\\');
         $this->loadData();
     }
 
@@ -27,6 +26,7 @@ class Storage
     public function put(string $key, mixed $value): void
     {
         $this->data->set($key, $value);
+        $this->saveData();
     }
 
     /**
@@ -51,20 +51,27 @@ class Storage
     /**
      * @return void
      */
-    public function loadData(): void
+    protected function loadData(): void
     {
-        if (!file_exists($this->path)) {
+        $path = rtrim($this->path, '/\\');
+
+        if (!file_exists($path)) {
             $this->data = new Collection;
         } else {
-            $this->data = new Collection(unserialize(file_get_contents($this->path)));
+            $this->data = new Collection(unserialize(file_get_contents($path)));
         }
     }
 
     /**
      * @return void
      */
-    public function saveData(): void
+    protected function saveData(): void
     {
-        file_put_contents($this->path, serialize($this->data));
+
+        $path = rtrim($this->path, '/\\');
+
+        if ($path == '') return;
+
+        file_put_contents($path, serialize($this->data));
     }
 }
