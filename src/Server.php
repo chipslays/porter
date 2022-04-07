@@ -199,7 +199,7 @@ class Server
     }
 
     /**
-     * Send event by connection.
+     * Send event to connection.
      *
      * @param TcpConnection $connection
      * @param string $event
@@ -209,5 +209,25 @@ class Server
     public function to(TcpConnection $connection, string $event, array $data = []): bool|null
     {
         return $connection->send($this->makePayload($event, $data));
+    }
+
+    /**
+     * Getter for Storage class.
+     *
+     * @return Storage
+     */
+    public function storage(): Storage
+    {
+        return $this->storage;
+    }
+
+    /**
+     * Getter for Channels class.
+     *
+     * @return Channels
+     */
+    public function channels(): Channels
+    {
+        return $this->channels;
     }
 }

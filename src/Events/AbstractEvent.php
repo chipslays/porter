@@ -45,7 +45,7 @@ abstract class AbstractEvent
     abstract public function handle(TcpConnection $connection, Payload $payload, Server $server): void;
 
     /**
-     * Send event by connection.
+     * Send event to connection.
      *
      * @param TcpConnection $connection
      * @param string $event
