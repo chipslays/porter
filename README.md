@@ -1,10 +1,9 @@
 # 🤵‍ Porter
 
-A simple wrapper over Workerman websockets with channels and other stuff.
+A simple wrapper over Workerman Websockets with channels and other stuff for PHP 8.1.
 
 # Installation
 
-Via composer:
 
 ### **PHP**
 
@@ -109,7 +108,7 @@ $worker = new Worker('websocket://0.0.0.0:3030');
 use Workerman\Worker;
 
 $context = [
-    // More see http://php.net/manual/zh/context.ssl.php
+    // More see http://php.net/manual/en/context.ssl.php
     'ssl' => [
         'local_cert' => '/path/to/cert.pem',
         'local_pk' => '/path/to/privkey.pem',
@@ -249,7 +248,7 @@ Emitted when worker processes stoped.
 use Porter\Terminal;
 use Workerman\Worker;
 
-server()->omStop(function (Worker $worker) {
+server()->onStop(function (Worker $worker) {
     // do something
 });
 ```
