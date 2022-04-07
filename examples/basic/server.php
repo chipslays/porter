@@ -22,7 +22,6 @@ $server->storage->put('foo', 'bar');
 dump($server->storage->get('foo'));
 dump($server->storage->get('foo1', 'baz'));
 
-
 $server->onConnected(function (TcpConnection $connection) {
     Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
 });
