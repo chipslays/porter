@@ -4,7 +4,6 @@ A simple wrapper over Workerman Websockets with channels and other stuff for PHP
 
 # Installation
 
-Via composer:
 
 ### **PHP**
 
