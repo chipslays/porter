@@ -8,7 +8,8 @@ if (!function_exists('server')) {
     /**
      * @return Server
      */
-    function server(): Server {
+    function server(): Server
+    {
         return Server::getInstance();
     }
 }
@@ -17,7 +18,8 @@ if (!function_exists('worker')) {
     /**
      * @return Worker
      */
-    function worker(): Worker {
+    function worker(): Worker
+    {
         return Server::getInstance()->getWorker();
     }
 }
@@ -29,7 +31,8 @@ if (!function_exists('channel')) {
      * @param mixed $default
      * @return Channel|mixed
      */
-    function channel(string $id, string|array $key = null, mixed $default = null): mixed {
+    function channel(string $id, string|array $key = null, mixed $default = null): mixed
+    {
         if ($key === null) {
             return Server::getInstance()->channels->get($id);
         }
