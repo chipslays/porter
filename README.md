@@ -6,17 +6,12 @@ A simple wrapper over Workerman Websockets with channels and other stuff for PHP
 
 ### **PHP**
 
-Stable:
+Via composer:
 
 ```bash
 composer require chipslays/porter ^1.x
 ```
 
-Dev:
-
-```bash
-composer require chipslays/porter dev-master
-```
 
 ### Javascript
 
