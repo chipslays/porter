@@ -112,11 +112,11 @@ Can be used anywhere as function `server()` or `Server::getInstance()`.
 use Porter\Server;
 
 $server = Server::getInstance();
-$server->doSomething();
+$server->on(...);
 ```
 
 ```php
-server()->doSomething();
+server()->on(...);
 ```
 
 
@@ -232,7 +232,7 @@ use Porter\Terminal;
 use Workerman\Worker;
 
 server()->onStart(function (Worker $worker) {
-    // do something
+    //
 });
 ```
 
@@ -245,7 +245,7 @@ use Porter\Terminal;
 use Workerman\Worker;
 
 server()->onStop(function (Worker $worker) {
-    // do something
+    //
 });
 ```
 
@@ -258,7 +258,19 @@ use Porter\Terminal;
 use Workerman\Worker;
 
 server()->onReload(function (Worker $worker) {
-    // do something
+    //
+});
+```
+
+#### `onRaw(callable $handler): void`
+
+Handle non event messages (raw data).
+
+```php
+server()->onRaw(function (string $payload, TcpConnection $connection) {
+    if ($payload == 'ping') {
+        $connection->send('pong');
+    }
 });
 ```
 
@@ -791,6 +803,12 @@ public function leaveAll(): void
 public function add(string $channelId): void
 ```
 
+
+
+
+
+
+
 ## `Client`
 
 Simple implementation of client.
@@ -861,6 +879,18 @@ Emitted when an error occurs with connection.
 ```php
 $client->onDisconnected(function (AsyncTcpConnection $connection, $code, $message) {
     //
+});
+```
+
+#### `onRaw(callable $handler): void`
+
+Handle non event messages (raw data).
+
+```php
+$client->onRaw(function (string $payload, AsyncTcpConnection $connection) {
+    if ($payload == 'ping') {
+        $connection->send('pong');
+    }
 });
 ```
 
