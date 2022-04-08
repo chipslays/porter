@@ -255,9 +255,65 @@ server()->onReload(function (Worker $worker) {
 });
 ```
 
+### `to(TcpConnection $connection, string $event, array $data = []): bool|null`
+
+Send event to connection.
+
+```php
+server()->to($connection, 'ping');
+```
+
+### `storage(): Storage`
+
+Getter for Storage class.
+
+```php
+server()->storage();
+
+server()->storage()->put('foo', 'bar');
+
+$storage = server()->storage();
+$storage->get('foo');
+
+// can also be a get as propperty
+server()->storage->put('foo', 'bar');
+$storage = server()->storage;
+```
+
+### `channels(): Channels`
+
+Getter for Channels class.
+
+```php
+server()->channels();
+
+server()->channels()->create('secret channel');
+
+$channels = server()->channels();
+$channels->get('secret channel');
+
+// can also be a get as propperty
+server()->channels->create('secret channel');
+$channels = server()->channels;
+```
+
+### `getConnection(int $connectionId): ?TcpConnection`
+
+Get connection instance by id.
+
+```php
+$connection = server()->getConnection(1337);
+server()->to($connection, 'welcome message', [
+    'text' => 'Hello world!'
+]);
+
+// also can get like
+$connection = server()->getWorker()->connections[1337] ?? null;
+```
+
 *More to come later...*
 
-# Credit
+# Credits
 
 * [`Workerman`](https://github.com/walkor/workerman) by [walkor](https://github.com/walkor)
 
