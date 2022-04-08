@@ -122,6 +122,8 @@ server()->doSomething();
 
 ### `setWorker(Worker $worker): void`
 
+Set worker instance.
+
 ```php
 use Workerman\Worker;
 
@@ -131,11 +133,15 @@ server()->setWorker($worker);
 
 ### `getWorker(): Worker`
 
+Get worker instance.
+
 ```php
 server()->getWorker();
 ```
 
 ### `addEvent(string $event): self`
+
+Add event class handler.
 
 ```php
 use Porter\Server;
@@ -158,7 +164,9 @@ server()->addEvent(Ping::class);
 
 ### `on(string $eventId, callable $handler): void`
 
-> **Notice:** `Event` class extends `AbstractEvent`.
+
+
+> **Notice:** `Event $event` class extends and have all methods & properties of `AbstractEvent`.
 
 ```php
 $server->on('ping', function (Event $event) {
@@ -167,6 +175,8 @@ $server->on('ping', function (Event $event) {
 ```
 
 ### `start(): void`
+
+Start server.
 
 ```php
 server()->start();
