@@ -47,8 +47,7 @@ abstract class AbstractEvent
     public function __construct(
         public TcpConnection $connection,
         public Payload $payload,
-    )
-    {
+    ) {
         $this->server = Server::getInstance();
 
         // Get channel instance by `channelId` parameter.
