@@ -13,13 +13,6 @@ abstract class AbstractEvent
     use Payloadable;
 
     /**
-     * Event name.
-     *
-     * @var string
-     */
-    public static string $name;
-
-    /**
      * Available if client passed `channelId`.
      *
      * @var Channel|null

@@ -6,11 +6,11 @@ use Chipslays\Collection\Collection;
 
 class Payload
 {
-    public string $eventId;
+    public readonly string $eventId;
+
+    public readonly int $timestamp;
 
     public Collection $data;
-
-    public int $timestamp;
 
     /**
      * Constructor.
