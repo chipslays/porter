@@ -720,13 +720,21 @@ server()->on('new message', function (Event $event) {
 
 It is a global object, changing in one place, it will contain the changed data in another place.
 
-You can set different properties, functions to this object.
-
 This object has already predefined properties:
 
+See all `$connection` methods [here](https://doc.hotexamples.com/class/workerman.connection/TcpConnection).
+
 ```php
-$connection->channels;
+$connection->channels; // object of Porter\Connection\Channels
 ```
+
+You can set different properties, functions to this object.
+
+```php
+$connection->name = 'John Doe'
+```
+
+#### List of methods `Porter\Connection\Channels`
 
 ```php
 /**
@@ -764,6 +772,8 @@ public function delete(string $channelId): void
  */
 public function leaveAll(): void
 ```
+
+> **NOTICE:** On disconnect client connection will leave of all the channels where he was.
 
 ```php
 /**
