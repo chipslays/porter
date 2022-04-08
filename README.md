@@ -4,16 +4,15 @@ A simple wrapper over Workerman Websockets with channels and other stuff for PHP
 
 # Installation
 
-
 ### **PHP**
 
-Stable version:
+Stable:
 
 ```bash
 composer require chipslays/porter ^1.x
 ```
 
-Dev version:
+Dev:
 
 ```bash
 composer require chipslays/porter dev-master
@@ -689,7 +688,7 @@ $this->to($this->target, 'new message', [
 ```
 
 
-### Event: anonymous function
+### `Anonymous function`
 
 ```php
 use Porter\Events\Event;
@@ -709,11 +708,39 @@ server()->on('new message', function (Event $event) {
 });
 ```
 
+## `Storage`
 
+Storage is a part of server, all data stored in flat files.
 
+To get started you need set a `$path` where files will be stored.
 
+```php
+server()->storage->path = __DIR__ . '/Storage/storage.hub';
+```
 
-*More to come later...*
+> **NOTICE:** Set path only after you set worker instance (`server()->setWorker($worker)`).
+
+> **NOTICE:** If path not setting, data will be stored in RAM. After server restart you lose your data.
+
+### `put(string $key, mixed $value): void`
+
+```php
+server()->storage->put('foo', 'bar');
+```
+
+### `get(string $key, mixed $default = null): mixed`
+
+```php
+server()->storage->get('foo', 'default value'); // foo
+server()->storage->get('baz', 'default value'); // default value
+```
+
+### `has(string $key): bool`
+
+```php
+server()->storage->has('foo'); // true
+server()->storage->has('baz'); // false
+```
 
 # Credits
 
