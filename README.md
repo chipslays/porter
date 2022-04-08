@@ -731,7 +731,11 @@ $connection->channels; // object of Porter\Connection\Channels
 You can set different properties, functions to this object.
 
 ```php
-$connection->name = 'John Doe'
+$connection->firstName = 'John';
+$connection->lastName = 'Doe';
+$connection->getFullName = fn () => $connection->firstName . ' ' . $connection->lastName;
+
+call_user_func($connection->getFullname); // John Doe
 ```
 
 #### List of methods `Porter\Connection\Channels`
