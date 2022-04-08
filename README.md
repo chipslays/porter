@@ -20,12 +20,11 @@ composer require chipslays/porter dev-master
 
 ### Javascript
 
-Via CDN:
+Via jsDelivr CDN:
 
-Version|CDN
----|---
-Uncompressed|`<script src="https://cdn.jsdelivr.net/gh/chipslays/porter/dist/porter.js"></script>`
-Minified|`<script src="https://cdn.jsdelivr.net/gh/chipslays/porter/dist/porter.min.js"></script>`
+```html
+<script src="https://cdn.jsdelivr.net/gh/chipslays/porter/dist/porter.min.js"></script>
+```
 
 
 # Usage
