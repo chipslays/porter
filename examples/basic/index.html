@@ -11,7 +11,7 @@
     <script src="../../dist/porter.js"></script>
 
     <!-- Or via CDN -->
-    <!-- <script src="https://cdn.jsdelivr.net/gh/chipslays/porter/dist/porter.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/gh/chipslays/porter/dist/porter.min.js"></script> -->
 
     <script>
         const ws = new WebSocket('ws://localhost:3030');
@@ -20,7 +20,7 @@
         client.connected = () => {
             client.event('ping');
 
-            client.event('say hello', {
+            client.event('say hello to', {
                 username: 'John Doe',
             });
         }
