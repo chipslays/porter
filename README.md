@@ -199,6 +199,8 @@ server()->onConnected(function (TcpConnection $connection) {
 
 Emitted when the other end of the socket sends a FIN packet.
 
+> **NOTICE:** On disconnect client connection will leave of all the channels where he was.
+
 ```php
 use Porter\Terminal;
 use Workerman\Connection\TcpConnection;
@@ -712,6 +714,67 @@ server()->on('new message', function (Event $event) {
         'from' => $this->connection->nickname,
     ]);
 });
+```
+
+## `TcpConnection $connection`
+
+It is a global object, changing in one place, it will contain the changed data in another place.
+
+You can set different properties, functions to this object.
+
+This object has already predefined properties:
+
+```php
+$connection->channels;
+```
+
+```php
+/**
+ * Get connection channels.
+ *
+ * @return Channel[]
+ */
+public function all(): array
+```
+
+```php
+/**
+ * Get channels count.
+ *
+ * @return integer
+ */
+public function count(): int
+```
+
+```php
+/**
+ * Method for when connection join to channel should detach channel id from connection.
+ *
+ * @param string $channelId
+ * @return void
+ */
+public function delete(string $channelId): void
+```
+
+```php
+/**
+ * Leave all channels for this connection.
+ *
+ * @return void
+ */
+public function leaveAll(): void
+```
+
+```php
+/**
+ * When connection join to channel should attach channel id to connection.
+ *
+ * You don't need to use this method, it will automatically fire inside the class.
+ *
+ * @param string $channelId
+ * @return void
+ */
+public function add(string $channelId): void
 ```
 
 ## `Storage`
