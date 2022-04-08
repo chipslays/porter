@@ -109,7 +109,7 @@ $worker = new Worker('websocket://0.0.0.0:3030', $context);
 $worker->transport = 'ssl';
 ```
 
-## `Server::class`
+## `Server`
 
 Can be used anywhere as function `server()` or `Server::getInstance()`.
 
@@ -310,6 +310,261 @@ server()->to($connection, 'welcome message', [
 // also can get like
 $connection = server()->getWorker()->connections[1337] ?? null;
 ```
+
+## `Channels`
+
+This is a convenient division of connected connections into channels.
+
+One connection can consist of an unlimited number of channels.
+
+Channels also support broadcasting and their own storage.
+
+Channel can be access like:
+
+```php
+// by method
+server()->channels();
+
+// by property
+server()->channels;
+```
+
+### `create(string $id, array $data = []): Channel`
+
+Create new channel.
+
+```php
+$channel = server()->channels->create('secret channel', [
+    'foo' => 'bar',
+]);
+
+$channel->join($connection)->broadcast('welcome message', [
+    'foo' => $channel->data->get('foo'),
+]);
+```
+
+### `get(string $id): ?Channel`
+
+Get a channel.
+
+> Returns `NULL` if channel not exists.
+
+```php
+$channel = server()->channels()->get('secret channel');
+$channel = server()->channels->get('secret channel');
+```
+
+### `all(): Channel[]`
+
+Get array of channels (`Channel` instances).
+
+```php
+foreach (server()->channels->all() as $id => $channel) {
+    echo count($channel->connections) . ' connection(s) in channel: ' . $id . PHP_EOL;
+}
+```
+
+### `count(): int`
+
+Get count of channels.
+
+```php
+$count = server()->channels->count();
+
+echo "Total channels: {$count}";
+```
+
+### `delete(string $id): void`
+
+Delete channel.
+
+```php
+server()->channels->delete('secret channel');
+```
+
+### `exists(string $id): bool`
+
+Checks if given channel id exists already.
+
+```php
+$channelId = 'secret channel';
+if (!server()->channels->exists($channelId)) {
+    server()->channels->create($channelId);
+}
+```
+
+### `join(string $id, TcpConnection|array $connections): Channel`
+
+Join or create and join to channel.
+
+```php
+server()->channels->join($connection);
+server()->channels->join([$connection1, $connection2, $connection3, ...]);
+```
+
+## `Channel`
+
+### `join(TcpConnection|array $connections): self`
+
+Join given connections to channel.
+
+```php
+$channel = server()->channels->get('secret channel');
+$channel->join($connection);
+$channel->join([$connection1, $connection2, $connection3, ...]);
+```
+
+### `leave(TcpConnection $connection): self`
+
+Delete given connection from channel.
+
+```php
+$channel = server()->channels->get('secret channel');
+$channel->leave($connection);
+```
+
+### `exists(TcpConnection $connection): bool`
+
+Checks if given connection exists in channel.
+
+```php
+$channel = server()->channels->get('secret channel');
+$channel->exists($connection);
+```
+
+### `broadcast(string $event, array $data = [], array $excepts = []): void`
+
+Send an event to all connection on this channel.
+
+> `TcpConnection[] $excepts` Connection instance or connection id.
+
+```php
+$channel = server()->channels->get('secret channel');
+$channel->broadcast('welcome message', [
+    'text' => 'Hello world',
+]);
+```
+
+For example, you need to send to all participants in the room except yourself, or other connections.
+
+```php
+$channel->broadcast('welcome message', [
+    'text' => 'Hello world',
+], [$connection]);
+
+$channel->broadcast('welcome message', [
+    'text' => 'Hello world',
+], [$connection1, $connection2, ...]);
+```
+
+### `destroy(): void`
+
+Delete this channel from channels.
+
+```php
+$channel = server()->channels->get('secret channel');
+$channel->desstoy();
+
+// now if use $channel, you get an error
+$channel->data->get('foo');
+```
+
+## Properties
+
+### `$channel->connections`
+
+A array of connections in this channel. Key is a `id` of connection, and value is a instance of connection `TcpConnection`.
+
+```php
+$channel = server()->channels->get('secret channel');
+
+foreach($channel->connections, as $connection) {
+    $connection->lastMessageAt = time();
+}
+```
+
+```php
+$channel = server()->channels->get('secret channel');
+
+$connection = $channel->connections[1337];
+```
+
+### `$channel->data`
+
+Data is a simple implement of box for storage your data.
+
+Data is a object of powerful [chipslays/collection](https://github.com/chipslays/collection).
+
+See [documentation](https://github.com/chipslays/collection) for more information how to manipulate this data.
+
+> **NOTICE:** All this data will be deleted when the server is restarted.
+
+Couple of simple-short examples:
+
+```php
+$channel->data->set('foo');
+$channel->data->get('foo', 'default value');
+$channel->data->has('foo', 'default value');
+
+$channel->data['foo'];
+$channel->data['foo'] ?? 'default value';
+isset($channel->data['foo']);
+
+// see more examples here: https://github.com/chipslays/collection
+```
+
+
+## `Payload`
+
+The payload is the object that came from the client.
+
+### `get(string $key, mixed $default = null): mixed`
+
+Get value from data.
+
+```php
+$payload->get('foo', 'default value');
+
+// can also use like:
+$payload->data->get('foo', 'default value');
+$payload->data['foo'] ?? 'default value';
+```
+
+## Properties
+
+### `$payload->eventId`
+
+Is a id of event, for example, `welcome message`.
+
+```php
+$payload->eventId; // string
+```
+
+### `$payload->timestamp`
+
+A timestamp when event was came.
+
+```php
+$payload->timestamp; // int
+```
+
+### `$payload->timestamp`
+
+An object of values passed from the client.
+
+Object of [chipslays/collection](https://github.com/chipslays/collection).
+
+See [documentation](https://github.com/chipslays/collection) for more information how to manipulate this data.
+
+```php
+$payload->data; // Collection
+```
+
+
+
+
+
+
 
 *More to come later...*
 
