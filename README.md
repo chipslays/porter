@@ -786,6 +786,7 @@ server()->channels->get('secret channel')->data->get('foo', 'default value');
 
 # Credits
 
+* [chipslays](https://github.com/chipslays)
 * [`Workerman`](https://github.com/walkor/workerman) by [walkor](https://github.com/walkor)
 
 # License
