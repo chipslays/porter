@@ -570,7 +570,144 @@ isset($payload->data['foo']);
 // see more examples here: https://github.com/chipslays/collection
 ```
 
+## `Events`
 
+Events can be as a separate class or as an anonymous function.
+
+### Event class
+
+Basic ping-pong example:
+
+```php
+use Porter\Server;
+use Porter\Payload;
+use Porter\Events\AbstractEvent;
+use Workerman\Connection\TcpConnection;
+
+class Ping extends AbstractEvent
+{
+    public static string $eventId = 'ping';
+
+    public function handle(TcpConnection $connection, Payload $payload, Server $server): void
+    {
+        $this->reply('pong');
+    }
+}
+
+// and next you need add (register) this class to events:
+server()->addEvent(Ping::class);
+```
+
+> **NOTICE** The event class must have a `handle()` method.
+> This method handles the event. You can also create other
+
+### `AbstractEvent`
+
+#### Properties
+
+Each child class get following properties:
+
+* `TcpConnection $connection` - from whom the event came;
+* `Payload $payload` - contain data from client;
+* `Server $server` - server instance;
+
+#### Methods
+
+#### `to(TcpConnection $connection, string $event, array $data = []): bool|null`
+
+Send event to connection.
+
+```php
+$this->to($connection, 'ping');
+```
+
+#### `reply(string $event, array $data = []): bool|null`
+
+Reply event to incoming connection.
+
+```php
+$this->reply('ping');
+
+// analog for:
+$this->to($this->connection, 'ping');
+```
+
+#### `raw(string $string): bool|null`
+
+Send raw data to connection. Not a event object.
+
+```php
+$this->raw('ping');
+
+// now client will receive just a 'ping', not event object.
+```
+
+#### `broadcast(string $event, array $data = [], array $excepts = []): void`
+
+Send event to all connections.
+
+Yes, to **all connections** on server.
+
+```php
+$this->broadcast('announcement', [
+    'text' => 'This is a global announcement message.',
+]);
+```
+
+Send event to all except for the connection from which the event came.
+
+```php
+$this->broadcast('user join', [
+    'text' => 'New user joined to chat.',
+], [$this->connection]);
+```
+
+#### Magic properties & methods.
+
+If client pass in data `channelId` with channel id or `targetId` with id of connection, we got a magic properties and methods.
+
+```php
+// this is a object of Channel, getted by `channelId` from client.
+$this->channel;
+$this->channel();
+
+$this->channel->broadcast('new message', [
+    'text' => $this->payload->get('text'),
+    'from' => $this->connection->nickname,
+]);
+```
+
+```php
+// this is a object of Channel, getted by `channelId` from client.
+$this->target;
+$this->target();
+
+$this->to($this->target, 'new message', [
+    'text' => $this->payload->get('text'),
+    'from' => $this->connection->nickname,
+]);
+```
+
+
+### Event: anonymous function
+
+```php
+use Porter\Events\Event;
+
+server()->on('new message', function (Event $event) {
+    // $event has all the same property && methods as in the example above
+
+    $event->to($event->target, 'new message', [
+        'text' => $this->payload->get('text'),
+        'from' => $this->connection->nickname,
+    ]);
+
+    $event->channel->broadcast('new message', [
+        'text' => $this->payload->get('text'),
+        'from' => $this->connection->nickname,
+    ]);
+});
+```
 
 
 
