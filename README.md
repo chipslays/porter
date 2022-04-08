@@ -76,10 +76,6 @@ See more in [examples](/examples) folder.
 
 # Documentation
 
-> **Notice:** Documentation in progress...
-
-> **Notice:** You can view [source files](/src) for more information.
-
 ## Basics
 
 ### Local development
