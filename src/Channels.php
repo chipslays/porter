@@ -80,7 +80,7 @@ class Channels
      * Checks if given channel id exists already.
      *
      * @param string $id
-     * @return boolean
+     * @return bool
      */
     public function exists(string $id): bool
     {

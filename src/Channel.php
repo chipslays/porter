@@ -64,7 +64,7 @@ class Channel
      * Checks if given connection exists in channel.
      *
      * @param TcpConnection $connection
-     * @return boolean
+     * @return bool
      */
     public function exists(TcpConnection $connection): bool
     {

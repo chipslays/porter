@@ -41,7 +41,7 @@ class Storage
 
     /**
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function has(string $key): bool
     {

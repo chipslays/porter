@@ -16,8 +16,8 @@ $worker = new Worker('websocket://0.0.0.0:3030');
 $server = Server::getInstance();
 $server->setWorker($worker);
 
+// storage
 $server->storage->path = __DIR__ . '/Storage/storage.hub';
-
 $server->storage->put('foo', 'bar');
 dump($server->storage->get('foo'));
 dump($server->storage->get('foo1', 'baz'));
@@ -32,6 +32,10 @@ $server->onDisconnected(function (TcpConnection $connection) {
 
 $server->onError(function (TcpConnection $connection, $code, $message) {
     Terminal::print("{bg:red}{text:white}Error {$code} {$message}");
+});
+
+$server->onRaw(function (string $payload, TcpConnection $connection) {
+    $connection->send($payload);
 });
 
 $server->addEvent(Ping::class);

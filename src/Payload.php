@@ -21,7 +21,7 @@ class Payload
     {
         $this->eventId = $payload['eventId'];
         $this->data = new Collection($payload['data'] ?? []);
-        $this->timestamp = time();
+        $this->timestamp = $payload['timestamp'] ?? time();
     }
 
     /**
