@@ -718,6 +718,13 @@ To get started you need set a `$path` where files will be stored.
 server()->storage->path = __DIR__ . '/Storage/storage.hub';
 ```
 
+You can get access to storage like property or method:
+
+```php
+server()->storage;
+server()->storage();
+```
+
 > **NOTICE:** Set path only after you set worker instance (`server()->setWorker($worker)`).
 
 > **NOTICE:** If path not setting, data will be stored in RAM. After server restart you lose your data.
