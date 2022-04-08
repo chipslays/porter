@@ -542,7 +542,7 @@ $payload->eventId; // string
 
 ### `$payload->timestamp`
 
-A timestamp when event was came.
+A timestamp when event was came (server time and timezone).
 
 ```php
 $payload->timestamp; // int
@@ -558,6 +558,16 @@ See [documentation](https://github.com/chipslays/collection) for more informatio
 
 ```php
 $payload->data; // Collection
+
+$payload->data->set('foo');
+$payload->data->get('foo', 'default value');
+$payload->data->has('foo', 'default value');
+
+$payload->data['foo'];
+$payload->data['foo'] ?? 'default value';
+isset($payload->data['foo']);
+
+// see more examples here: https://github.com/chipslays/collection
 ```
 
 
