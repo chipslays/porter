@@ -784,6 +784,58 @@ channel('secret channel', 'foo', 'default value'); // get data from channel (by 
 server()->channels->get('secret channel')->data->get('foo', 'default value');
 ```
 
+# Front-end
+
+There is also a [small class](#javascript) for working with websockets on the client side.
+
+```javascript
+const ws = new WebSocket('ws://localhost:3031'); // on local dev
+const ws = new WebSocket('wss://example.com:3031'); // on prod server
+const client = new Porter(ws);
+
+// on client connected to server
+client.connected = () => {
+    //
+}
+
+// on client disconected from server
+client.disconnected = () => {
+    //
+}
+
+// on error
+client.error = () => {
+    //
+}
+
+// close connection
+client.close();
+
+// event handler
+client.on('ping', payload => {
+    // available property
+    payload.eventId;
+    payload.timestamp;
+    payload.data;
+
+    console.log(payload.data.foo) // bar
+});
+
+// send event
+client.event('pong', {
+    foo: 'bar',
+});
+
+// pass channelId and targetId for magic properties on back-end server
+client.event('pong', {
+    channelId: 'secret channel',
+    targetId: 1337,
+});
+
+// start listen
+client.listen();
+```
+
 # Credits
 
 * [chipslays](https://github.com/chipslays)
