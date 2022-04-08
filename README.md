@@ -828,7 +828,7 @@ $client = new Client('wss://example.com:3030');
 
 Set worker.
 
-> **NOTICE:** The worker creates an instance on its own in the constructor. Use this method if you need to define worker specific settings.
+> **NOTICE:** Worker instance auto init in constructor. Use this method if you need to define worker specific settings.
 
 #### `getWorker(): Worker`
 
