@@ -262,7 +262,7 @@ server()->onReload(function (Worker $worker) {
 });
 ```
 
-### `to(TcpConnection $connection, string $event, array $data = []): bool|null`
+### `to(TcpConnection $connection, string $event, array $data = []): ?bool`
 
 Send event to connection.
 
@@ -620,7 +620,7 @@ Each child class get following properties:
 
 #### Methods
 
-#### `to(TcpConnection $connection, string $event, array $data = []): bool|null`
+#### `to(TcpConnection $connection, string $event, array $data = []): ?bool`
 
 Send event to connection.
 
@@ -628,7 +628,7 @@ Send event to connection.
 $this->to($connection, 'ping');
 ```
 
-#### `reply(string $event, array $data = []): bool|null`
+#### `reply(string $event, array $data = []): ?bool`
 
 Reply event to incoming connection.
 
@@ -790,6 +790,101 @@ public function leaveAll(): void
  */
 public function add(string $channelId): void
 ```
+
+## `Client`
+
+Simple implementation of client.
+
+See basic example of client [here](/examples/client-php/client.php).
+
+#### `__construct(string $host, array $context = [])`
+
+Set worker.
+
+```php
+$client = new Client('ws://localhost:3030');
+$client = new Client('wss://example.com:3030');
+```
+
+#### `setWorker(Worker $worker): void`
+
+Set worker.
+
+> **NOTICE:** The worker creates an instance on its own in the constructor. Use this method if you need to define worker specific settings.
+
+#### `getWorker(): Worker`
+
+Get worker.
+
+#### `event(string $eventId, array $data = []): ?bool`
+
+Send event to server.
+
+```php
+$client->on('pong', function (AsyncTcpConnection $connection, Payload $payload, Client $client) {
+    echo 'PONG!' . PHP_EOL;
+});
+```
+
+#### `raw(string $payload): ?bool`
+
+Send raw payload to server.
+
+```php
+$client->raw('simple message');
+```
+
+#### `onConnected(callable $handler): void`
+
+Emitted when a socket connection is successfully established.
+
+```php
+$client->onConnected(function (AsynTcpConnection $connection) {
+    //
+});
+```
+
+#### `onDisconnected(callable $handler): void`
+
+Emitted when the server sends a FIN packet.
+
+```php
+$client->onDisconnected(function (AsynTcpConnection $connection) {
+    //
+});
+```
+
+#### `onError(callable $handler): void`
+
+Emitted when an error occurs with connection.
+
+```php
+$client->onDisconnected(function (AsyncTcpConnection $connection, $code, $message) {
+    //
+});
+```
+
+#### `on(string $eventId, callable $handler): void`
+
+Event handler as callable.
+
+```php
+$client->on('pong', function (AsyncTcpConnection $connection, Payload $payload, Client $client) {
+    //
+});
+```
+
+#### `listen(): void`
+
+Connect to server and listen.
+
+```php
+$client->listen();
+```
+
+
+
+
 
 ## `Storage`
 
