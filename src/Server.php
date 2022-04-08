@@ -3,13 +3,13 @@
 namespace Porter;
 
 use Porter\Events\Event;
+use Porter\Traits\Payloadable;
 use Porter\Connection\Channels as ConnectionChannels;
 use Sauce\Traits\Mappable;
 use Sauce\Traits\Singleton;
 use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
 use Exception;
-use Porter\Traits\Payloadable;
 
 class Server
 {
