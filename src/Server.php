@@ -5,6 +5,7 @@ namespace Porter;
 use Porter\Events\Event;
 use Porter\Traits\Payloadable;
 use Porter\Connection\Channels as ConnectionChannels;
+use Porter\Traits\Rawable;
 use Sauce\Traits\Mappable;
 use Sauce\Traits\Singleton;
 use Workerman\Worker;
@@ -16,6 +17,7 @@ class Server
     use Singleton;
     use Mappable;
     use Payloadable;
+    use Rawable;
 
     protected Worker $worker;
 
@@ -143,7 +145,7 @@ class Server
     }
 
     /**
-     * Add event.
+     * Add event handler.
      *
      * @param string $event
      * @return self
@@ -159,6 +161,13 @@ class Server
         return $this;
     }
 
+    /**
+     * Event handler as callable.
+     *
+     * @param string $eventId
+     * @param callable $handler
+     * @return void
+     */
     public function on(string $eventId, callable $handler): void
     {
         if (isset($this->events[$eventId])) {
@@ -176,11 +185,22 @@ class Server
     public function start(): void
     {
         $this->getWorker()->onMessage = function (TcpConnection $connection, string $payload) {
-            $payload = new Payload(json_decode($payload, true));
+            $payloadData = @json_decode($payload, true);
+
+            if ($payloadData) {
+                $payload = new Payload($payloadData);
+            } else {
+                if ($this->onRawHandler) {
+                    call_user_func_array($this->onRawHandler, [$payload, $connection]);
+                }
+                return;
+            }
 
             $event = $this->events[$payload->eventId] ?? null;
 
-            if (!$event) return;
+            if (!$event) {
+                return;
+            }
 
             if (is_callable($event)) {
                 $handler = $event;
@@ -206,7 +226,7 @@ class Server
      * @param array $data
      * @return bool|null
      */
-    public function to(TcpConnection $connection, string $event, array $data = []): bool|null
+    public function to(TcpConnection $connection, string $event, array $data = []): ?bool
     {
         return $connection->send($this->makePayload($event, $data));
     }
