@@ -749,6 +749,41 @@ server()->storage->has('foo'); // true
 server()->storage->has('baz'); // false
 ```
 
+## Helpers (functions)
+
+### `server(): Server`
+
+```php
+server()->on(...);
+
+// will be like:
+use Porter\Server;
+Server::getInstance()->on(...);
+```
+
+### `worker(): Worker`
+
+```php
+worker()->connections;
+
+// will be like:
+use Porter\Server;
+Server::getInstance()->getWorker()->connections;
+```
+
+### `channel(string $id, string|array $key = null, mixed $default = null): mixed`
+
+```php
+$channel = channel('secret channel'); // get channel instance
+$channel = server()->channels->get('secret channel');
+
+channel('secret channel', ['foo' => 'bar']); // set data for given channel (by id)
+server()->channels->set('secret channel')->set('foo', 'bar');
+
+channel('secret channel', 'foo', 'default value'); // get data from channel (by id)
+server()->channels->get('secret channel')->data->get('foo', 'default value');
+```
+
 # Credits
 
 * [`Workerman`](https://github.com/walkor/workerman) by [walkor](https://github.com/walkor)
