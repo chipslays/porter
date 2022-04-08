@@ -7,7 +7,7 @@ use Workerman\Connection\TcpConnection;
 
 class SayHello extends AbstractEvent
 {
-    public static string $eventId = 'say hello';
+    public static string $eventId = 'say hello to';
 
     public function handle(TcpConnection $connection, Payload $payload, Server $server): void
     {
