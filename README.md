@@ -872,7 +872,7 @@ $client->onDisconnected(function (AsynTcpConnection $connection) {
 Emitted when an error occurs with connection.
 
 ```php
-$client->onDisconnected(function (AsyncTcpConnection $connection, $code, $message) {
+$client->onError(function (AsyncTcpConnection $connection, $code, $message) {
     //
 });
 ```
