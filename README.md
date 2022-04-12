@@ -561,7 +561,7 @@ A timestamp when event was came (server time and timezone).
 $payload->timestamp; // int
 ```
 
-### `$payload->timestamp`
+### `$payload->data`
 
 An object of values passed from the client.
 
