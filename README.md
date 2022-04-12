@@ -834,8 +834,8 @@ Get worker.
 Send event to server.
 
 ```php
-$client->on('pong', function (AsyncTcpConnection $connection, Payload $payload, Client $client) {
-    echo 'PONG!' . PHP_EOL;
+$client->on('ping', function (AsyncTcpConnection $connection, Payload $payload, Client $client) {
+    $client->event('pong', ['time' => time()]);
 });
 ```
 
