@@ -18,20 +18,16 @@
         const client = new Porter(ws);
 
         client.connected = () => {
-            client.event('ping');
+            client.event('ping').on('pong', payload => {
+                console.log(payload);
+            });
 
             client.event('say hello to', {
                 username: 'John Doe',
+            }).on('hello username', payload => {
+                console.log(payload);
             });
         }
-
-        client.on('pong', payload => {
-            console.log(payload);
-        });
-
-        client.on('hello username', payload => {
-            console.log(payload);
-        });
 
         client.listen();
     </script>
