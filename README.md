@@ -18,7 +18,7 @@ composer require chipslays/porter ^1.x
 Via jsDelivr CDN:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/chipslays/porter/dist/porter.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/chipslays/porter@latest/dist/porter.min.js"></script>
 ```
 
 
@@ -612,7 +612,7 @@ server()->addEvent(Ping::class);
 ```
 
 > **NOTICE:** The event class must have a `handle()` method.
-> 
+>
 > This method handles the event. You can also create other methods.
 
 ### `AbstractEvent`
