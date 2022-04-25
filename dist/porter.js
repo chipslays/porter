@@ -14,6 +14,8 @@ class Porter {
     }
 
     event(eventId, data) {
+        while (this.ws.readyState !== WebSocket.OPEN) {}
+
         this.ws.send(JSON.stringify({
             eventId: eventId,
             data: data || {},
