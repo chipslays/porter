@@ -1,6 +1,8 @@
 class Porter {
     events = {};
 
+    shouldSend = [];
+
     constructor(ws) {
         this.ws = ws;
     }
@@ -14,7 +16,9 @@ class Porter {
     }
 
     event(eventId, data) {
-        while (this.ws.readyState !== WebSocket.OPEN) {}
+        if (this.ws.readyState !== WebSocket.OPEN) {
+            return this.shouldSend.push({eventId: eventId, data: data});
+        }
 
         this.ws.send(JSON.stringify({
             eventId: eventId,
@@ -23,8 +27,16 @@ class Porter {
     }
 
     listen() {
-        this.ws.onopen = this.connected;
+        this.ws.onopen = () => {
+            this.shouldSend.forEach(event => {
+                this.event(event.eventId, event.data);
+            });
+
+            this.connected.call();
+        };
+
         this.ws.onclose = this.disconnected;
+
         this.ws.onerror = this.error;
 
         this.ws.onmessage = event => {
