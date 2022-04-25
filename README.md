@@ -561,7 +561,7 @@ A timestamp when event was came (server time and timezone).
 $payload->timestamp; // int
 ```
 
-### `$payload->timestamp`
+### `$payload->data`
 
 An object of values passed from the client.
 
@@ -611,8 +611,9 @@ class Ping extends AbstractEvent
 server()->addEvent(Ping::class);
 ```
 
-> **NOTICE** The event class must have a `handle()` method.
-> This method handles the event. You can also create other
+> **NOTICE:** The event class must have a `handle()` method.
+> 
+> This method handles the event. You can also create other methods.
 
 ### `AbstractEvent`
 
@@ -833,8 +834,8 @@ Get worker.
 Send event to server.
 
 ```php
-$client->on('pong', function (AsyncTcpConnection $connection, Payload $payload, Client $client) {
-    echo 'PONG!' . PHP_EOL;
+$client->on('ping', function (AsyncTcpConnection $connection, Payload $payload, Client $client) {
+    $client->event('pong', ['time' => time()]);
 });
 ```
 
@@ -871,7 +872,7 @@ $client->onDisconnected(function (AsynTcpConnection $connection) {
 Emitted when an error occurs with connection.
 
 ```php
-$client->onDisconnected(function (AsyncTcpConnection $connection, $code, $message) {
+$client->onError(function (AsyncTcpConnection $connection, $code, $message) {
     //
 });
 ```
