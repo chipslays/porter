@@ -18,7 +18,8 @@ class Porter {
 
     event(eventId, data) {
         if (this.ws.readyState !== WebSocket.OPEN) {
-            return this.shouldSend.push({eventId: eventId, data: data});
+            this.shouldSend.push({eventId: eventId, data: data});
+            return this;
         }
 
         this.ws.send(JSON.stringify({
