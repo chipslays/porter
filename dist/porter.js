@@ -13,6 +13,7 @@ class Porter {
 
     on(event, handler) {
         this.events[event] = handler;
+        return this;
     }
 
     event(eventId, data) {
@@ -24,6 +25,8 @@ class Porter {
             eventId: eventId,
             data: data || {},
         }));
+
+        return this;
     }
 
     listen() {
