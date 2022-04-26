@@ -720,6 +720,8 @@ $this->to($this->target, 'new message', [
 
 ### `Anonymous function`
 
+In anonymous function instead of `$this`, use `$event`.
+
 ```php
 use Porter\Events\Event;
 
