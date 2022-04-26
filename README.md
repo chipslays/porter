@@ -1004,6 +1004,24 @@ channel('secret channel', 'foo', 'default value'); // get data from channel (by 
 server()->channels->get('secret channel')->data->get('foo', 'default value');
 ```
 
+## Mappable methods
+
+You can extend the class and map your own methods on the fly..
+
+Basic method:
+```php
+server()->map('sum', fn(...$args) => array_sum($args));
+echo server()->sum(1000, 300, 30, 5, 2) // 1337
+echo server()->sum(1000, 300, 30, 5, 3) // 1338
+```
+
+As singletone method:
+```php
+server()->mapOnce('timestamp', fn() => time());
+echo server()->timestamp(); // e.g. 1234567890
+echo server()->timestamp(); // e.g. 1234567890
+```
+
 # Front-end
 
 There is also a [small class](#javascript) for working with websockets on the client side.
