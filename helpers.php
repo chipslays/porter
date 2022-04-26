@@ -1,6 +1,7 @@
 <?php
 
 use Porter\Channel;
+use Porter\Channels;
 use Porter\Server;
 use Workerman\Worker;
 
@@ -21,6 +22,13 @@ if (!function_exists('worker')) {
     function worker(): Worker
     {
         return Server::getInstance()->getWorker();
+    }
+}
+
+if (!function_exists('channels')) {
+    function channels(): Channels
+    {
+        return Server::getInstance()->channels();
     }
 }
 
