@@ -1,15 +1,16 @@
 <?php
 
-use Porter\Events\Event;
+
+use Workerman\Worker;
+use Workerman\Connection\TcpConnection;
 use Porter\Server;
 use Porter\Terminal;
-use Workerman\Connection\TcpConnection;
-use Workerman\Worker;
+use Porter\Events\Event;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-require __DIR__ . '/Events/Ping.php';
-require __DIR__ . '/Events/SayHello.php';
+require __DIR__ . '/Events/PingEvent.php';
+require __DIR__ . '/Events/HelloToEvent.php';
 
 $worker = new Worker('websocket://0.0.0.0:3030');
 
@@ -19,8 +20,8 @@ $server->setWorker($worker);
 // storage
 $server->storage->path = __DIR__ . '/Storage/storage.hub';
 $server->storage->put('foo', 'bar');
-dump($server->storage->get('foo'));
-dump($server->storage->get('foo1', 'baz'));
+dump($server->storage->get('foo')); // bar
+dump($server->storage->get('foo1', 'baz')); // baz
 
 $server->onConnected(function (TcpConnection $connection) {
     Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
@@ -38,12 +39,12 @@ $server->onRaw(function (string $payload, TcpConnection $connection) {
     $connection->send($payload);
 });
 
-$server->addEvent(Ping::class);
+$server->addEvent(HelloToEvent::class);
+$server->addEvent(PingEvent::class);
 // Or:
 // $server->on('ping', function (Event $event) {
 //     $event->reply('pong');
 // });
 
-$server->addEvent(SayHello::class);
 
 $server->start();

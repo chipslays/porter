@@ -73,13 +73,13 @@ abstract class AbstractEvent
     /**
      * Reply event to incoming connection.
      *
-     * @param string $event
+     * @param string|null $event If `null`, reply with current eventId.
      * @param array $data
      * @return bool|null
      */
-    public function reply(string $event, array $data = []): ?bool
+    public function reply(string $event = null, array $data = []): ?bool
     {
-        return $this->to($this->connection, $event, $data);
+        return $this->to($this->connection, $event ?? $this->payload->eventId, $data);
     }
 
     /**

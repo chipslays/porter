@@ -5,14 +5,12 @@ use Porter\Payload;
 use Porter\Events\AbstractEvent;
 use Workerman\Connection\TcpConnection;
 
-class SayHello extends AbstractEvent
+class PingEvent extends AbstractEvent
 {
-    public static string $eventId = 'say hello to';
+    public static string $eventId = 'ping';
 
     public function handle(TcpConnection $connection, Payload $payload, Server $server): void
     {
-        $this->reply('hello username', [
-            'message' => 'Hello ' . $this->payload->data['username'] . '!',
-        ]);
+        $this->reply('pong');
     }
 }

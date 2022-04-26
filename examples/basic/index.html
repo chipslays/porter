@@ -22,9 +22,7 @@
                 console.log(payload);
             });
 
-            client.event('say hello to', {
-                username: 'John Doe',
-            }).on('hello username', payload => {
+            client.event('hello to', {username: 'John Doe'}, payload => {
                 console.log(payload);
             });
         }

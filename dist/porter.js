@@ -1,22 +1,77 @@
+/**
+ * @package Porter
+ * @description An easy way to build real-time apps with a WebSocket server/client and channels.
+ * @author chipslays
+ * @license MIT
+ * @link https://github.com/chipslays/porter
+ */
 class Porter {
+    /**
+     * Object with events.
+     */
     events = {};
 
+    /**
+     * Queue while WebSocket not connected.
+     */
     shouldSend = [];
 
+    /**
+     * @param {function}
+     */
+    connected = null;
+
+    /**
+     * @param {function}
+     */
+    disconnected = null;
+
+    /**
+     * @param {function}
+     */
+    error = null;
+
+    /**
+     * Constructor.
+     *
+     * @param {WebSocket} ws
+     */
     constructor(ws) {
         this.ws = ws;
     }
 
+    /**
+     * Close connection.
+     */
     close() {
         this.ws.close();
     }
 
-    on(event, handler) {
-        this.events[event] = handler;
+    /**
+     * Handle event from server.
+     *
+     * @param {string} eventId
+     * @param {function} handler
+     * @returns {self}
+     */
+    on(eventId, handler) {
+        this.events[eventId] = handler;
         return this;
     }
 
-    event(eventId, data) {
+    /**
+     * Send event to server.
+     *
+     * @param {string} eventId
+     * @param {object} data
+     * @param {?function} handler opt_argument
+     * @returns
+     */
+    event(eventId, data, handler) {
+        if (handler) {
+            this.on(eventId, handler);
+        }
+
         if (this.ws.readyState !== WebSocket.OPEN) {
             this.shouldSend.push({eventId: eventId, data: data});
             return this;
@@ -30,6 +85,9 @@ class Porter {
         return this;
     }
 
+    /**
+     * Start listen events from server.
+     */
     listen() {
         this.ws.onopen = () => {
             this.shouldSend.forEach(event => {

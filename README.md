@@ -646,6 +646,21 @@ $this->reply('ping');
 $this->to($this->connection, 'ping');
 ```
 
+To reply with the current `eventId`, pass only the `$data` parameter.
+
+**On front-end:**
+```javascript
+client.event('hello to', {username: 'John Doe'}, payload => {
+    console.log(payload.data.message); // Hello, John Doe!
+});
+```
+
+**On back-end:**
+```php
+$username = $this->payload->data['username'];
+$this->reply(data: ['message' => "Hello, {$username}!"]);
+```
+
 #### `raw(string $string): bool|null`
 
 Send raw data to connection. Not a event object.
@@ -1029,8 +1044,17 @@ client.event('pong', {
     foo: 'bar',
 });
 
+// chain methods
+client.event('ping').on('pong', payload => console.log(payload.timestamp));
+
+// support short variants:
+client.event('get online users', {}, payload => {
+    console.log(payload.eventId); // get online users
+    console.log(payload.data.online); // e.g. 5
+});
+
 // pass channelId and targetId for magic properties on back-end server
-client.event('pong', {
+client.event('magical properties', {
     channelId: 'secret channel',
     targetId: 1337,
 });
