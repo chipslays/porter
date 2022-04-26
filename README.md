@@ -1011,14 +1011,15 @@ You can extend the class and map your own methods on the fly..
 Basic method:
 ```php
 server()->map('sum', fn(...$args) => array_sum($args));
-echo server()->sum(1000, 300, 30, 5, 2) // 1337
-echo server()->sum(1000, 300, 30, 5, 3) // 1338
+echo server()->sum(1000, 300, 30, 5, 2); // 1337
+echo server()->sum(1000, 300, 30, 5, 3); // 1338
 ```
 
 As singletone method:
 ```php
 server()->mapOnce('timestamp', fn() => time());
 echo server()->timestamp(); // e.g. 1234567890
+sleep(1);
 echo server()->timestamp(); // e.g. 1234567890
 ```
 
