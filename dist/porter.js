@@ -77,10 +77,14 @@ class Porter {
             return this;
         }
 
-        this.ws.send(JSON.stringify({
+        let eventData = JSON.stringify({
             eventId: eventId,
             data: data || {},
-        }));
+        });
+
+        if (new Blob([eventData]).size / 1e+6 > 1) return this;
+
+        this.ws.send(eventData);
 
         return this;
     }
