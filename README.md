@@ -337,7 +337,8 @@ if ($v->email()->validate('john.doe@example.com')) {
     //
 }
 
-if ($v->contains('example.com')->validate('john.doe@example.com')) {
+// available as helper
+if (validator()->contains('example.com')->validate('john.doe@example.com')) {
     //
 }
 ```

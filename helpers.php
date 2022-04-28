@@ -3,6 +3,7 @@
 use Porter\Channel;
 use Porter\Channels;
 use Porter\Server;
+use Respect\Validation\Validator;
 use Workerman\Worker;
 
 if (!function_exists('server')) {
@@ -57,5 +58,17 @@ if (!function_exists('channel')) {
         }
 
         return $channel->data->get($key, $default);
+    }
+}
+
+if (!function_exists('validator')) {
+    /**
+     * Create validator instance.
+     *
+     * @return Validator
+     */
+    function validator(): Validator
+    {
+        return Server::getInstance()->validator::create();
     }
 }
