@@ -3,6 +3,7 @@
 namespace Porter;
 
 use Porter\Events\Event;
+use Porter\Events\AbstractEvent;
 use Porter\Traits\Rawable;
 use Porter\Traits\Payloadable;
 use Porter\Connection\Channels as ConnectionChannels;
@@ -11,9 +12,7 @@ use Sauce\Traits\Mappable;
 use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
 use Respect\Validation\Validator;
-
 use Exception;
-use Porter\Events\AbstractEvent;
 
 class Server
 {
