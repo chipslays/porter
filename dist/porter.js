@@ -41,13 +41,6 @@ class Porter {
     }
 
     /**
-     * Close connection.
-     */
-    close() {
-        this.ws.close();
-    }
-
-    /**
      * Handle event from server.
      *
      * @param {string} eventId
@@ -64,12 +57,12 @@ class Porter {
      *
      * @param {string} eventId
      * @param {object} data
-     * @param {?function} handler opt_argument
+     * @param {?function} handler opt_argument Alternative for `on` method.
      * @returns
      */
-    event(eventId, data, handler) {
-        if (handler) {
-            this.on(eventId, handler);
+    event(eventId, data, callback) {
+        if (callback) {
+            this.on(eventId, callback);
         }
 
         if (this.ws.readyState !== WebSocket.OPEN) {
@@ -82,7 +75,10 @@ class Porter {
             data: data || {},
         });
 
-        if (new Blob([eventData]).size / 1e+6 > 1) return this;
+        if (new Blob([eventData]).size / 1e+6 > 1) {
+            this.close();
+            return this;
+        };
 
         this.ws.send(eventData);
 
@@ -113,5 +109,12 @@ class Porter {
                 handler(payload);
             }
         }
+    }
+
+    /**
+     * Close connection.
+     */
+     close() {
+        this.ws.close();
     }
 }
