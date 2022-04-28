@@ -1065,6 +1065,22 @@ server()->storage->has('foo'); // true
 server()->storage->has('baz'); // false
 ```
 
+### `delete(): bool`
+
+Remove storage file from disk.
+
+```php
+server()->storage->delete();
+```
+
+### `getPath(): ?string`
+
+Returns `string` if path not empty.
+
+```php
+server()->storage->getPath();
+```
+
 ## Helpers (functions)
 
 ### `server(): Server`
