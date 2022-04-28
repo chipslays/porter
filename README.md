@@ -256,7 +256,7 @@ server()->onReload(function (Worker $worker) {
 });
 ```
 
-#### `onRaw(callable $handler): void`
+### `onRaw(callable $handler): void`
 
 Handle non event messages (raw data).
 
