@@ -842,10 +842,6 @@ This object has already predefined properties:
 
 See all `$connection` methods [here](https://doc.hotexamples.com/class/workerman.connection/TcpConnection).
 
-```php
-$connection->channels; // object of Porter\Connection\Channels
-```
-
 You can set different properties, functions to this object.
 
 ```php
@@ -854,6 +850,12 @@ $connection->lastName = 'Doe';
 $connection->getFullName = fn () => $connection->firstName . ' ' . $connection->lastName;
 
 call_user_func($connection->getFullname); // John Doe
+```
+
+### Custom property `channels`
+
+```php
+$connection->channels; // object of Porter\Connection\Channels
 ```
 
 #### List of methods `Porter\Connection\Channels`
