@@ -8,11 +8,11 @@ ob_end_clean();
 
 if ($_ENV['IS_SERVER'] == 'true') {
     $context = [
-        'ssl' => array(
+        'ssl' => [
             'local_cert' => '/etc/letsencrypt/live/example.com/cert.pem',
             'local_pk' => '/etc/letsencrypt/live/example.com/privkey.pem',
             'verify_peer' => false,
-        )
+        ]
     ];
     $worker = new Worker('websocket://0.0.0.0:3031', $context);
     $worker->transport = 'ssl';

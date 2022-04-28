@@ -1,6 +1,7 @@
 <?php
 
 use Porter\Terminal;
+use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
 
 require __DIR__ . '/bootstrap.php';
@@ -17,8 +18,8 @@ server()->onError(function (TcpConnection $connection, $code, $message) {
     Terminal::print("{bg:red}{text:white}Error {$code} {$message}");
 });
 
-server()->onStart(function () {
-    //
+server()->onStart(function (Worker $worker) {
+    Terminal::print("{text:blue}Server started.");
 });
 
 server()->start();
