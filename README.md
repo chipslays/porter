@@ -324,6 +324,24 @@ server()->to($connection, 'welcome message', [
 $connection = server()->getWorker()->connections[1337] ?? null;
 ```
 
+### `validator(): Validator`
+
+Create validator instance.
+
+See [documenation & examples](https://respect-validation.readthedocs.io/en/latest) how to use.
+
+```php
+$v = server()->validator();
+
+if ($v->email()->validate('john.doe@example.com')) {
+    //
+}
+
+if ($v->contains('example.com')->validate('john.doe@example.com')) {
+    //
+}
+```
+
 ## `Channels`
 
 This is a convenient division of connected connections into channels.
@@ -543,6 +561,17 @@ $payload->data->get('foo', 'default value');
 $payload->data['foo'] ?? 'default value';
 ```
 
+### `is(string|array $rule, string $property): bool`
+
+Validate payload data.
+
+See [documenation & examples](https://respect-validation.readthedocs.io/en/latest) how to use.
+
+```php
+$payload->is('StringType', 'username'); // return true if username is string
+$payload->is(['contains', 'john'], 'username'); // return true if $payload->data['username'] contains 'john'
+```
+
 ## Properties
 
 ### `$payload->eventId`
@@ -581,6 +610,39 @@ $payload->data['foo'] ?? 'default value';
 isset($payload->data['foo']);
 
 // see more examples here: https://github.com/chipslays/collection
+```
+
+### `$payload->rules` [protected]
+
+Auto validate payload data on incoming event.
+
+Available only in events as `class`.
+
+```php
+use Porter\Server;
+use Porter\Payload;
+use Porter\Events\AbstractEvent;
+use Workerman\Connection\TcpConnection;
+
+class HelloToEvent extends AbstractEvent
+{
+    public static string $eventId = 'hello to';
+
+    protected array $rules = [
+        'username' => ['stringType', ['length', [3, 18]]],
+    ];
+
+    public function handle(TcpConnection $connection, Payload $payload, Server $server): void
+    {
+        if ($this->hasErrors()) {
+            $this->reply('bad request', ['errors' => $this->errors]);
+            return;
+        }
+
+        $username = $this->payload->data['username'];
+        $this->reply(data: ['message' => "Hello, {$username}!"]);
+    }
+}
 ```
 
 ## `Events`
@@ -689,6 +751,27 @@ Send event to all except for the connection from which the event came.
 $this->broadcast('user join', [
     'text' => 'New user joined to chat.',
 ], [$this->connection]);
+```
+
+### `hasErrors(): bool`
+
+Returns `true` if has errors on validate payload data.
+
+```php
+if ($this->hasErrors()) {
+    $this->reply('bad request', ['errors' => $this->errors]);
+    return;
+}
+```
+
+```textplain
+// $this->errors contains:
+
+^ array:1 [
+  "username" => array:1 [
+    "length" => "username failed validation: length"
+  ]
+]
 ```
 
 #### Magic properties & methods.
