@@ -1081,6 +1081,18 @@ Returns `string` if path not empty.
 server()->storage->getPath();
 ```
 
+### Storage as standalone
+
+You can use Storage class as standalone anywhere.
+
+```php
+use Porter\Storage;
+
+$storage1 = new Storage(__DIR__ . '/storage/storage1.hub');
+$storage2 = new Storage(__DIR__ . '/storage/storage2.hub');
+$storage3 = new Storage(__DIR__ . '/storage/storage3.hub');
+```
+
 ## Helpers (functions)
 
 ### `server(): Server`
