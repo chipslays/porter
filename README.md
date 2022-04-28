@@ -1083,7 +1083,7 @@ server()->storage->getPath();
 
 ### Storage as standalone
 
-You can use Storage class as standalone anywhere.
+You can use `Storage` class as standalone anywhere.
 
 ```php
 use Porter\Storage;
