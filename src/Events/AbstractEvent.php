@@ -6,6 +6,7 @@ use Porter\Channel;
 use Porter\Server;
 use Porter\Payload;
 use Porter\Traits\Payloadable;
+use Respect\Validation\Validator;
 use Workerman\Connection\TcpConnection;
 
 abstract class AbstractEvent
@@ -32,6 +33,20 @@ abstract class AbstractEvent
     public Server $server;
 
     /**
+     * Array of rules for payload data.
+     *
+     * @var array
+     */
+    protected array $rules = [];
+
+    /**
+     * Array of validate errors.
+     *
+     * @var array
+     */
+    public array $errors = [];
+
+    /**
      * Constructor.
      *
      * @param TcpConnection $connection
@@ -48,6 +63,8 @@ abstract class AbstractEvent
 
         // Get target connection instance by `targetId` parameter.
         $this->target = isset($payload->data['targetId']) ? $this->server->getConnection((int) $payload->data['targetId']) : null;
+
+        $this->validate();
     }
 
     /**
@@ -133,5 +150,42 @@ abstract class AbstractEvent
     public function target(): ?TcpConnection
     {
         return $this->target;
+    }
+
+    /**
+     * Create validator instance.
+     *
+     * @return Validator
+     */
+    public function validator(): Validator
+    {
+        return Server::getInstance()->validator::create();
+    }
+
+    /**
+     * Validate payload data by `$rules`.
+     *
+     * @return void
+     */
+    protected function validate(): void
+    {
+        foreach ($this->rules as $property => $rules) {
+            foreach ($rules as $rule) {
+                if (!$this->payload->is($rule, $property)) {
+                    $rule = ((array) $rule)[0];
+                    $this->errors[$property][$rule] = "{$property} failed validation: {$rule}";
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns `true` if has errors on validate payload data.
+     *
+     * @return bool
+     */
+    public function hasErrors(): bool
+    {
+        return count($this->errors) > 0;
     }
 }

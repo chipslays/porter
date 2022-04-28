@@ -3,27 +3,32 @@
 namespace Porter;
 
 use Porter\Events\Event;
+use Porter\Traits\Rawable;
 use Porter\Traits\Payloadable;
 use Porter\Connection\Channels as ConnectionChannels;
-use Porter\Traits\Rawable;
-use Sauce\Traits\Mappable;
 use Sauce\Traits\Singleton;
+use Sauce\Traits\Mappable;
 use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
+use Respect\Validation\Validator;
+
 use Exception;
+use Porter\Events\AbstractEvent;
 
 class Server
 {
-    use Singleton;
-    use Mappable;
-    use Payloadable;
     use Rawable;
+    use Mappable;
+    use Singleton;
+    use Payloadable;
 
     protected Worker $worker;
 
     public Channels $channels;
 
     public Storage $storage;
+
+    public Validator $validator;
 
     /** @var string[] */
     protected array $events = [];
@@ -57,6 +62,7 @@ class Server
     {
         $this->storage = new Storage;
         $this->channels = new Channels($this);
+        $this->validator = new Validator;
     }
 
     protected function initConnection(TcpConnection $connection): void
@@ -211,6 +217,7 @@ class Server
                 return;
             }
 
+            /** @var AbstractEvent */
             $event = new $event($connection, $payload);
             call_user_func_array([$event, 'handle'], [$connection, $payload, self::getInstance()]);
         };
@@ -260,5 +267,15 @@ class Server
     public function getConnection(int $connectionId): ?TcpConnection
     {
         return $this->getWorker()->connections[$connectionId] ?? null;
+    }
+
+    /**
+     * Create validator instance.
+     *
+     * @return Validator
+     */
+    public function validator(): Validator
+    {
+        return $this->validator::create();
     }
 }

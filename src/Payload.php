@@ -3,6 +3,7 @@
 namespace Porter;
 
 use Chipslays\Collection\Collection;
+use Respect\Validation\Validator;
 
 class Payload
 {
@@ -34,5 +35,22 @@ class Payload
     public function get(string $key, mixed $default = null): mixed
     {
         return $this->data->get($key, $default);
+    }
+
+    /**
+     * Validate payload data.
+     *
+     * @see https://respect-validation.readthedocs.io/en/latest/ Documentation & Examples
+     *
+     * @param string $method
+     * @param string $arguments
+     * @return bool
+     */
+    public function is(string|array $rule, string $property): bool
+    {
+        $rule = (array) $rule;
+        return Server::getInstance()->validator::create()
+            ->__call($rule[0], isset($rule[1]) ? (array) $rule[1] : [])
+            ->validate($this->data->get($property));
     }
 }
