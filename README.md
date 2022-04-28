@@ -501,6 +501,16 @@ $channel->desstoy();
 $channel->data->get('foo');
 ```
 
+### Lifehack for `Channel`
+
+You can add channel  to current user as property to `$connection` instance and get it anywhere.
+
+```php
+$channel = channel('secret channel');
+$connection->channel = &$channel;
+```
+
+
 ## Properties
 
 ### `$channel->connections`
