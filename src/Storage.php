@@ -11,6 +11,9 @@ class Storage
     /**
      * Constructor.
      *
+     * If you specify an incorrect path, the data will be
+     * stored in RAM, and the data will be lost upon restart.
+     *
      * @param string $path
      */
     public function __construct(public string $path = '')
@@ -67,10 +70,40 @@ class Storage
      */
     protected function saveData(): void
     {
-        $path = rtrim($this->path, '/\\');
+        $path = $this->getPath();
 
-        if ($path == '') return;
+        if (!$path) {
+            return;
+        }
 
         file_put_contents($path, serialize($this->data));
+    }
+
+    /**
+     * Remove storage file from disk.
+     *
+     * @return bool
+     */
+    public function delete(): bool
+    {
+        $path = $this->getPath();
+
+        if (!$path) {
+            return false;
+        }
+
+        return unlink($path);
+    }
+
+    /**
+     * Returns `string` if path not empty.
+     *
+     * @return string|null
+     */
+    public function getPath(): ?string
+    {
+        $path = rtrim($this->path, '/\\');
+
+        return $path == '' ? null : $path;
     }
 }
