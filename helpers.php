@@ -4,6 +4,7 @@ use Porter\Channel;
 use Porter\Channels;
 use Porter\Server;
 use Respect\Validation\Validator;
+use Workerman\Timer;
 use Workerman\Worker;
 
 if (!function_exists('server')) {
@@ -70,5 +71,21 @@ if (!function_exists('validator')) {
     function validator(): Validator
     {
         return Server::getInstance()->validator::create();
+    }
+}
+
+if (!function_exists('timer')) {
+    /**
+     * Add a timer.
+     *
+     * @param integer|float $interval
+     * @param callable $function
+     * @param mixed $args
+     * @param boolean $persistent
+     * @return integer|boolean
+     */
+    function timer(int|float $interval, callable $function, mixed $args = [], bool $persistent = true): int|bool
+    {
+        return Timer::add($interval, $function, $args, $persistent);
     }
 }
