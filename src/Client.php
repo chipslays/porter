@@ -68,7 +68,7 @@ class Client
      * Send raw payload to server.
      *
      * @param string $payload
-     * @return boolean|null
+     * @return bool|null
      */
     public function raw(string $payload): ?bool
     {
