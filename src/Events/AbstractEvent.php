@@ -70,9 +70,9 @@ abstract class AbstractEvent
     /**
      * Handle incoming event from client.
      *
-     * @return void
+     * @return mixed
      */
-    abstract public function handle(TcpConnection $connection, Payload $payload, Server $server): void;
+    abstract public function handle(TcpConnection $connection, Payload $payload, Server $server): mixed;
 
     /**
      * Send event to connection.

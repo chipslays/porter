@@ -11,7 +11,7 @@ class ExampleEvent extends AbstractEvent
 
     protected array $rules = [];
 
-    public function handle(TcpConnection $connection, Payload $payload, Server $server): void
+    public function handle(TcpConnection $connection, Payload $payload, Server $server)
     {
         $this->reply('pong');
     }

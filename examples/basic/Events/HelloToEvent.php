@@ -1,5 +1,6 @@
 <?php
 
+use Porter\Connection;
 use Porter\Server;
 use Porter\Payload;
 use Porter\Events\AbstractEvent;
@@ -13,11 +14,10 @@ class HelloToEvent extends AbstractEvent
         'username' => ['stringType', ['length', [4, 18]]],
     ];
 
-    public function handle(TcpConnection $connection, Payload $payload, Server $server): void
+    public function handle(TcpConnection $connection, Payload $payload, Server $server)
     {
         if ($this->hasErrors()) {
-            $this->reply('bad request', ['errors' => $this->errors]);
-            return;
+            return $this->reply('bad request', ['errors' => $this->errors]);
         }
 
         $username = $this->payload->data['username'];

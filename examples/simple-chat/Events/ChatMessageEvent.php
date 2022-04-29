@@ -13,7 +13,7 @@ class ChatMessageEvent extends AbstractEvent
         'message' => ['stringType', ['length', [1, 256]]],
     ];
 
-    public function handle(TcpConnection $connection, Payload $payload, Server $server): void
+    public function handle(TcpConnection $connection, Payload $payload, Server $server)
     {
         if ($this->hasErrors()) return;
 
