@@ -227,14 +227,20 @@ class Server
     /**
      * Send event to connection.
      *
-     * @param TcpConnection $connection
+     * @param TcpConnection|Connection $connection
      * @param string $event
      * @param array $data
      * @return bool|null
      */
-    public function to(TcpConnection $connection, string $event, array $data = []): ?bool
+    public function to(TcpConnection|Connection $connection, string $event, array $data = []): ?bool
     {
-        return $connection->send($this->makePayload($event, $data));
+        if ($connection instanceof Connection) {
+            $target = $connection->getTcpConnection();
+        } else {
+            $target = $connection;
+        }
+
+        return $target->send($this->makePayload($event, $data));
     }
 
     /**
