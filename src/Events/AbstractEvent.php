@@ -72,7 +72,7 @@ abstract class AbstractEvent
      *
      * @return mixed
      */
-    abstract public function handle(TcpConnection $connection, Payload $payload, Server $server): mixed;
+    abstract public function handle(TcpConnection $connection, Payload $payload, Server $server);
 
     /**
      * Send event to connection.
