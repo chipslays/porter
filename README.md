@@ -7,7 +7,7 @@
 
 A simple wrapper over Workerman Websockets with channels and other stuff for PHP 8.1.
 
-# Installation
+# 🧰 Installation
 
 ### **PHP**
 
@@ -27,7 +27,7 @@ Via jsDelivr CDN:
 ```
 
 
-# Usage
+# 👨‍💻 Usage
 
 ### Server
 
@@ -73,7 +73,7 @@ client.listen();
 
 See more in [examples](/examples) folder.
 
-# Documentation
+# 📚 Documentation
 
 ## Basics
 
@@ -103,7 +103,7 @@ $worker = new Worker('websocket://0.0.0.0:3030', $context);
 $worker->transport = 'ssl';
 ```
 
-## `Server`
+## 🔹 `Server`
 
 Can be used anywhere as function `server()` or `Server::getInstance()`.
 
@@ -361,7 +361,7 @@ if (validator()->contains('example.com')->validate('john.doe@example.com')) {
 }
 ```
 
-## `Channels`
+## 🔹 `Channels`
 
 This is a convenient division of connected connections into channels.
 
@@ -452,7 +452,7 @@ server()->channels->join($connection);
 server()->channels->join([$connection1, $connection2, $connection3, ...]);
 ```
 
-## `Channel`
+## 🔹 `Channel`
 
 ### `join(TcpConnection|array $connections): self`
 
@@ -574,7 +574,7 @@ isset($channel->data['foo']);
 ```
 
 
-## `Payload`
+## 🔹 `Payload`
 
 The payload is the object that came from the client.
 
@@ -674,7 +674,7 @@ class HelloToEvent extends AbstractEvent
 }
 ```
 
-## `Events`
+## 🔹 `Events`
 
 Events can be as a separate class or as an anonymous function.
 
@@ -853,7 +853,7 @@ server()->on('new message', function (Event $event) {
 });
 ```
 
-## `TcpConnection $connection`
+## 🔹 `TcpConnection $connection`
 
 It is a global object, changing in one place, it will contain the changed data in another place.
 
@@ -936,7 +936,7 @@ public function add(string $channelId): void
 
 
 
-## `Client`
+## 🔹 `Client`
 
 Simple implementation of client.
 
@@ -1043,7 +1043,7 @@ $client->listen();
 
 
 
-## `Storage`
+## 🔹 `Storage`
 
 Storage is a part of server, all data stored in flat files.
 
@@ -1112,7 +1112,7 @@ $storage2 = new Storage(__DIR__ . '/storage/storage2.hub');
 $storage3 = new Storage(__DIR__ . '/storage/storage3.hub');
 ```
 
-## Helpers (functions)
+## 🔹 Helpers (functions)
 
 ### `server(): Server`
 
@@ -1147,7 +1147,7 @@ channel('secret channel', 'foo', 'default value'); // get data from channel (by 
 server()->channels->get('secret channel')->data->get('foo', 'default value');
 ```
 
-## Mappable methods
+## 🔹 Mappable methods
 
 You can extend the class and map your own methods on the fly..
 
@@ -1166,7 +1166,7 @@ sleep(1);
 echo server()->timestamp(); // e.g. 1234567890
 ```
 
-# Front-end
+# 🔹 Front-end
 
 There is also a [small class](#javascript) for working with websockets on the client side.
 
