@@ -1,0 +1,16 @@
+name: tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install composer dependencies
+      run: composer install
+
+    - name: Run PHPUnit
+      run: php8.1 vendor/bin/pest
