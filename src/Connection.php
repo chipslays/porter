@@ -94,7 +94,7 @@ class Connection
      * @param mixed $default
      * @return mixed
      */
-    public function getValue(string $key, mixed $default): mixed
+    public function getValue(string $key, mixed $default = null): mixed
     {
         return $this->connection->data->get($key, $default);
     }
