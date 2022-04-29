@@ -84,7 +84,7 @@ abstract class AbstractEvent
      */
     public function to(TcpConnection $connection, string $event, array $data = []): ?bool
     {
-        return $connection->send($this->makePayload($event, $data));
+        return $this->server->to($connection, $event, $data);
     }
 
     /**
