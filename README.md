@@ -273,7 +273,7 @@ server()->onRaw(function (string $payload, TcpConnection $connection) {
 });
 ```
 
-### `to(TcpConnection $connection, string $event, array $data = []): ?bool`
+### `to(TcpConnection|Connection $connection, string $event, array $data = []): ?bool`
 
 Send event to connection.
 
@@ -718,7 +718,7 @@ Each child class get following properties:
 
 #### Methods
 
-#### `to(TcpConnection $connection, string $event, array $data = []): ?bool`
+#### `to(TcpConnection|Connection $connection, string $event, array $data = []): ?bool`
 
 Send event to connection.
 
