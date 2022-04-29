@@ -276,6 +276,19 @@ Send event to connection.
 server()->to($connection, 'ping');
 ```
 
+### `broadcast(string $event, array $data = [], array $excepts = []): void`
+
+Send event to all connections.
+
+Yes, to **all connections** on server.
+
+```php
+server()->broadcast('chat message', [
+    'nickname' => 'John Doe',
+    'message' => 'Hello World!',
+]);
+```
+
 ### `storage(): Storage`
 
 Getter for Storage class.
@@ -751,8 +764,9 @@ Send event to all connections.
 Yes, to **all connections** on server.
 
 ```php
-$this->broadcast('announcement', [
-    'text' => 'This is a global announcement message.',
+$this->broadcast('chat message', [
+    'nickname' => 'John Doe',
+    'message' => 'Hello World!',
 ]);
 ```
 
