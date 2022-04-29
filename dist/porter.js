@@ -94,7 +94,7 @@ class Porter {
                 this.event(event.eventId, event.data);
             });
 
-            this.connected.call();
+            this.connected ? this.connected.call() : null;
         };
 
         this.ws.onclose = this.disconnected;
