@@ -238,6 +238,28 @@ class Server
     }
 
     /**
+     * Send event to all connections.
+     *
+     * @param string $event
+     * @param array $data
+     * @param TcpConnection[] $excepts Connection instance or connection id.
+     * @return void
+     */
+    public function broadcast(string $event, array $data = [], array $excepts = []): void
+    {
+        foreach ($excepts as &$value) {
+            if ($value instanceof TcpConnection) {
+                $value = $value->id;
+            }
+        }
+
+        foreach ($this->getWorker()->connections as $connection) {
+            if (in_array($connection->id, $excepts)) continue;
+            $this->to($connection, $event, $data);
+        }
+    }
+
+    /**
      * Getter for Storage class.
      *
      * @return Storage
