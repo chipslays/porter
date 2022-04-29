@@ -41,6 +41,11 @@ class Server
     public function setWorker(Worker $worker): void
     {
         $this->worker = $worker;
+
+        if (!$this->worker->name || $this->worker->name == 'none') {
+            $this->worker->name = 'Porter#' . mt_rand(1000, 9999);
+        }
+
         $this->bootServer();
     }
 
