@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <title>Chat</title>
+</head>
+
+<body class="bg-gray-50">
+    <main class="max-w-lg w-full mx-auto mt-8">
+        <div class="p-4 rounded-lg border shadow-sm bg-white">
+            <div class="font-bold mb-2">
+                Chat
+            </div>
+
+            <div id="chat" class="flex flex-col divide-y border rounded-md h-96 overflow-y-auto"></div>
+
+            <div class="mt-4">
+                <input id="message" class="focus:outline-none outline-none px-3 py-2 rounded-lg focus:shadow-sm bg-gray-50 focus:bg-transparent border text-sm w-full" type="text" placeholder="Text message (Enter)">
+            </div>
+        </div>
+    </main>
+
+    <script src="../../dist/porter.js"></script>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:3030');
+        const client = new Porter(ws);
+
+        client.on('chat message', payload => {
+            document.getElementById('chat').innerHTML += `
+                <div class="p-3">
+                    <div class="font-medium text-xs">
+                        ${payload.data.nickname}
+                    </div>
+                    <div class="text-xs text-gray-400">
+                        ${payload.data.message}
+                    </div>
+                </div>
+            `;
+        });
+
+        var message = document.getElementById('message');
+        message.addEventListener('keypress', e => {
+            if (e.key === 'Enter') {
+                client.event('chat message', {
+                    message: document.getElementById('message').value,
+                });
+                message.value = '';
+            }
+        });
+
+        client.listen();
+    </script>
+</body>
+
+</html>
