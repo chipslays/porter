@@ -120,16 +120,7 @@ abstract class AbstractEvent
      */
     public function broadcast(string $event, array $data = [], array $excepts = []): void
     {
-        foreach ($excepts as &$value) {
-            if ($value instanceof TcpConnection) {
-                $value = $value->id;
-            }
-        }
-
-        foreach ($this->server->getWorker()->connections as $connection) {
-            if (in_array($connection->id, $excepts)) continue;
-            $this->to($connection, $event, $data);
-        }
+        $this->server->broadcast($event, $data, $excepts);
     }
 
     /**
