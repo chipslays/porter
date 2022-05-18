@@ -2,6 +2,7 @@
 
 namespace Porter\Events;
 
+use Chipslays\Collection\Collection;
 use Porter\Channel;
 use Porter\Server;
 use Porter\Payload;
@@ -47,6 +48,13 @@ abstract class AbstractEvent
     public array $errors = [];
 
     /**
+     * Short cut for payload data (as &link).
+     *
+     * @var Collection
+     */
+    public Collection $data;
+
+    /**
      * Constructor.
      *
      * @param TcpConnection $connection
@@ -57,14 +65,18 @@ abstract class AbstractEvent
         public Payload $payload,
     ) {
         $this->server = Server::getInstance();
+        $this->data = &$this->payload->data;
+        $this->setMagicalVars();
+        $this->validatePayloadData();
+    }
 
+    protected function setMagicalVars(): void
+    {
         // Get channel instance by `channelId` parameter.
-        $this->channel = $this->server->channels->get($payload->data['channelId'] ?? '');
+        $this->channel = $this->server->channels->get($this->payload->data['channelId'] ?? '');
 
         // Get target connection instance by `targetId` parameter.
-        $this->target = isset($payload->data['targetId']) ? $this->server->getConnection((int) $payload->data['targetId']) : null;
-
-        $this->validate();
+        $this->target = isset($this->payload->data['targetId']) ? $this->server->getConnection((int) $this->payload->data['targetId']) : null;
     }
 
     /**
@@ -158,7 +170,7 @@ abstract class AbstractEvent
      *
      * @return void
      */
-    protected function validate(): void
+    protected function validatePayloadData(): void
     {
         foreach ($this->rules as $property => $rules) {
             foreach ($rules as $rule) {
@@ -178,5 +190,17 @@ abstract class AbstractEvent
     public function hasErrors(): bool
     {
         return count($this->errors) > 0;
+    }
+
+    /**
+     * Another yet short cut for data.
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function data(string $key, mixed $default = null): mixed
+    {
+        return $this->data->get($key, $default);
     }
 }
