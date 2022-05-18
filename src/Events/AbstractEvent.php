@@ -193,7 +193,7 @@ abstract class AbstractEvent
     }
 
     /**
-     * Another yet short cut for data.
+     * Another yet short cut for payload data.
      *
      * @param string $key
      * @param mixed $default

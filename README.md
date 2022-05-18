@@ -833,7 +833,7 @@ if ($this->hasErrors()) {
 
 ### `data(string $key, mixed $default = null): mixed`
 
-Another yet short cut for data.
+Another yet short cut for payload data.
 
 ```php
 public function handle(TcpConnection $connection, Payload $payload, Server $server)
