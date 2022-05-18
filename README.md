@@ -715,6 +715,33 @@ Each child class get following properties:
 * `TcpConnection $connection` - from whom the event came;
 * `Payload $payload` - contain data from client;
 * `Server $server` - server instance;
+* `Collection $data` - short cut for payload data (as &link).;
+
+#### Magic properties & methods.
+
+If client pass in data `channelId` with channel id or `targetId` with id of connection, we got a magic properties and methods.
+
+```php
+// this is a object of Channel, getted by `channelId` from client.
+$this->channel;
+$this->channel();
+
+$this->channel->broadcast('new message', [
+    'text' => $this->payload->get('text'),
+    'from' => $this->connection->nickname,
+]);
+```
+
+```php
+// this is a object of Channel, getted by `channelId` from client.
+$this->target;
+$this->target();
+
+$this->to($this->target, 'new message', [
+    'text' => $this->payload->get('text'),
+    'from' => $this->connection->nickname,
+]);
+```
 
 #### Methods
 
@@ -804,31 +831,29 @@ if ($this->hasErrors()) {
 ]
 ```
 
-#### Magic properties & methods.
+### `data(string $key, mixed $default = null): mixed`
 
-If client pass in data `channelId` with channel id or `targetId` with id of connection, we got a magic properties and methods.
-
-```php
-// this is a object of Channel, getted by `channelId` from client.
-$this->channel;
-$this->channel();
-
-$this->channel->broadcast('new message', [
-    'text' => $this->payload->get('text'),
-    'from' => $this->connection->nickname,
-]);
-```
+Another yet short cut for data.
 
 ```php
-// this is a object of Channel, getted by `channelId` from client.
-$this->target;
-$this->target();
+public function handle(TcpConnection $connection, Payload $payload, Server $server)
+{
+    $this->data('nickname');
 
-$this->to($this->target, 'new message', [
-    'text' => $this->payload->get('text'),
-    'from' => $this->connection->nickname,
-]);
+    // as property
+    $this->data['nickname'];
+    $this->data->get('nickname');
+
+    // form payload instance
+    $payload->data['nickname'];
+    $payload->data->get('nickname');
+
+    $this->payload->data['nickname'];
+    $this->payload->data->get('nickname');
+}
 ```
+
+
 
 
 ### `Anonymous function`
