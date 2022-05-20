@@ -7,6 +7,16 @@ use Respect\Validation\Validator;
 use Workerman\Timer;
 use Workerman\Worker;
 
+if (!function_exists('porter')) {
+    /**
+     * @return Server
+     */
+    function porter(): Server
+    {
+        return Server::getInstance();
+    }
+}
+
 if (!function_exists('server')) {
     /**
      * @return Server
