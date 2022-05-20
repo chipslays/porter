@@ -1198,10 +1198,14 @@ There is also a [small class](#javascript) for working with websockets on the cl
 ```javascript
 const ws = new WebSocket('ws://localhost:3031'); // on local dev
 const ws = new WebSocket('wss://example.com:3031'); // on prod server
-const client = new Porter(ws, options = {
-    pingInterval: 30000, // 30 sec
+
+// options (optional, below default values)
+let options = {
+    pingInterval: 30000, // 30 sec.
     maxBodySize: 1e+6, // 1 mb.
-});
+}
+
+const client = new Porter(ws, options);
 
 // on client connected to server
 client.connected = () => {
