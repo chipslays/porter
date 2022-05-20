@@ -195,6 +195,12 @@ class Server
     public function start(): void
     {
         $this->getWorker()->onMessage = function (TcpConnection $connection, string $payload) {
+            // handle heartbeat implementation (ping & pong)
+            if ($payload == 'ping') {
+                $connection->send('pong');
+                return;
+            }
+
             $payloadData = @json_decode($payload, true);
 
             if ($payloadData) {
