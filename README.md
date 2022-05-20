@@ -1198,7 +1198,10 @@ There is also a [small class](#javascript) for working with websockets on the cl
 ```javascript
 const ws = new WebSocket('ws://localhost:3031'); // on local dev
 const ws = new WebSocket('wss://example.com:3031'); // on prod server
-const client = new Porter(ws);
+const client = new Porter(ws, options = {
+    pingInterval: 30000, // 30 sec
+    maxBodySize: 1e+6, // 1 mb.
+});
 
 // on client connected to server
 client.connected = () => {
@@ -1212,6 +1215,11 @@ client.disconnected = () => {
 
 // on error
 client.error = () => {
+    //
+}
+
+// on raw `pong` event (if you needed it)
+client.pong = () => {
     //
 }
 
@@ -1246,6 +1254,17 @@ client.event('get online users', {}, payload => {
 client.event('magical properties', {
     channelId: 'secret channel',
     targetId: 1337,
+});
+
+// send raw websocket data
+client.sendRaw('hello world');
+client.sendRaw(JSON.stringify({
+    foo: 'bar',
+}));
+
+// handle raw websocket data
+client.onRaw('hello from server', data => {
+    console.log(data); // hello from server
 });
 
 // start listen
