@@ -23,8 +23,10 @@ $server->storage->put('foo', 'bar');
 dump($server->storage->get('foo')); // bar
 dump($server->storage->get('foo1', 'baz')); // baz
 
-$server->onConnected(function (TcpConnection $connection) {
+$server->onConnected(function (TcpConnection $connection, string $header) {
     Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
+
+    // Here available $_GET, $_COOKE, $_SERVER
 });
 
 $server->onDisconnected(function (TcpConnection $connection) {

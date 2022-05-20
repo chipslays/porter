@@ -82,9 +82,15 @@ class Server
      */
     public function onConnected(callable $handler): void
     {
-        $this->getWorker()->onConnect = function (TcpConnection $connection) use ($handler) {
+        // $this->getWorker()->onConnect = function (TcpConnection $connection) use ($handler) {
+        //     $this->initConnection($connection);
+        //     call_user_func_array($handler, [$connection]);
+        // };
+
+        // temporarily replace `onConnect` to `onWebSocketConnect`
+        $this->getWorker()->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($handler) {
             $this->initConnection($connection);
-            call_user_func_array($handler, [$connection]);
+            call_user_func_array($handler, [$connection, $header]);
         };
     }
 
