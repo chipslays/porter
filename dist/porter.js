@@ -12,6 +12,19 @@ class Porter {
     events = {};
 
     /**
+     * Raw websocket events.
+     */
+    rawEvents = {};
+
+    /**
+     * Options.
+     */
+    options = {
+        pingInterval: 30000,
+        maxBodySize: 1e+6,
+    };
+
+    /**
      * Queue while WebSocket not connected.
      */
     shouldSend = [];
@@ -32,12 +45,45 @@ class Porter {
     error = null;
 
     /**
+     * @param {function}
+     */
+    pong;
+
+    pingInterval;
+
+    /**
      * Constructor.
      *
      * @param {WebSocket} ws
      */
-    constructor(ws) {
+    constructor(ws, options) {
         this.ws = ws;
+
+        if (options) {
+            this.options = {
+                ...this.options,
+                ...options
+            };
+        }
+
+        this.initPingPongEvent();
+    }
+
+    initPingPongEvent() {
+        this.pingInterval ?
+            clearInterval(this.pingInterval) :
+            this.pingInterval = setInterval(() => {
+                this.sendRaw('ping');
+            }, this.options.pingInterval);
+
+        this.onRaw('pong', payload => {
+            // code...
+
+            // exec user function for pong event
+            if (typeof this.pong == 'function') {
+                this.pong(payload);
+            }
+        });
     }
 
     /**
@@ -66,7 +112,10 @@ class Porter {
         }
 
         if (this.ws.readyState !== WebSocket.OPEN) {
-            this.shouldSend.push({eventId: eventId, data: data});
+            this.shouldSend.push({
+                eventId: eventId,
+                data: data
+            });
             return this;
         }
 
@@ -75,14 +124,32 @@ class Porter {
             data: data || {},
         });
 
-        if (new Blob([eventData]).size / 1e+6 > 1) {
-            this.close();
+        var bodySize = new Blob([eventData]).size;
+        if (bodySize / this.options.maxBodySize > 1) {
+            console.warn(
+                `The event was not dispatched because the body size (${bodySize}) exceeded the allowable value (${this.options.maxBodySize}).`
+            );
             return this;
         };
 
         this.ws.send(eventData);
 
         return this;
+    }
+
+    onRaw(data, handler) {
+        if (data == 'pong' && 'pong' in this.rawEvents) {
+            throw new Error(
+                'You cannot override the "pong" service event. Use `porterInstance.pong = () => {...}` instead.'
+            );
+        }
+
+        this.rawEvents[data] = handler;
+        return this;
+    }
+
+    sendRaw(data) {
+        this.ws.send(data);
     }
 
     /**
@@ -94,7 +161,7 @@ class Porter {
                 this.event(event.eventId, event.data);
             });
 
-            this.connected && this.connected.call() ;
+            this.connected && this.connected.call();
         };
 
         this.ws.onclose = this.disconnected;
@@ -102,10 +169,15 @@ class Porter {
         this.ws.onerror = this.error;
 
         this.ws.onmessage = event => {
-            let payload = JSON.parse(event.data);
-            let handler = this.events[payload.eventId] || null;
+            try {
+                var payload = JSON.parse(event.data);
+                var handler = this.events[payload.eventId] || null;
+            } catch (error) {
+                var payload = event.data;
+                var handler = this.rawEvents[event.data] || null;
+            }
 
-            if (handler) {
+            if (typeof handler == 'function') {
                 handler(payload);
             }
         }
@@ -114,7 +186,7 @@ class Porter {
     /**
      * Close connection.
      */
-     close() {
+    close() {
         this.ws.close();
     }
 }
