@@ -91,11 +91,44 @@ if (!function_exists('timer')) {
      * @param integer|float $interval
      * @param callable $function
      * @param mixed $args
-     * @param boolean $persistent
-     * @return integer|boolean
+     * @param bool $persistent
+     * @return integer|bool
      */
     function timer(int|float $interval, callable $function, mixed $args = [], bool $persistent = true): int|bool
     {
         return Timer::add($interval, $function, $args, $persistent);
+    }
+}
+
+if (!function_exists('copy_dir_to')) {
+    /**
+     * Copy dir with all files.
+     *
+     * @param string $src
+     * @param string $dist
+     * @param bool $withReplace
+     * @return void
+     */
+    function copy_dir_to(string $src, string $dist, bool $withReplace = false) {
+        $dir = opendir($src);
+
+        @mkdir($dist);
+
+        while ($file = readdir($dir)) {
+            if (($file != '.') && ($file != '..')) {
+                $srcPath = $src . '/' . $file;
+                if (is_dir($srcPath)) {
+                    (__FUNCTION__)($srcPath, $dist . '/' . $file);
+                } else {
+                    if (file_exists($dist . '/' . $file) && !$withReplace) {
+                        dump('skipped -> '. $dist . '/' . $file);
+                        continue;
+                    }
+                    copy($srcPath, $dist . '/' . $file);
+                }
+            }
+        }
+
+        closedir($dir);
     }
 }
