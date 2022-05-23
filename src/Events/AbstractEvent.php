@@ -2,12 +2,12 @@
 
 namespace Porter\Events;
 
-use Chipslays\Collection\Collection;
 use Porter\Channel;
 use Porter\Server;
 use Porter\Payload;
 use Porter\Traits\Payloadable;
 use Respect\Validation\Validator;
+use Chipslays\Collection\Collection;
 use Workerman\Connection\TcpConnection;
 
 abstract class AbstractEvent
@@ -70,6 +70,9 @@ abstract class AbstractEvent
         $this->validatePayloadData();
     }
 
+    /**
+     * @return void
+     */
     protected function setMagicalVars(): void
     {
         // Get channel instance by `channelId` parameter.
