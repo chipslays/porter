@@ -10,7 +10,7 @@ class Terminal
      */
     public static function print(mixed $text): void
     {
-        if (is_string($text)) {
+        if (!is_string($text)) {
             $text = var_export($text, true);
         }
 
