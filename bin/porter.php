@@ -1,0 +1,23 @@
+<?php
+
+use Porter\Terminal;
+
+include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
+
+switch ($argv[1] ?? null) {
+    case 'template:laravel':
+        if (!isset($argv[2])) {
+            return Terminal::print('{text:red}Error: Provide destination path for copy files.');
+        }
+
+        copy_dir_to(__DIR__ . '/../examples/laravel', $argv[2]);
+
+        Terminal::print('{text:darkGreen}✅ Successfuly copied!');
+        Terminal::print('{bg:cyan}{text:white} 📁 ' . realpath($argv[2]));
+        break;
+
+    default:
+        Terminal::print('{text:darkGreen}List of commands:');
+        Terminal::print('    {text:white}template:laravel [path] {reset}- Integration to Laravel project. [e.g. template:laravel ./websocket]');
+        break;
+}
