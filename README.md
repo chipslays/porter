@@ -1087,7 +1087,7 @@ server()->storage();
 
 > **NOTICE:** Set path only after you set worker instance (`server()->setWorker($worker)`).
 
-> **NOTICE:** If path not setting, data will be stored in RAM. After server restart you lose your data.
+> **NOTICE:** If you not provide path or an incorrect path, data will be stored in RAM. After server restart you lose your data.
 
 ### `put(string $key, mixed $value): void`
 
