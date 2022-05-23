@@ -42,6 +42,7 @@ class Server
     {
         $this->worker = $worker;
 
+        // set default name for worker
         if (!$this->worker->name || $this->worker->name == 'none') {
             $this->worker->name = 'Porter#' . mt_rand(1000, 9999);
         }
@@ -60,6 +61,8 @@ class Server
     }
 
     /**
+     * Init classes.
+     *
      * @return void
      */
     protected function bootServer(): void
@@ -69,6 +72,12 @@ class Server
         $this->validator = new Validator;
     }
 
+    /**
+     * Attach features to incoming connection.
+     *
+     * @param TcpConnection $connection
+     * @return void
+     */
     protected function initConnection(TcpConnection $connection): void
     {
         $connection->channels = new ConnectionChannels($connection);
@@ -82,12 +91,6 @@ class Server
      */
     public function onConnected(callable $handler): void
     {
-        // $this->getWorker()->onConnect = function (TcpConnection $connection) use ($handler) {
-        //     $this->initConnection($connection);
-        //     call_user_func_array($handler, [$connection]);
-        // };
-
-        // temporarily replace `onConnect` to `onWebSocketConnect`
         $this->getWorker()->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($handler) {
             $this->initConnection($connection);
             call_user_func_array($handler, [$connection, $header]);
