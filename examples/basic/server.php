@@ -17,16 +17,11 @@ $worker = new Worker('websocket://0.0.0.0:3030');
 $server = Server::getInstance();
 $server->setWorker($worker);
 
-// storage
-$server->storage->path = __DIR__ . '/Storage/storage.hub';
-$server->storage->put('foo', 'bar');
-dump($server->storage->get('foo')); // bar
-dump($server->storage->get('foo1', 'baz')); // baz
-
 $server->onConnected(function (TcpConnection $connection, string $header) {
     Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
 
-    // Here available $_GET, $_COOKE, $_SERVER
+    // Here also available vars: $_GET, $_COOKIE, $_SERVER.
+    Terminal::print("Query from client: {text:darkYellow}foo={$_GET['foo']}");
 });
 
 $server->onDisconnected(function (TcpConnection $connection) {
@@ -43,10 +38,10 @@ $server->onRaw(function (string $payload, TcpConnection $connection) {
 
 $server->addEvent(HelloToEvent::class);
 $server->addEvent(PingEvent::class);
-// Or:
+
+// Or you can use callback instead event class:
 // $server->on('ping', function (Event $event) {
 //     $event->reply('pong');
 // });
-
 
 $server->start();
