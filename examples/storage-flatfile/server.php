@@ -13,6 +13,7 @@ $server = Server::getInstance();
 $server->setWorker($worker);
 
 // set path only after you set worker instance
+// *note: if you not provide path or an incorrect path, the data will be stored in RAM, and the data will be lost upon restart
 $server->storage->path = __DIR__ . '/storage/storage.hub';
 
 // add value to storage
