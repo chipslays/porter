@@ -3,7 +3,6 @@
 namespace Porter;
 
 use Chipslays\Collection\Collection;
-use Respect\Validation\Validator;
 
 class Payload
 {

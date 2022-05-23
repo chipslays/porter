@@ -2,8 +2,8 @@
 
 namespace Porter;
 
-use Chipslays\Collection\Collection;
 use Porter\Traits\Payloadable;
+use Chipslays\Collection\Collection;
 use Workerman\Connection\TcpConnection;
 
 class Channel

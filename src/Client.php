@@ -4,8 +4,8 @@ namespace Porter;
 
 use Porter\Traits\Rawable;
 use Porter\Traits\Payloadable;
-use Workerman\Worker;
 use Workerman\Connection\AsyncTcpConnection;
+use Workerman\Worker;
 use Exception;
 
 class Client

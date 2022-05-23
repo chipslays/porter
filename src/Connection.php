@@ -2,8 +2,8 @@
 
 namespace Porter;
 
-use Chipslays\Collection\Collection;
 use Porter\Connection\Channels;
+use Chipslays\Collection\Collection;
 use Workerman\Connection\TcpConnection;
 
 class Connection
