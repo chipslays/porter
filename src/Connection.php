@@ -103,7 +103,7 @@ class Connection
      * Returns true if key exists.
      *
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function hasValue(string $key): bool
     {
