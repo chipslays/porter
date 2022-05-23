@@ -5,14 +5,14 @@ namespace Porter\Traits;
 trait Payloadable
 {
     /**
-     * @param string $event
+     * @param string $type
      * @param array $data
      * @return string
      */
-    protected function makePayload(string $event, array $data): string
+    protected function makePayload(string $type, array $data): string
     {
         $payload = [
-            'eventId' => $event,
+            'type' => $type,
             'timestamp' => time(),
             'data' => $data,
         ];

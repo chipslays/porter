@@ -7,7 +7,7 @@ use Workerman\Connection\TcpConnection;
 
 class HelloToEvent extends AbstractEvent
 {
-    public static string $eventId = 'hello to';
+    public static string $type = 'hello to';
 
     protected array $rules = [
         'username' => ['stringType', ['length', [4, 18]]],

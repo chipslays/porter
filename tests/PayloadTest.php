@@ -3,7 +3,7 @@
 use Porter\Payload;
 
 $payload = new Payload([
-    'eventId' => 'example event',
+    'type' => 'example event',
     'timestamp' => time(),
     'data' => [
         'firstname' => 'John',
@@ -17,7 +17,7 @@ $payload = new Payload([
 ]);
 
 it('event id', function () use ($payload) {
-    expect($payload->eventId)->toEqual('example event');
+    expect($payload->type)->toEqual('example event');
 });
 
 it('event timestamp', function () use ($payload) {

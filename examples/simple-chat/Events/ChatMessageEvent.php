@@ -7,7 +7,7 @@ use Workerman\Connection\TcpConnection;
 
 class ChatMessageEvent extends AbstractEvent
 {
-    public static string $eventId = 'chat message';
+    public static string $type = 'chat message';
 
     protected array $rules = [
         'message' => ['stringType', ['length', [1, 256]]],
@@ -17,7 +17,7 @@ class ChatMessageEvent extends AbstractEvent
     {
         if ($this->hasErrors()) return;
 
-        $this->broadcast($payload->eventId, data: [
+        $this->broadcast($payload->type, data: [
             'nickname' => $connection->nickname,
             'message' => $payload->data['message'],
         ]);

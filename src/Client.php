@@ -55,13 +55,13 @@ class Client
     /**
      * Send event to server.
      *
-     * @param string $eventId
+     * @param string $type
      * @param array $data
      * @return bool|null
      */
-    public function event(string $eventId, array $data = []): ?bool
+    public function event(string $type, array $data = []): ?bool
     {
-        return $this->connection->send($this->makePayload($eventId, $data));
+        return $this->connection->send($this->makePayload($type, $data));
     }
 
     /**
@@ -118,17 +118,17 @@ class Client
     /**
      * Event handler as callable.
      *
-     * @param string $eventId
+     * @param string $type
      * @param callable $handler
      * @return void
      */
-    public function on(string $eventId, callable $handler): void
+    public function on(string $type, callable $handler): void
     {
-        if (isset($this->events[$eventId])) {
-            throw new Exception("Event '{$eventId}' already exists.");
+        if (isset($this->events[$type])) {
+            throw new Exception("Event '{$type}' already exists.");
         }
 
-        $this->events[$eventId] = $handler;
+        $this->events[$type] = $handler;
     }
 
     /**
@@ -151,7 +151,7 @@ class Client
                     return;
                 }
 
-                $handler = $this->events[$payload->eventId] ?? null;
+                $handler = $this->events[$payload->type] ?? null;
 
                 if (!$handler) {
                     return;

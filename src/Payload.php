@@ -7,7 +7,7 @@ use Respect\Validation\Validator;
 
 class Payload
 {
-    public readonly string $eventId;
+    public readonly string $type;
 
     public readonly int $timestamp;
 
@@ -20,7 +20,7 @@ class Payload
      */
     public function __construct(public array $payload)
     {
-        $this->eventId = $payload['eventId'];
+        $this->type = $payload['type'];
         $this->data = new Collection($payload['data'] ?? []);
         $this->timestamp = $payload['timestamp'] ?? time();
     }

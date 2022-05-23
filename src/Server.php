@@ -171,11 +171,11 @@ class Server
      */
     public function addEvent(string $event): self
     {
-        if (isset($this->events[$event::$eventId])) {
-            throw new Exception("Event '{$event::$eventId}' already exists.");
+        if (isset($this->events[$event::$type])) {
+            throw new Exception("Event '{$event::$type}' already exists.");
         }
 
-        $this->events[$event::$eventId] = $event;
+        $this->events[$event::$type] = $event;
 
         return $this;
     }
@@ -183,17 +183,17 @@ class Server
     /**
      * Event handler as callable.
      *
-     * @param string $eventId
+     * @param string $type
      * @param callable $handler
      * @return void
      */
-    public function on(string $eventId, callable $handler): void
+    public function on(string $type, callable $handler): void
     {
-        if (isset($this->events[$eventId])) {
-            throw new Exception("Event '{$eventId}' already exists.");
+        if (isset($this->events[$type])) {
+            throw new Exception("Event '{$type}' already exists.");
         }
 
-        $this->events[$eventId] = $handler;
+        $this->events[$type] = $handler;
     }
 
     /**
@@ -221,7 +221,7 @@ class Server
                 return;
             }
 
-            $event = $this->events[$payload->eventId] ?? null;
+            $event = $this->events[$payload->type] ?? null;
 
             if (!$event) {
                 return;

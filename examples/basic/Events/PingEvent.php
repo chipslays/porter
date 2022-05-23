@@ -7,7 +7,7 @@ use Workerman\Connection\TcpConnection;
 
 class PingEvent extends AbstractEvent
 {
-    public static string $eventId = 'ping';
+    public static string $type = 'ping';
 
     protected array $rules = [];
 

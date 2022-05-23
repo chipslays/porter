@@ -161,7 +161,7 @@ class Ping extends AbstractEvent
 server()->addEvent(Ping::class);
 ```
 
-### `on(string $eventId, callable $handler): void`
+### `on(string $type, callable $handler): void`
 
 
 
@@ -603,12 +603,12 @@ $payload->is(['contains', 'john'], 'username'); // return true if $payload->data
 
 ## Properties
 
-### `$payload->eventId`
+### `$payload->type`
 
 Is a id of event, for example, `welcome message`.
 
 ```php
-$payload->eventId; // string
+$payload->type; // string
 ```
 
 ### `$payload->timestamp`
@@ -655,7 +655,7 @@ use Workerman\Connection\TcpConnection;
 
 class HelloToEvent extends AbstractEvent
 {
-    public static string $eventId = 'hello to';
+    public static string $type = 'hello to';
 
     protected array $rules = [
         'username' => ['stringType', ['length', [3, 18]]],
@@ -690,7 +690,7 @@ use Workerman\Connection\TcpConnection;
 
 class Ping extends AbstractEvent
 {
-    public static string $eventId = 'ping';
+    public static string $type = 'ping';
 
     public function handle(TcpConnection $connection, Payload $payload, Server $server): void
     {
@@ -764,7 +764,7 @@ $this->reply('ping');
 $this->to($this->connection, 'ping');
 ```
 
-To reply with the current `eventId`, pass only the `$data` parameter.
+To reply with the current `type`, pass only the `$data` parameter.
 
 **On front-end:**
 ```javascript
@@ -986,7 +986,7 @@ Set worker.
 
 Get worker.
 
-#### `event(string $eventId, array $data = []): ?bool`
+#### `event(string $type, array $data = []): ?bool`
 
 Send event to server.
 
@@ -1046,7 +1046,7 @@ $client->onRaw(function (string $payload, AsyncTcpConnection $connection) {
 });
 ```
 
-#### `on(string $eventId, callable $handler): void`
+#### `on(string $type, callable $handler): void`
 
 Event handler as callable.
 
@@ -1233,7 +1233,7 @@ client.close();
 // event handler
 client.on('ping', payload => {
     // available property
-    payload.eventId;
+    payload.type;
     payload.timestamp;
     payload.data;
 
@@ -1250,7 +1250,7 @@ client.event('ping').on('pong', payload => console.log(payload.timestamp));
 
 // support short variants:
 client.event('get online users', {}, payload => {
-    console.log(payload.eventId); // get online users
+    console.log(payload.type); // get online users
     console.log(payload.data.online); // e.g. 5
 });
 

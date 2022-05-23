@@ -89,38 +89,38 @@ class Porter {
     /**
      * Handle event from server.
      *
-     * @param {string} eventId
+     * @param {string} type
      * @param {function} handler
      * @returns {self}
      */
-    on(eventId, handler) {
-        this.events[eventId] = handler;
+    on(type, handler) {
+        this.events[type] = handler;
         return this;
     }
 
     /**
      * Send event to server.
      *
-     * @param {string} eventId
+     * @param {string} type
      * @param {object} data
      * @param {?function} handler opt_argument Alternative for `on` method.
      * @returns
      */
-    event(eventId, data, callback) {
+    event(type, data, callback) {
         if (callback) {
-            this.on(eventId, callback);
+            this.on(type, callback);
         }
 
         if (this.ws.readyState !== WebSocket.OPEN) {
             this.shouldSend.push({
-                eventId: eventId,
+                type: type,
                 data: data
             });
             return this;
         }
 
         let eventData = JSON.stringify({
-            eventId: eventId,
+            type: type,
             data: data || {},
         });
 
@@ -158,7 +158,7 @@ class Porter {
     listen() {
         this.ws.onopen = () => {
             this.shouldSend.forEach(event => {
-                this.event(event.eventId, event.data);
+                this.event(event.type, event.data);
             });
 
             this.connected && this.connected.call();
@@ -171,7 +171,7 @@ class Porter {
         this.ws.onmessage = event => {
             try {
                 var payload = JSON.parse(event.data);
-                var handler = this.events[payload.eventId] || null;
+                var handler = this.events[payload.type] || null;
             } catch (error) {
                 var payload = event.data;
                 var handler = this.rawEvents[event.data] || null;
