@@ -121,7 +121,6 @@ if (!function_exists('copy_dir_to')) {
                     (__FUNCTION__)($srcPath, $dist . '/' . $file);
                 } else {
                     if (file_exists($dist . '/' . $file) && !$withReplace) {
-                        dump('skipped -> '. $dist . '/' . $file);
                         continue;
                     }
                     copy($srcPath, $dist . '/' . $file);
