@@ -5,12 +5,47 @@ namespace Porter;
 class Terminal
 {
     /**
+     * @param mixed $text
+     * @return void
+     */
+    public static function print(mixed $text): void
+    {
+        if (is_string($text)) {
+            $text = var_export($text, true);
+        }
+
+        echo self::paint($text . '{reset}') . PHP_EOL;
+    }
+
+    /**
+     * @param string $text
+     * @return void
+     */
+    public static function out(string $text): void
+    {
+        echo self::paint($text) . PHP_EOL;
+    }
+
+    /**
+     * Ask and get answer.
+     *
+     * @param string|int $text,
+     * @param array $variants Array of variant answers
+     * @return string Input text
+     */
+    public static function ask($text, $variants = ['y', 'N']): string
+    {
+        echo self::print($text . ' {text:yellow}[' . implode('/', $variants) . ']{reset}: ');
+        return trim(fgets(STDIN));
+    }
+
+    /**
      * Colorize text.
      *
      * @param string|int $text
      * @return string
      */
-    public static function paint($text = '')
+    public static function paint(string $text = '')
     {
         $list = [
             "{reset}" => "\e[0m",
@@ -43,28 +78,5 @@ class Terminal
         ];
 
         return strtr($text, $list);
-    }
-
-    public static function print($text)
-    {
-        echo self::paint($text . '{reset}') . PHP_EOL;
-    }
-
-    public static function out($text)
-    {
-        echo self::paint($text) . PHP_EOL;
-    }
-
-    /**
-     * Ask and get answer.
-     *
-     * @param string|int $text,
-     * @param array $variants Array of variant answers
-     * @return string Input text
-     */
-    public static function ask($text, $variants = ['y', 'N'])
-    {
-        echo self::print($text . ' {text:yellow}[' . implode('/', $variants) . ']{reset}: ');
-        return trim(fgets(STDIN));
     }
 }
