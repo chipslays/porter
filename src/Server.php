@@ -7,12 +7,12 @@ use Porter\Events\AbstractEvent;
 use Porter\Traits\Rawable;
 use Porter\Traits\Payloadable;
 use Porter\Connection\Channels as ConnectionChannels;
+use Porter\Exceptions\PorterException;
 use Sauce\Traits\Singleton;
 use Sauce\Traits\Mappable;
 use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
 use Respect\Validation\Validator;
-use Exception;
 
 class Server
 {
@@ -172,7 +172,7 @@ class Server
     public function addEvent(string $className): self
     {
         if (isset($this->events[$className::$type])) {
-            throw new Exception("Event '{$className::$type}' already exists.");
+            throw new PorterException("Event '{$className::$type}' already exists.");
         }
 
         $this->events[$className::$type] = $className;
@@ -187,10 +187,19 @@ class Server
      * @param string $mask
      * @return void
      */
-    public function autoload(string $path, string $mask = '*.php'): void
+    public function autoload(string $path, string|array $masks = ['*.php', '**/*.php']): void
     {
-        foreach (glob(rtrim($path, '/\\') . '/' . ltrim($mask, '/\\')) as $file) {
+        $files = array_map(function ($mask) use ($path) {
+            return glob(rtrim($path, '/\\') . '/' . ltrim($mask, '/\\'));
+        }, $masks);
+
+        foreach (call_user_func('array_merge', ...$files) as $file) {
             $className = require $file;
+
+            if ($className == 1) {
+                throw new PorterException("Event class must return class name when loading by 'autoload' method.");
+            }
+
             $this->addEvent($className);
         }
     }
@@ -205,7 +214,7 @@ class Server
     public function on(string $type, callable $handler): void
     {
         if (isset($this->events[$type])) {
-            throw new Exception("Event '{$type}' already exists.");
+            throw new PorterException("Event '{$type}' already exists.");
         }
 
         $this->events[$type] = $handler;
