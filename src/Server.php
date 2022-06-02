@@ -166,18 +166,33 @@ class Server
     /**
      * Add event handler.
      *
-     * @param string $event
+     * @param string $className
      * @return self
      */
-    public function addEvent(string $event): self
+    public function addEvent(string $className): self
     {
-        if (isset($this->events[$event::$type])) {
-            throw new Exception("Event '{$event::$type}' already exists.");
+        if (isset($this->events[$className::$type])) {
+            throw new Exception("Event '{$className::$type}' already exists.");
         }
 
-        $this->events[$event::$type] = $event;
+        $this->events[$className::$type] = $className;
 
         return $this;
+    }
+
+    /**
+     * Autoload event classes.
+     *
+     * @param string $path
+     * @param string $mask
+     * @return void
+     */
+    public function autoload(string $path, string $mask = '*.php'): void
+    {
+        foreach (glob(rtrim($path, '/\\') . '/' . ltrim($mask, '/\\')) as $file) {
+            $className = require $file;
+            $this->addEvent($className);
+        }
     }
 
     /**
