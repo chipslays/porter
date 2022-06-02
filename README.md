@@ -559,7 +559,7 @@ See [documentation](https://github.com/chipslays/collection) for more informatio
 
 > **NOTICE:** All this data will be deleted when the server is restarted.
 
-Couple of simple-short examples:
+Two of simple-short examples:
 
 ```php
 $channel->data->set('foo');
