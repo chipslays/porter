@@ -10,8 +10,8 @@ use Exception;
 
 class Client
 {
-    use Payloadable;
     use Rawable;
+    use Payloadable;
 
     public AsyncTcpConnection $connection;
 
