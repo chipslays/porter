@@ -9,9 +9,6 @@ use Porter\Events\Event;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-require __DIR__ . '/Events/PingEvent.php';
-require __DIR__ . '/Events/HelloToEvent.php';
-
 $worker = new Worker('websocket://0.0.0.0:3030');
 
 $server = Server::getInstance();
@@ -36,8 +33,12 @@ $server->onRaw(function (string $payload, TcpConnection $connection) {
     $connection->send($payload);
 });
 
-$server->addEvent(HelloToEvent::class);
-$server->addEvent(PingEvent::class);
+// Auto require event classes
+$server->autoload(__DIR__ . '/Events');
+
+// Or manual
+// $server->addEvent(PingEvent::class);
+// $server->addEvent(HelloToEvent::class);
 
 // Or you can use callback instead event class:
 // $server->on('ping', function (Event $event) {
