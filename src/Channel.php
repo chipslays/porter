@@ -3,7 +3,7 @@
 namespace Porter;
 
 use Porter\Traits\Payloadable;
-use Chipslays\Collection\Collection;
+use Porter\Support\Collection;
 use Workerman\Connection\TcpConnection;
 
 class Channel

@@ -5,9 +5,9 @@ namespace Porter\Events;
 use Porter\Channel;
 use Porter\Server;
 use Porter\Payload;
+use Porter\Support\Collection;
 use Porter\Traits\Payloadable;
 use Respect\Validation\Validator;
-use Chipslays\Collection\Collection;
 use Workerman\Connection\TcpConnection;
 
 abstract class AbstractEvent

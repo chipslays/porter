@@ -3,7 +3,7 @@
 namespace Porter;
 
 use Porter\Connection\Channels;
-use Chipslays\Collection\Collection;
+use Porter\Support\Collection;
 use Workerman\Connection\TcpConnection;
 
 class Connection
@@ -76,6 +76,16 @@ class Connection
     }
 
     /**
+     * Leave all channels for this connection.
+     *
+     * @return void
+     */
+    public function leaveAllChannels(): void
+    {
+        $this->channels()->leaveAll();
+    }
+
+    /**
      * Set private value for this connection.
      *
      * @param string $key
@@ -119,6 +129,18 @@ class Connection
     public function removeValue(string $key): void
     {
         $this->connection->data = $this->connection->data->remove($key);
+    }
+
+    /**
+     * Send raw websocket message.
+     *
+     * @param mixed $buffer
+     * @param boolean $raw
+     * @return boolean|null
+     */
+    public function send(mixed $buffer, bool $raw = false): bool|null
+    {
+        return $this->getTcpConnection()->send($buffer, $raw);
     }
 
     /**

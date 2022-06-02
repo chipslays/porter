@@ -2,7 +2,7 @@
 
 namespace Porter;
 
-use Chipslays\Collection\Collection;
+use Porter\Support\Collection;
 
 class Payload
 {
