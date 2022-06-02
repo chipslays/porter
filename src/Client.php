@@ -4,9 +4,9 @@ namespace Porter;
 
 use Porter\Traits\Rawable;
 use Porter\Traits\Payloadable;
+use Porter\Exceptions\PorterException;
 use Workerman\Connection\AsyncTcpConnection;
 use Workerman\Worker;
-use Exception;
 
 class Client
 {
@@ -121,11 +121,13 @@ class Client
      * @param string $type
      * @param callable $handler
      * @return void
+     *
+     * @throws PorterException
      */
     public function on(string $type, callable $handler): void
     {
         if (isset($this->events[$type])) {
-            throw new Exception("Event '{$type}' already exists.");
+            throw new PorterException("Event '{$type}' already exists.");
         }
 
         $this->events[$type] = $handler;
