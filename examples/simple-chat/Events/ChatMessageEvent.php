@@ -23,3 +23,5 @@ class ChatMessageEvent extends AbstractEvent
         ]);
     }
 }
+
+return ChatMessageEvent::class;

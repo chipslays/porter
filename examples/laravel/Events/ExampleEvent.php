@@ -17,4 +17,4 @@ class ExampleEvent extends AbstractEvent
     }
 }
 
-server()->addEvent(ExampleEvent::class);
+return ExampleEvent::class;

@@ -24,11 +24,4 @@ $worker->count = 1;
 
 server()->setWorker($worker);
 
-$eventFiles = array_merge([
-    ...glob(__DIR__  . '/Events/*Event.php'),
-    ...glob(__DIR__  . '/Events/**/*Event.php'),
-]);
-
-foreach ($eventFiles as $file) {
-    require_once $file;
-}
+server()->autoload(__DIR__ . '/Events');

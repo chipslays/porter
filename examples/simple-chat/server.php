@@ -4,11 +4,8 @@
 use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
 use Porter\Server;
-use Porter\Terminal;
 
 require __DIR__ . '/../../vendor/autoload.php';
-
-require __DIR__ . '/Events/ChatMessageEvent.php';
 
 $worker = new Worker('websocket://0.0.0.0:3030');
 
@@ -31,6 +28,6 @@ $server->onDisconnected(function (TcpConnection $connection) {
     ]);
 });
 
-$server->addEvent(ChatMessageEvent::class);
+$server->autoload(__DIR__ . '/Events');
 
 $server->start();
