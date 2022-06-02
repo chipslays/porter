@@ -185,12 +185,17 @@ server()->start();
 
 Emitted when a socket connection is successfully established.
 
+> In this method available vars: `$_GET`, `$_COOKIE`, `$_SERVER`.
+
 ```php
 use Porter\Terminal;
 use Workerman\Connection\TcpConnection;
 
 server()->onConnected(function (TcpConnection $connection) {
     Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
+
+    // Here also available vars: $_GET, $_COOKIE, $_SERVER.
+    Terminal::print("Query from client: {text:darkYellow}foo={$_GET['foo']}");
 });
 ```
 
