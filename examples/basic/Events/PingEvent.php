@@ -16,3 +16,5 @@ class PingEvent extends AbstractEvent
         $this->reply('pong');
     }
 }
+
+return PingEvent::class;

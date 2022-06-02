@@ -23,3 +23,5 @@ class HelloToEvent extends AbstractEvent
         $this->reply(data: ['message' => "Hello, {$username}!"]);
     }
 }
+
+return HelloToEvent::class;
