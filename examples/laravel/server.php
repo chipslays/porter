@@ -19,7 +19,7 @@ server()->onError(function (TcpConnection $connection, $code, $message) {
 });
 
 server()->onStart(function (Worker $worker) {
-    Terminal::print("{text:blue}Server started.");
+    Terminal::print("{text:darkGreen}Server started...");
 });
 
 server()->start();
