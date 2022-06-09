@@ -91,8 +91,12 @@ class Server
      */
     public function onConnected(callable $handler): void
     {
-        $this->getWorker()->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($handler) {
+        $this->getWorker()->onConnect = function (TcpConnection $connection) {
+            // init connection there
             $this->initConnection($connection);
+        };
+
+        $this->getWorker()->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($handler) {
             call_user_func_array($handler, [$connection, $header]);
         };
     }
@@ -106,7 +110,10 @@ class Server
     public function onDisconnected(callable $handler): void
     {
         $this->getWorker()->onClose = function (TcpConnection $connection) use ($handler) {
-            $connection->channels->leaveAll();
+            // fix: ErrorException: Undefined property: Workerman\Connection\TcpConnection::$channels in /srv/naplenke.online/vendor/chipslays/porter/src/Server.php
+            if (property_exists($this, 'channels')) {
+                $connection->channels->leaveAll();
+            }
             call_user_func_array($handler, [$connection]);
         };
     }
