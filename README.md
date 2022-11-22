@@ -88,7 +88,7 @@ List of all available commands.
 Send `ping` event on established connection.
 
 ```javascript
-const ws = new WebSocket('ws://localhost:3737');
+const ws = new WebSocket(`ws://${location.hostname}:3737`);
 const client = new Porter(ws);
 
 client.connected = () => {
@@ -1235,9 +1235,9 @@ There is also a [small class](#javascript) for working with websockets on the cl
 
 ```javascript
 if (location.hostname == '127.0.0.1' || location.hostname == 'localhost') {
-    window.ws = new WebSocket(`ws://${location.hostname}:3737`); // on local dev
+    const ws = new WebSocket(`ws://${location.hostname}:3737`); // on local dev
 } else {
-    window.ws = new WebSocket(`wss://${location.hostname}:3737`); // on vps with ssl certificate
+    const ws = new WebSocket(`wss://${location.hostname}:3737`); // on vps with ssl certificate
 }
 
 // options (optional, below default values)
