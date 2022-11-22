@@ -89,24 +89,28 @@ List of all available commands.
 
 Send `ping` event on established connection.
 
-```javascript
-const ws = new WebSocket(`ws://${location.hostname}:3737`);
-const client = new Porter(ws);
+```html
+<script src="https://cdn.jsdelivr.net/gh/chipslays/porter@latest/dist/porter.min.js"></script>
 
-client.connected = () => {
-    client.event('ping');
-}
+<script>
+    const ws = new WebSocket(`ws://${location.hostname}:3737`);
+    const client = new Porter(ws);
 
-client.on('pong', payload => {
-    console.log(payload);
-});
+    client.connected = () => {
+        client.event('ping');
+    }
 
-client.listen();
+    client.on('pong', payload => {
+        console.log(payload);
+    });
+
+    client.listen();
+</script>
 ```
 
-> Don't forget include [PorterJS](#javascript) script via CDN.
+# 💡 Examples
 
-See more in [examples](/examples) folder.
+Examples can be found [here](/examples).
 
 # 📚 Documentation
 
