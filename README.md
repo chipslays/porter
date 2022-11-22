@@ -62,16 +62,26 @@ php server.php start -d
 
 List of all available commands.
 
-`php start.php start`
-`php start.php start -d`
-`php start.php status`
-`php start.php status -d`
-`php start.php connections`
-`php start.php stop`
-`php start.php stop -g`
-`php start.php restart`
-`php start.php reload`
-`php start.php reload -g`
+`php server.php start`
+
+`php server.php start -d`
+
+`php server.php status`
+
+`php server.php status -d`
+
+`php server.php connections`
+
+`php server.php stop`
+
+`php server.php stop -g`
+
+`php server.php restart`
+
+`php server.php reload`
+
+`php server.php reload -g`
+
 
 ### Client (Javascript)
 
