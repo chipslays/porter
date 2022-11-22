@@ -74,7 +74,7 @@ class Channel
     /**
      * Send an event to all connection on this channel.
      *
-     * @param string $event asdasd
+     * @param string $event
      * @param array $data
      * @param TcpConnection[] $excepts Connection instance or connection id.
      * @return void
