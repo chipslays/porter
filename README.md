@@ -836,7 +836,7 @@ if ($this->hasErrors()) {
 
 ### `data(string $key, mixed $default = null): mixed`
 
-Another yet short cut for payload data.
+Yet another short cut for payload data.
 
 ```php
 public function handle(TcpConnection $connection, Payload $payload, Server $server)
@@ -964,7 +964,7 @@ public function add(string $channelId): void
 
 
 
-## 🔹 `Client`
+## 🔹 `Client (PHP)`
 
 Simple implementation of client.
 
@@ -972,7 +972,7 @@ See basic example of client [here](/examples/client-php/client.php).
 
 #### `__construct(string $host, array $context = [])`
 
-Set worker.
+Create client.
 
 ```php
 $client = new Client('ws://localhost:3737');
@@ -983,7 +983,7 @@ $client = new Client('wss://example.com:3737');
 
 Set worker.
 
-> **NOTICE:** Worker instance auto init in constructor. Use this method if you need to define worker specific settings.
+> **NOTICE:** Worker instance auto init in constructor. Use this method if you need to define worker with specific settings.
 
 #### `getWorker(): Worker`
 
@@ -1088,9 +1088,9 @@ server()->storage;
 server()->storage();
 ```
 
-> **NOTICE:** Set path only after you set worker instance (`server()->setWorker($worker)`).
+> **NOTICE:** Set path only after if you set worker instance (`server()->setWorker($worker)`).
 
-> **NOTICE:** If you not provide path or an incorrect path, data will be stored in RAM. After server restart you lose your data.
+> **WARNING:** If you not provide path or an incorrect path, data will be stored in RAM. After server restart you lose your data.
 
 ### `put(string $key, mixed $value): void`
 
@@ -1135,9 +1135,9 @@ You can use `Storage` class as standalone anywhere.
 ```php
 use Porter\Storage;
 
-$storage1 = new Storage(__DIR__ . '/storage/storage1.hub');
-$storage2 = new Storage(__DIR__ . '/storage/storage2.hub');
-$storage3 = new Storage(__DIR__ . '/storage/storage3.hub');
+$storage1 = new Storage(__DIR__ . '/storage/storage1.strg'); // any extension
+$storage2 = new Storage(__DIR__ . '/storage/storage2.txt');
+$storage3 = new Storage(__DIR__ . '/storage/storage3.data');
 ```
 
 ## 🔹 Helpers (functions)
@@ -1175,7 +1175,7 @@ channel('secret channel', 'foo', 'default value'); // get data from channel (by 
 server()->channels->get('secret channel')->data->get('foo', 'default value');
 ```
 
-## 🔹 Mappable methods
+## 🔹 Mappable methods (Macros)
 
 You can extend the class and map your own methods on the fly..
 
@@ -1200,7 +1200,7 @@ There is also a [small class](#javascript) for working with websockets on the cl
 
 ```javascript
 const ws = new WebSocket('ws://localhost:3737'); // on local dev
-const ws = new WebSocket('wss://example.com:3737'); // on prod server
+const ws = new WebSocket('wss://example.com:3737'); // on vps with ssl certificate
 
 // options (optional, below default values)
 let options = {
@@ -1212,22 +1212,22 @@ const client = new Porter(ws, options);
 
 // on client connected to server
 client.connected = () => {
-    //
+    // code...
 }
 
 // on client disconected from server
 client.disconnected = () => {
-    //
+    // code...
 }
 
 // on error
 client.error = () => {
-    //
+    // code...
 }
 
 // on raw `pong` event (if you needed it)
 client.pong = () => {
-    //
+    // code...
 }
 
 // close connection
@@ -1243,7 +1243,7 @@ client.on('ping', payload => {
     console.log(payload.data.foo) // bar
 });
 
-// send event
+// send event to server
 client.event('pong', {
     foo: 'bar',
 });
@@ -1251,41 +1251,46 @@ client.event('pong', {
 // chain methods
 client.event('ping').on('pong', payload => console.log(payload.timestamp));
 
-// support short variants:
-client.event('get online users', {}, payload => {
-    console.log(payload.type); // get online users
-    console.log(payload.data.online); // e.g. 5
+// send event and handle answer in one method
+client.event('get online users', {/* ... */}, payload => {
+    console.log(payload.type); // contains same event type 'get online users'
+    console.log(payload.data.online); // and server answer e.g. '1337 users'
 });
 
 // pass channelId and targetId for magic properties on back-end server
-client.event('magical properties', {
+client.event('magical properties example', {
     channelId: 'secret channel',
     targetId: 1337,
+
+    // on backend php websocket server we can use $this->channel and $this->target magical properties.
 });
 
 // send raw websocket data
 client.sendRaw('hello world');
+
+// send raw websocket data as json
 client.sendRaw(JSON.stringify({
     foo: 'bar',
 }));
 
-// handle raw websocket data
+// handle raw websocket data from server
 client.onRaw('hello from server', data => {
     console.log(data); // hello from server
 });
 
-// start listen
+// dont forget start listen websocket server!
 client.listen();
 ```
 
 # Used by
 
-* [naplenke.online](https://naplenke.online?ref=porter) — The largest online cinema in Russia.
+* [naplenke.online](https://naplenke.online?ref=porter) — The largest online cinema in Russia. Watching movies together.
 
 # Credits
 
-* [chipslays](https://github.com/chipslays)
-* [`Workerman`](https://github.com/walkor/workerman) by [walkor](https://github.com/walkor)
+* [Chipslays](https://github.com/chipslays)
+* [Workerman](https://github.com/walkor/workerman) by [walkor](https://github.com/walkor)
+* [All contributors](https://github.com/chipslays/porter/graphs/contributors)
 
 # License
 MIT
