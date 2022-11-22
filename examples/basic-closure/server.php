@@ -16,8 +16,9 @@ $server->on('ping', function (Event $event) {
 });
 
 $server->on('hello to', function (Event $event) {
-    $username = $event->payload->data['username'];
-    $event->reply(data: ['message' => "Hello, {$username}!"]);
+    $event->reply(data: [
+        'message' => "Hello, {$event->payload->data['username']}!"
+    ]);
 });
 
 $server->start();
