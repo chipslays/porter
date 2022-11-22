@@ -29,7 +29,7 @@
     <script src="../../dist/porter.js"></script>
 
     <script>
-        const ws = new WebSocket('ws://localhost:3030');
+        const ws = new WebSocket('ws://localhost:3737');
         const client = new Porter(ws);
 
         client.on('chat message', payload => {

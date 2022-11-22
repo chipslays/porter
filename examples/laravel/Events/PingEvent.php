@@ -5,7 +5,7 @@ use Porter\Payload;
 use Porter\Events\AbstractEvent;
 use Workerman\Connection\TcpConnection;
 
-class ExampleEvent extends AbstractEvent
+class PingEvent extends AbstractEvent
 {
     public static string $type = 'ping';
 
@@ -17,4 +17,4 @@ class ExampleEvent extends AbstractEvent
     }
 }
 
-return ExampleEvent::class;
+return PingEvent::class;

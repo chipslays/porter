@@ -8,7 +8,7 @@ use Porter\Events\Event;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-$worker = new Worker('websocket://0.0.0.0:3030');
+$worker = new Worker('websocket://0.0.0.0:3737');
 
 $server = Server::getInstance();
 $server->setWorker($worker);

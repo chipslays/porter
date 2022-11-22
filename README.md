@@ -9,27 +9,25 @@ A simple wrapper over Workerman Websockets with channels and other stuff for PHP
 
 # 🧰 Installation
 
-### **PHP**
-
-Via composer:
+1. Install Porter via Composer:
 
 ```bash
 composer require chipslays/porter ^1.x
 ```
 
-
-### Javascript
-
-Via jsDelivr CDN:
+2. Put javascript code in views:
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/chipslays/porter@latest/dist/porter.min.js"></script>
 ```
 
+3. All done.
+
+> Laravel integration can be found [here](/examples/laravel/README.md).
 
 # 👨‍💻 Usage
 
-### Server
+### Server (PHP)
 
 Simplest ping-pong server.
 
@@ -39,7 +37,7 @@ use Porter\Events\Event;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$worker = new Worker('websocket://0.0.0.0:3030');
+$worker = new Worker('websocket://0.0.0.0:3737');
 
 server()->setWorker($worker);
 
@@ -50,12 +48,12 @@ server()->on('ping', function (Event $event) {
 server()->start();
 ```
 
-### Client
+### Client (Javascript)
 
 Send `ping` event on established connection.
 
 ```javascript
-const ws = new WebSocket('ws://localhost:3030');
+const ws = new WebSocket('ws://localhost:3737');
 const client = new Porter(ws);
 
 client.connected = () => {
@@ -82,7 +80,7 @@ See more in [examples](/examples) folder.
 ```php
 use Workerman\Worker;
 
-$worker = new Worker('websocket://0.0.0.0:3030');
+$worker = new Worker('websocket://0.0.0.0:3737');
 ```
 
 ### On server with SSL
@@ -99,7 +97,7 @@ $context = [
         // 'allow_self_signed' => true,
     ],
 ];
-$worker = new Worker('websocket://0.0.0.0:3030', $context);
+$worker = new Worker('websocket://0.0.0.0:3737', $context);
 $worker->transport = 'ssl';
 ```
 
@@ -126,7 +124,7 @@ Set worker instance.
 ```php
 use Workerman\Worker;
 
-$worker = new Worker('websocket://0.0.0.0:3030');
+$worker = new Worker('websocket://0.0.0.0:3737');
 server()->setWorker($worker);
 ```
 
@@ -977,8 +975,8 @@ See basic example of client [here](/examples/client-php/client.php).
 Set worker.
 
 ```php
-$client = new Client('ws://localhost:3030');
-$client = new Client('wss://example.com:3030');
+$client = new Client('ws://localhost:3737');
+$client = new Client('wss://example.com:3737');
 ```
 
 #### `setWorker(Worker $worker): void`
@@ -1201,8 +1199,8 @@ echo server()->timestamp(); // e.g. 1234567890
 There is also a [small class](#javascript) for working with websockets on the client side.
 
 ```javascript
-const ws = new WebSocket('ws://localhost:3031'); // on local dev
-const ws = new WebSocket('wss://example.com:3031'); // on prod server
+const ws = new WebSocket('ws://localhost:3737'); // on local dev
+const ws = new WebSocket('wss://example.com:3737'); // on prod server
 
 // options (optional, below default values)
 let options = {
@@ -1282,7 +1280,7 @@ client.listen();
 
 # Used by
 
-* [naplenke.online](https://naplenke.online?ref=porter) — The largest online cinema in Russia. 
+* [naplenke.online](https://naplenke.online?ref=porter) — The largest online cinema in Russia.
 
 # Credits
 

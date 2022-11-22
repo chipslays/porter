@@ -14,10 +14,10 @@ if ($_ENV['IS_SERVER'] == 'true') {
             'verify_peer' => false,
         ]
     ];
-    $worker = new Worker('websocket://0.0.0.0:3031', $context);
+    $worker = new Worker('websocket://0.0.0.0:3737', $context);
     $worker->transport = 'ssl';
 } else {
-    $worker = new Worker('websocket://0.0.0.0:3031');
+    $worker = new Worker('websocket://0.0.0.0:3737');
 }
 
 $worker->count = 1;

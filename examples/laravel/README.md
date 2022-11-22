@@ -1,24 +1,37 @@
-## Laravel
+## Laravel Websocket Server
 
 Primitive integration Porter to Laravel project.
 
 ## Installation
 
-### By command
-1. `php vendor/bin/porter template:laravel ./websocket`.
+1. Install Porter via Composer.
 
-### Manual
-1. Put this files to folder (e.g. `/websocket`) in root of Laravel project.
+```php
+composer require chipslays/porter ^1.x
+```
 
-In both cases don't forget update your .env file:
+2. Put javascript file in `app.blade.php`
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/chipslays/porter@latest/dist/porter.min.js"></script>
+```
+
+3. Place template in root application folder.
+
+```bash
+php vendor/bin/porter template:laravel ./websocket
+```
+
+4. Add `IS_SERVER` var to `.env` file.
 
 ```bash
 echo 'IS_SERVER=false' >> .env
 ```
 
->**NOTE:** On server `IS_SERVER=true`.
+>**NOTE:** On VPS with SSL certificate set `IS_SERVER=true`.
 
-## Run
+5. Run websocket server.
+
 ```bash
 php websocket/server.php start
 ```

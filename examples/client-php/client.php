@@ -7,7 +7,7 @@ use Workerman\Connection\AsyncTcpConnection;
 require __DIR__ . '/../../vendor/autoload.php';
 
 // use localhost instead 0.0.0.0 for client
-$client = new Client('ws://localhost:3030');
+$client = new Client('ws://localhost:3737');
 
 // send event as client on connect
 $client->onConnected(fn () => $client->event('ping'));
