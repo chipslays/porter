@@ -7,7 +7,7 @@
 
 A simple wrapper over Workerman Websockets with channels and other stuff for PHP 8.1.
 
-Can say this is an alternative to SocketIO for PHP.
+Can say this is a Socket IO alternative for PHP.
 
 # 🧰 Installation
 
