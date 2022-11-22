@@ -39,9 +39,4 @@ $server->autoload(__DIR__ . '/Events');
 // $server->addEvent(PingEvent::class);
 // $server->addEvent(HelloToEvent::class);
 
-// Or you can use callback instead event class:
-// $server->on('ping', function (Event $event) {
-//     $event->reply('pong');
-// });
-
 $server->start();
