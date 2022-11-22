@@ -17,5 +17,5 @@ $client->on('pong', function (AsyncTcpConnection $connection, Payload $payload, 
     echo 'PONG!' . PHP_EOL;
 });
 
-// connect to websocket server
+// start listen events from websocket server
 $client->listen();
