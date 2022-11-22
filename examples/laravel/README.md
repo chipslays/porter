@@ -22,13 +22,15 @@ composer require chipslays/porter ^1.x
 php vendor/bin/porter template:laravel ./websocket
 ```
 
-4. Add `IS_SERVER` var to `.env` file.
+4. Add variables to `.env` file.
 
 ```bash
-echo 'IS_SERVER=false' >> .env
+echo 'PORTER_SSL=false' >> .env
+echo 'PORTER_LOCAL_CERT=/etc/letsencrypt/live/example.com/cert.pem' >> .env
+echo 'PORTER_LOCAL_PK=/etc/letsencrypt/live/example.com/privkey.pem' >> .env
 ```
 
->**NOTE:** On VPS with SSL certificate set `IS_SERVER=true`.
+>**NOTE:** On VPS with SSL certificate set `PORTER_SSL=true` and provide path to certs in `PORTER_LOCAL_CERT` and `PORTER_LOCAL_PK`.
 
 5. Run websocket server.
 
