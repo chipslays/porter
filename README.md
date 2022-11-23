@@ -372,18 +372,30 @@ server()->channels->create('secret channel');
 $channels = server()->channels;
 ```
 
-### `getConnection(int $connectionId): ?TcpConnection`
+### `connection(int $connectionId): ?TcpConnection`
 
 Get connection instance by id.
 
 ```php
-$connection = server()->getConnection(1337);
+$connection = server()->connection(1);
 server()->to($connection, 'welcome message', [
     'text' => 'Hello world!'
 ]);
 
 // also can get like
 $connection = server()->getWorker()->connections[1337] ?? null;
+```
+
+### `connections(): TcpConnection[]`
+
+Get all connections on server.
+
+```php
+$connections = server()->connections();
+server()->broadcast('update users count', ['count' => count($connections)]);
+
+// also can get like
+$connections = server()->getWorker()->connections;
 ```
 
 ### `validator(): Validator`
