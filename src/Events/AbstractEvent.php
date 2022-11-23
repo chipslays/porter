@@ -79,7 +79,7 @@ abstract class AbstractEvent
         $this->channel = $this->server->channels->get($this->payload->data['channelId'] ?? '');
 
         // Get target connection instance by `targetId` parameter.
-        $this->target = isset($this->payload->data['targetId']) ? $this->server->getConnection((int) $this->payload->data['targetId']) : null;
+        $this->target = isset($this->payload->data['targetId']) ? $this->server->connection((int) $this->payload->data['targetId']) : null;
     }
 
     /**
