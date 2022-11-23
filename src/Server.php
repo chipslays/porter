@@ -342,9 +342,19 @@ class Server
      * @param integer $connectionId
      * @return TcpConnection|null
      */
-    public function getConnection(int $connectionId): ?TcpConnection
+    public function connection(int $connectionId): ?TcpConnection
     {
         return $this->getWorker()->connections[$connectionId] ?? null;
+    }
+
+    /**
+     * Get all connections on server.
+     *
+     * @return TcpConnection[]
+     */
+    public function connections(): array
+    {
+        return $this->getWorker()->connections;
     }
 
     /**
