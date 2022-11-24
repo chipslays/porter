@@ -12,7 +12,7 @@ $server = Server::getInstance();
 $server->setWorker($worker);
 
 $server->onConnected(function (TcpConnection $connection) {
-    $connection->nickname = 'Anonymous#' . mt_rand(1000, 9999);
+    $connection->nickname = 'Anonymous#' . $connection->id;
 
     server()->broadcast('chat message', [
         'nickname' => 'Notification',
