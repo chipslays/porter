@@ -719,7 +719,7 @@ class HelloToEvent extends AbstractEvent
 
     public function handle(TcpConnection $connection, Payload $payload, Server $server): void
     {
-        if ($this->hasErrors()) {
+        if ($this->validate()) {
             $this->reply('bad request', ['errors' => $this->errors]);
             return;
         }
@@ -866,14 +866,27 @@ $this->broadcast('user join', [
 ], [$this->connection]);
 ```
 
+### `validate(): bool`
+
+Validate payload data.
+
+Pass custom rules. Default use $rules class attribute.
+
+Returns True if has errors.
+
+```php
+if ($this->validate()) {
+    return $this->reply(/** ... */);
+}
+```
+
 ### `hasErrors(): bool`
 
 Returns `true` if has errors on validate payload data.
 
 ```php
 if ($this->hasErrors()) {
-    $this->reply('bad request', ['errors' => $this->errors]);
-    return;
+    return $this->reply('bad request', ['errors' => $this->errors]);
 }
 ```
 

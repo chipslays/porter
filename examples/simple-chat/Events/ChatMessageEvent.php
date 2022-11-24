@@ -15,7 +15,7 @@ class ChatMessageEvent extends AbstractEvent
 
     public function handle(TcpConnection $connection, Payload $payload, Server $server)
     {
-        if ($this->hasErrors()) return;
+        if ($this->validate()) return;
 
         $this->broadcast($payload->type, data: [
             'nickname' => $connection->nickname,

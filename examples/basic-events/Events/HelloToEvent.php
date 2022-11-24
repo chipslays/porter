@@ -15,7 +15,7 @@ class HelloToEvent extends AbstractEvent
 
     public function handle(TcpConnection $connection, Payload $payload, Server $server)
     {
-        if ($this->hasErrors()) {
+        if ($this->validate()) {
             return $this->reply('bad request', ['errors' => $this->errors]);
         }
 

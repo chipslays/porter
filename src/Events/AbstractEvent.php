@@ -67,7 +67,6 @@ abstract class AbstractEvent
         $this->server = Server::getInstance();
         $this->data = &$this->payload->data;
         $this->setMagicalVars();
-        $this->validatePayloadData();
     }
 
     /**
@@ -169,13 +168,14 @@ abstract class AbstractEvent
     }
 
     /**
-     * Validate payload data by `$rules`.
+     * Validate payload data.
      *
-     * @return void
+     * @param array $rules Pass custom rules. Default use $rules class attribute.
+     * @return bool Returns True if has errors.
      */
-    protected function validatePayloadData(): void
+    protected function validate(array $rules = null): bool
     {
-        foreach ($this->rules as $property => $rules) {
+        foreach ($rules ?? $this->rules as $property => $rules) {
             foreach ($rules as $rule) {
                 if (!$this->payload->is($rule, $property)) {
                     $rule = ((array) $rule)[0];
@@ -183,6 +183,8 @@ abstract class AbstractEvent
                 }
             }
         }
+
+        return $this->hasErrors();
     }
 
     /**
