@@ -22,6 +22,8 @@ class Connection
     /**
      * Get connection channels manager.
      *
+     * Note: Attribute `channels` init in `onConnected` server method.
+     *
      * @return Channels
      */
     public function channels(): Channels
@@ -151,5 +153,39 @@ class Connection
     public function getTcpConnection(): TcpConnection
     {
         return $this->connection;
+    }
+
+    /**
+     * Call TcpConnection methods.
+     *
+     * @param mixed $method
+     * @param mixed $arguments
+     * @return void
+     */
+    public function __call(mixed $method, mixed $arguments): mixed
+    {
+        return call_user_func_array([$this->connection, $method], $arguments);
+    }
+
+    /**
+     * Get TcpConnection attribute value.
+     *
+     * @param mixed $attribute
+     * @return mixed
+     */
+    public function __get(mixed $attribute): mixed
+    {
+        return $this->connection->{$attribute};
+    }
+
+    /**
+     * Set TcpConnection attribute value.
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     */
+    public function __set(mixed $attribute, mixed $value): void
+    {
+        $this->connection->{$attribute} = $value;
     }
 }

@@ -88,7 +88,10 @@ class Channel
         }
 
         foreach ($this->connections as $connection) {
-            if (in_array($connection->id, $excepts)) continue;
+            if (in_array($connection->id, $excepts)) {
+                continue;
+            }
+
             $connection->send($this->makePayload($event, $data));
         }
     }
