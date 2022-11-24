@@ -27,6 +27,14 @@ $server->onDisconnected(function (TcpConnection $connection) {
     ]);
 });
 
+$server->onStart(function (Worker $worker) {
+    timer(1, function () {
+        server()->broadcast('update users count', [
+            'count' => count(server()->connections()),
+        ]);
+    });
+});
+
 $server->autoload(__DIR__ . '/Events');
 
 $server->start();
