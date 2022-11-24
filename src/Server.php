@@ -285,13 +285,7 @@ class Server
      */
     public function to(TcpConnection|Connection $connection, string $event, array $data = []): ?bool
     {
-        if ($connection instanceof Connection) {
-            $target = $connection->getTcpConnection();
-        } else {
-            $target = $connection;
-        }
-
-        return $target->send($this->makePayload($event, $data));
+        return $connection->send($this->makePayload($event, $data));
     }
 
     /**
@@ -299,19 +293,22 @@ class Server
      *
      * @param string $event
      * @param array $data
-     * @param TcpConnection[] $excepts Connection instance or connection id.
+     * @param int[]|TcpConnection[]|Connection[] $excepts TcpConnection, Connection instance or connection ids.
      * @return void
      */
-    public function broadcast(string $event, array $data = [], array $excepts = []): void
+    public function broadcast(string $event, array $data = [], array|TcpConnection|Connection $excepts = []): void
     {
-        foreach ($excepts as &$value) {
-            if ($value instanceof TcpConnection) {
+        foreach ((array) $excepts as &$value) {
+            if ($value instanceof TcpConnection || $value instanceof Connection) {
                 $value = $value->id;
             }
         }
 
         foreach ($this->getWorker()->connections as $connection) {
-            if (in_array($connection->id, $excepts)) continue;
+            if (in_array($connection->id, $excepts)) {
+                continue;
+            }
+
             $this->to($connection, $event, $data);
         }
     }
