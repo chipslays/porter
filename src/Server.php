@@ -191,7 +191,7 @@ class Server
      * Autoload event classes.
      *
      * @param string $path
-     * @param string $mask
+     * @param string|string[] $mask
      * @return void
      */
     public function autoloadEvents(string $path, string|array $masks = ['*.php', '**/*.php']): void
