@@ -35,6 +35,6 @@ $server->onStart(function (Worker $worker) {
     });
 });
 
-$server->autoload(__DIR__ . '/Events');
+$server->autoloadEvents(__DIR__ . '/Events');
 
 $server->start();

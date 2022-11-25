@@ -200,6 +200,16 @@ class Ping extends AbstractEvent
 server()->addEvent(Ping::class);
 ```
 
+### `autoloadEvents(string $path, string|array $masks = ['*.php', '**/*.php']): void`
+
+Autoload all events inside passed path.
+
+> Note: Use it instead manual add events by `addEvent` method.
+
+```php
+server()->autoloadEvents(__DIR__ . '/Events');
+```
+
 ### `on(string $type, callable $handler): void`
 
 

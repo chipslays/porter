@@ -24,4 +24,4 @@ $worker->count = 1;
 
 server()->setWorker($worker);
 
-server()->autoload(__DIR__ . '/Events');
+server()->autoloadEvents(__DIR__ . '/Events');

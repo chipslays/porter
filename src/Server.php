@@ -194,7 +194,7 @@ class Server
      * @param string $mask
      * @return void
      */
-    public function autoload(string $path, string|array $masks = ['*.php', '**/*.php']): void
+    public function autoloadEvents(string $path, string|array $masks = ['*.php', '**/*.php']): void
     {
         $files = array_map(function ($mask) use ($path) {
             return glob(rtrim($path, '/\\') . '/' . ltrim($mask, '/\\'));
@@ -204,7 +204,7 @@ class Server
             $className = require $file;
 
             if ($className == 1) {
-                throw new PorterException("Event class must return class name when loading by 'autoload' method.");
+                throw new PorterException("Event class must return class name when loading by 'autoloadEvents' method.");
             }
 
             $this->addEvent($className);
