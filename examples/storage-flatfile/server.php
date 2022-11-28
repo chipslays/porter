@@ -14,7 +14,7 @@ $server->setWorker($worker);
 
 // set path only after you set worker instance
 // *note: if you not provide path or an incorrect path, the data will be stored in RAM, and the data will be lost upon restart
-$server->storage->path = __DIR__ . '/storage/storage.hub';
+$server->storage->setPath(__DIR__ . '/storage/storage.hub');
 
 // add value to storage
 $server->storage->put('foo', 'bar');
@@ -33,7 +33,7 @@ Terminal::print($server->storage->has('baz')); // false
 Terminal::print($server->storage->getPath());
 
 // remove storage file from disk
-Terminal::print($server->storage->delete());
+Terminal::print($server->storage->deleteLocalFile());
 
 // you can use Storage class as standalone anywhere.
 $storage1 = new Storage(__DIR__ . '/storage/storage1.hub');
