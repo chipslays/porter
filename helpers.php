@@ -47,17 +47,17 @@ if (!function_exists('channels')) {
 if (!function_exists('channel')) {
     /**
      * @param string $id
-     * @param string|array|null $key
+     * @param string|array|null $key Pass array for set channel value, or string for get channel value.
      * @param mixed $default
      * @return Channel|mixed
      */
     function channel(string $id, string|array $key = null, mixed $default = null): mixed
     {
         if ($key === null) {
-            return Server::getInstance()->channels->get($id);
+            return Server::getInstance()->channel($id);
         }
 
-        $channel = Server::getInstance()->channels->get($id);
+        $channel = Server::getInstance()->channel($id);
 
         if (!$channel) {
             return null;
@@ -102,7 +102,7 @@ if (!function_exists('timer')) {
 
 if (!function_exists('copy_dir_to')) {
     /**
-     * Copy dir with all files.
+     * Copy dir with all (nested) files.
      *
      * @param string $src
      * @param string $dist
