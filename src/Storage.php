@@ -2,6 +2,7 @@
 
 namespace Porter;
 
+use Porter\Exceptions\StorageException;
 use Porter\Support\Collection;
 
 class Storage
@@ -16,7 +17,7 @@ class Storage
      *
      * @param string $path
      */
-    public function __construct(public string $path = '')
+    public function __construct(protected ?string $path = null)
     {
         $this->loadData();
     }
@@ -43,6 +44,19 @@ class Storage
     }
 
     /**
+     * Remove value from storage.
+     *
+     * @param string ...$keys
+     * @return self
+     */
+    public function remove(string ...$keys): self
+    {
+        $this->data->remove($keys);
+
+        return $this;
+    }
+
+    /**
      * @param string $key
      * @return bool
      */
@@ -56,13 +70,17 @@ class Storage
      */
     protected function loadData(): void
     {
+        if (!$this->path) {
+            $this->data = new Collection;
+        }
+
         $path = rtrim($this->path, '/\\');
 
         if (!file_exists($path)) {
-            $this->data = new Collection;
-        } else {
-            $this->data = new Collection(unserialize(file_get_contents($path)));
+            throw new StorageException("Path not exists: {$path}");
         }
+
+        $this->data = new Collection(unserialize(file_get_contents($path)));
     }
 
     /**
@@ -84,7 +102,7 @@ class Storage
      *
      * @return bool
      */
-    public function delete(): bool
+    public function deleteLocalFile(): bool
     {
         $path = $this->getPath();
 
@@ -102,8 +120,28 @@ class Storage
      */
     public function getPath(): ?string
     {
+        if (!$this->path) {
+            return null;
+        }
+
         $path = rtrim($this->path, '/\\');
 
-        return $path == '' ? null : $path;
+        return $path;
+    }
+
+    /**
+     * Set storage path.
+     *
+     * Pass null for storage in RAM.
+     *
+     * @param string|null $path
+     * @return self
+     */
+    public function setPath(?string $path = null): self
+    {
+        $this->path = $path;
+        $this->loadData();
+
+        return $this;
     }
 }
