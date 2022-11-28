@@ -1151,10 +1151,10 @@ $client->listen();
 
 Storage is a part of server, all data stored in flat files.
 
-To get started you need set a `$path` where files will be stored.
+To get started you need set a path where files will be stored.
 
 ```php
-server()->storage->path = __DIR__ . '/Storage/storage.hub';
+server()->storage->setPath(__DIR__ . '/server-storage.data'); // you can use any filename
 ```
 
 You can get access to storage like property or method:
@@ -1167,6 +1167,12 @@ server()->storage();
 > **NOTICE:** Set path only after if you set worker instance (`server()->setWorker($worker)`).
 
 > **WARNING:** If you not provide path or an incorrect path, data will be stored in RAM. After server restart you lose your data.
+
+### `setPath(?string $path = null): self`
+
+```php
+server()->storage->setPath(__DIR__ . '/path/to/file'); // you can use any filename
+```
 
 ### `put(string $key, mixed $value): void`
 
@@ -1181,6 +1187,12 @@ server()->storage->get('foo', 'default value'); // foo
 server()->storage->get('baz', 'default value'); // default value
 ```
 
+### `remove(string ...$keys): self`
+
+```php
+server()->storage->remove('foo'); // true
+```
+
 ### `has(string $key): bool`
 
 ```php
@@ -1188,12 +1200,12 @@ server()->storage->has('foo'); // true
 server()->storage->has('baz'); // false
 ```
 
-### `delete(): bool`
+### `deleteLocalFile(): bool`
 
 Remove storage file from disk.
 
 ```php
-server()->storage->delete();
+server()->storage->deleteLocalFile();
 ```
 
 ### `getPath(): ?string`
