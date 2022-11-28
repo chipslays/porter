@@ -8,15 +8,14 @@ use Workerman\Connection\TcpConnection;
 
 class Connection
 {
-    public TcpConnection $connection;
-
-    public function __construct(TcpConnection &$connection)
+    /**
+     * Constructor.
+     *
+     * @param TcpConnection $connection
+     */
+    public function __construct(public readonly TcpConnection &$connection)
     {
-        $this->connection = $connection;
-
-        if (!isset($this->connection->data)) {
-            $this->connection->data = new Collection;
-        }
+        $this->connection->__connection_class_data = new Collection;
     }
 
     /**
@@ -96,7 +95,7 @@ class Connection
      */
     public function setValue(string $key, mixed $value): void
     {
-        $this->connection->data->set($key, $value);
+        $this->connection->__connection_class_data->set($key, $value);
     }
 
     /**
@@ -108,7 +107,7 @@ class Connection
      */
     public function getValue(string $key, mixed $default = null): mixed
     {
-        return $this->connection->data->get($key, $default);
+        return $this->connection->__connection_class_data->get($key, $default);
     }
 
     /**
@@ -119,7 +118,7 @@ class Connection
      */
     public function hasValue(string $key): bool
     {
-        return $this->connection->data->has($key);
+        return $this->connection->__connection_class_data->has($key);
     }
 
     /**
@@ -130,27 +129,15 @@ class Connection
      */
     public function removeValue(string $key): void
     {
-        $this->connection->data = $this->connection->data->remove($key);
+        $this->connection->__connection_class_data = $this->connection->__connection_class_data->remove($key);
     }
 
     /**
-     * Send raw websocket message.
-     *
-     * @param mixed $buffer
-     * @param boolean $raw
-     * @return boolean|null
-     */
-    public function send(mixed $buffer, bool $raw = false): bool|null
-    {
-        return $this->getTcpConnection()->send($buffer, $raw);
-    }
-
-    /**
-     * Get `TcoConnection` instance.
+     * Get `TcpConnection` instance.
      *
      * @return TcpConnection
      */
-    public function getTcpConnection(): TcpConnection
+    public function getTcpConnectionInstance(): TcpConnection
     {
         return $this->connection;
     }

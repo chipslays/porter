@@ -92,7 +92,7 @@ class Server
     public function onConnected(callable $handler): void
     {
         $this->getWorker()->onConnect = function (TcpConnection $connection) {
-            // init connection there
+            // init connection vars and etc...
             $this->initConnection($connection);
         };
 
