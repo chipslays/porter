@@ -17,7 +17,7 @@ class Channels
     }
 
     /**
-     * Get connection channels.
+     * Get connection (user) channels.
      *
      * @return Channel[]
      */
@@ -26,7 +26,7 @@ class Channels
         $channels = [];
 
         foreach ($this->channels as $channelId) {
-            $channels[] = Server::getInstance()->channels->get($channelId);
+            $channels[] = Server::getInstance()->channel($channelId);
         }
 
         return $channels;
