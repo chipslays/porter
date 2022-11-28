@@ -37,6 +37,17 @@ class Payload
     }
 
     /**
+     * Has value in data.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function has(string $key): bool
+    {
+        return $this->data->has($key);
+    }
+
+    /**
      * Validate payload data.
      *
      * @see https://respect-validation.readthedocs.io/en/latest/ Documentation & Examples
