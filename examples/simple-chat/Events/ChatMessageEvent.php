@@ -1,9 +1,9 @@
 <?php
 
+use Porter\Connection;
 use Porter\Server;
 use Porter\Payload;
 use Porter\Events\AbstractEvent;
-use Workerman\Connection\TcpConnection;
 
 class ChatMessageEvent extends AbstractEvent
 {
@@ -13,7 +13,7 @@ class ChatMessageEvent extends AbstractEvent
         'message' => ['stringType', ['length', [1, 256]]],
     ];
 
-    public function handle(TcpConnection $connection, Payload $payload, Server $server)
+    public function handle(Connection $connection, Payload $payload, Server $server)
     {
         if ($this->validate()) return;
 
@@ -21,6 +21,8 @@ class ChatMessageEvent extends AbstractEvent
             'nickname' => $connection->nickname,
             'message' => $payload->data['message'],
         ]);
+
+        dump($connection);
     }
 }
 

@@ -2,8 +2,8 @@
 
 use Porter\Server;
 use Porter\Payload;
+use Porter\Connection;
 use Porter\Events\AbstractEvent;
-use Workerman\Connection\TcpConnection;
 
 class HelloToEvent extends AbstractEvent
 {
@@ -13,7 +13,7 @@ class HelloToEvent extends AbstractEvent
         'username' => ['stringType', ['length', [4, 18]]],
     ];
 
-    public function handle(TcpConnection $connection, Payload $payload, Server $server)
+    public function handle(Connection $connection, Payload $payload, Server $server)
     {
         if ($this->validate()) {
             return $this->reply('bad request', ['errors' => $this->errors]);

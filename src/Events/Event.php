@@ -2,10 +2,10 @@
 
 namespace Porter\Events;
 
+use Porter\Connection;
 use Porter\Server;
 use Porter\Payload;
 use Porter\Events\AbstractEvent;
-use Workerman\Connection\TcpConnection;
 
 class Event extends AbstractEvent
 {
@@ -16,7 +16,7 @@ class Event extends AbstractEvent
      *
      * @return void
      */
-    public function handle(TcpConnection $connection, Payload $payload, Server $server): void
+    public function handle(Connection $connection, Payload $payload, Server $server): void
     {
         //
     }

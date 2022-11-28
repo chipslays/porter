@@ -2,6 +2,7 @@
 
 use Porter\Channel;
 use Porter\Channels;
+use Porter\Connection;
 use Porter\Server;
 use Respect\Validation\Validator;
 use Workerman\Timer;
@@ -9,6 +10,8 @@ use Workerman\Worker;
 
 if (!function_exists('porter')) {
     /**
+     * Get server instance.
+     *
      * @return Server
      */
     function porter(): Server
@@ -19,6 +22,8 @@ if (!function_exists('porter')) {
 
 if (!function_exists('server')) {
     /**
+     * Get server instance.
+     *
      * @return Server
      */
     function server(): Server
@@ -29,6 +34,8 @@ if (!function_exists('server')) {
 
 if (!function_exists('worker')) {
     /**
+     * Get worker instance.
+     *
      * @return Worker
      */
     function worker(): Worker
@@ -37,7 +44,25 @@ if (!function_exists('worker')) {
     }
 }
 
+if (!function_exists('connection')) {
+    /**
+     * Get connection instance by id.
+     *
+     * @param int $id
+     * @return Connection
+     */
+    function connection(int $id): Connection
+    {
+        return Server::getInstance()->connection($id);
+    }
+}
+
 if (!function_exists('channels')) {
+    /**
+     * Get channels.
+     *
+     * @return Channels
+     */
     function channels(): Channels
     {
         return Server::getInstance()->channels();
@@ -46,6 +71,8 @@ if (!function_exists('channels')) {
 
 if (!function_exists('channel')) {
     /**
+     * Get channel, set & get channel value.
+     *
      * @param string $id
      * @param string|array|null $key Pass array for set channel value, or string for get channel value.
      * @param mixed $default
@@ -86,7 +113,7 @@ if (!function_exists('validator')) {
 
 if (!function_exists('timer')) {
     /**
-     * Add a timer.
+     * Create a timer.
      *
      * @param integer|float $interval
      * @param callable $function

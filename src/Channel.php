@@ -10,7 +10,7 @@ class Channel
 {
     use Payloadable;
 
-    /** @var TcpConnection[] */
+    /** @var Connection[] */
     public array $connections = [];
 
     public Collection $data;
@@ -29,10 +29,10 @@ class Channel
     /**
      * Join given connections to channel.
      *
-     * @param TcpConnection|TcpConnection[] $connections
+     * @param Connection|Connection[] $connections
      * @return self
      */
-    public function join(TcpConnection|array $connections): self
+    public function join(Connection|array $connections): self
     {
         $connections = is_array($connections) ?: [$connections];
 
@@ -47,10 +47,10 @@ class Channel
     /**
      * Delete given connection from channel.
      *
-     * @param TcpConnection $connection
+     * @param Connection $connection
      * @return self
      */
-    public function leave(TcpConnection $connection): self
+    public function leave(Connection $connection): self
     {
         if (!$this->exists($connection)) return $this;
 
@@ -63,10 +63,10 @@ class Channel
     /**
      * Checks if given connection exists in channel.
      *
-     * @param TcpConnection $connection
+     * @param Connection $connection
      * @return bool
      */
-    public function exists(TcpConnection $connection): bool
+    public function exists(Connection $connection): bool
     {
         return isset($this->connections[$connection->id]);
     }
@@ -76,13 +76,13 @@ class Channel
      *
      * @param string $event
      * @param array $data
-     * @param TcpConnection[] $excepts Connection instance or connection id.
+     * @param Connection[] $excepts Connection instance or connection id.
      * @return void
      */
-    public function broadcast(string $event, array $data = [], array $excepts = []): void
+    public function broadcast(string $event, array $data = [], TcpConnection|Connection|array $excepts = []): void
     {
-        foreach ($excepts as &$value) {
-            if ($value instanceof TcpConnection) {
+        foreach ((array) $excepts as &$value) {
+            if ($value instanceof Connection || $value instanceof TcpConnection) {
                 $value = $value->id;
             }
         }

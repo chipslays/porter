@@ -13,7 +13,7 @@ class Connection
      *
      * @param TcpConnection $connection
      */
-    public function __construct(public readonly TcpConnection &$connection)
+    public function __construct(protected TcpConnection $connection)
     {
         $this->connection->__connection_class_data = new Collection;
     }
@@ -87,7 +87,7 @@ class Connection
     }
 
     /**
-     * Set private value for this connection.
+     * Set value for this connection.
      *
      * @param string $key
      * @param mixed $value
@@ -99,7 +99,7 @@ class Connection
     }
 
     /**
-     * Get private value.
+     * Get value.
      *
      * @param string $key
      * @param mixed $default
@@ -162,7 +162,7 @@ class Connection
      */
     public function __get(mixed $attribute): mixed
     {
-        return $this->connection->{$attribute};
+        return $this->connection->{$attribute} ?? null;
     }
 
     /**

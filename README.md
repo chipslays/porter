@@ -184,14 +184,14 @@ Add event class handler.
 ```php
 use Porter\Server;
 use Porter\Payload;
+use Porter\Connection;
 use Porter\Events\AbstractEvent;
-use Workerman\Connection\TcpConnection;
 
 class Ping extends AbstractEvent
 {
     public static string $id = 'ping';
 
-    public function handle(TcpConnection $connection, Payload $payload, Server $server): void
+    public function handle(Connection $connection, Payload $payload, Server $server): void
     {
         $this->reply('pong');
     }
@@ -238,9 +238,9 @@ Emitted when a socket connection is successfully established.
 
 ```php
 use Porter\Terminal;
-use Workerman\Connection\TcpConnection;
+use Porter\Connection;
 
-server()->onConnected(function (TcpConnection $connection) {
+server()->onConnected(function (Connection $connection) {
     Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
 
     // Here also available vars: $_GET, $_COOKIE, $_SERVER.
@@ -256,9 +256,9 @@ Emitted when the other end of the socket sends a FIN packet.
 
 ```php
 use Porter\Terminal;
-use Workerman\Connection\TcpConnection;
+use Porter\Connection;
 
-server()->onDisconnected(function (TcpConnection $connection) {
+server()->onDisconnected(function (Connection $connection) {
     Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
 });
 ```
@@ -269,9 +269,9 @@ Emitted when an error occurs with connection.
 
 ```php
 use Porter\Terminal;
-use Workerman\Connection\TcpConnection;
+use Porter\Connection;
 
-server()->onError(function (TcpConnection $connection, $code, $message) {
+server()->onError(function (Connection $connection, $code, $message) {
     Terminal::print("{bg:red}{text:white}Error {$code} {$message}");
 });
 ```
@@ -320,7 +320,7 @@ server()->onReload(function (Worker $worker) {
 Handle non event messages (raw data).
 
 ```php
-server()->onRaw(function (string $payload, TcpConnection $connection) {
+server()->onRaw(function (string $payload, Connection $connection) {
     if ($payload == 'ping') {
         $connection->send('pong');
     }
@@ -382,7 +382,7 @@ server()->channels->create('secret channel');
 $channels = server()->channels;
 ```
 
-### `connection(int $connectionId): ?TcpConnection`
+### `connection(int $connectionId): ?Connection`
 
 Get connection instance by id.
 
@@ -396,7 +396,7 @@ server()->to($connection, 'welcome message', [
 $connection = server()->getWorker()->connections[1337] ?? null;
 ```
 
-### `connections(): TcpConnection[]`
+### `connections(): Connection[]`
 
 Get all connections on server.
 
@@ -509,7 +509,7 @@ if (!server()->channels->exists($channelId)) {
 }
 ```
 
-### `join(string $id, TcpConnection|array $connections): Channel`
+### `join(string $id, Connection|Connection[]|int[] $connections): Channel`
 
 Join or create and join to channel.
 
@@ -520,7 +520,7 @@ server()->channels->join([$connection1, $connection2, $connection3, ...]);
 
 ## 🔹 `Channel`
 
-### `join(TcpConnection|array $connections): self`
+### `join(Connection|array $connections): self`
 
 Join given connections to channel.
 
@@ -530,7 +530,7 @@ $channel->join($connection);
 $channel->join([$connection1, $connection2, $connection3, ...]);
 ```
 
-### `leave(TcpConnection $connection): self`
+### `leave(Connection $connection): self`
 
 Remove given connection from channel.
 
@@ -539,7 +539,7 @@ $channel = server()->channel('secret channel');
 $channel->leave($connection);
 ```
 
-### `exists(TcpConnection $connection): bool`
+### `exists(Connection $connection): bool`
 
 Checks if given connection exists in channel.
 
@@ -552,7 +552,7 @@ $channel->exists($connection);
 
 Send an event to all connection on this channel.
 
-> `TcpConnection[] $excepts` Connection instance or connection id.
+> `Connection[] $excepts` Connection instance or connection id.
 
 ```php
 $channel = server()->channel('secret channel');
@@ -599,7 +599,7 @@ $connection->channel = &$channel;
 
 ### `$channel->connections`
 
-A array of connections in this channel. Key is a `id` of connection, and value is a instance of connection `TcpConnection`.
+A array of connections in this channel. Key is a `id` of connection, and value is a instance of connection `Connection`.
 
 ```php
 $channel = server()->channel('secret channel');
@@ -717,7 +717,7 @@ Available only in events as `class`.
 use Porter\Server;
 use Porter\Payload;
 use Porter\Events\AbstractEvent;
-use Workerman\Connection\TcpConnection;
+use Porter\Connection;
 
 class HelloToEvent extends AbstractEvent
 {
@@ -727,7 +727,7 @@ class HelloToEvent extends AbstractEvent
         'username' => ['stringType', ['length', [3, 18]]],
     ];
 
-    public function handle(TcpConnection $connection, Payload $payload, Server $server): void
+    public function handle(Connection $connection, Payload $payload, Server $server): void
     {
         if ($this->validate()) {
             $this->reply('bad request', ['errors' => $this->errors]);
@@ -752,13 +752,13 @@ Basic ping-pong example:
 use Porter\Server;
 use Porter\Payload;
 use Porter\Events\AbstractEvent;
-use Workerman\Connection\TcpConnection;
+use Porter\Connection;
 
 class Ping extends AbstractEvent
 {
     public static string $type = 'ping';
 
-    public function handle(TcpConnection $connection, Payload $payload, Server $server): void
+    public function handle(Connection $connection, Payload $payload, Server $server): void
     {
         $this->reply('pong');
     }
@@ -778,7 +778,7 @@ server()->addEvent(Ping::class);
 
 Each child class get following properties:
 
-* `TcpConnection $connection` - from whom the event came;
+* `Connection $connection` - from whom the event came;
 * `Payload $payload` - contain data from client;
 * `Server $server` - server instance;
 * `Collection $data` - short cut for payload data (as &link).;
@@ -915,7 +915,7 @@ if ($this->hasErrors()) {
 Yet another short cut for payload data.
 
 ```php
-public function handle(TcpConnection $connection, Payload $payload, Server $server)
+public function handle(Connection $connection, Payload $payload, Server $server)
 {
     $this->data('nickname');
 
@@ -957,7 +957,7 @@ server()->on('new message', function (Event $event) {
 });
 ```
 
-## 🔹 `TcpConnection $connection`
+## 🔹 `TcpConnection|Connection $connection`
 
 It is a global object, changing in one place, it will contain the changed data in another place.
 

@@ -2,8 +2,8 @@
 
 use Porter\Server;
 use Porter\Payload;
+use Porter\Connection;
 use Porter\Events\AbstractEvent;
-use Workerman\Connection\TcpConnection;
 
 class PingEvent extends AbstractEvent
 {
@@ -11,7 +11,7 @@ class PingEvent extends AbstractEvent
 
     protected array $rules = [];
 
-    public function handle(TcpConnection $connection, Payload $payload, Server $server)
+    public function handle(Connection $connection, Payload $payload, Server $server)
     {
         $this->reply('pong');
     }

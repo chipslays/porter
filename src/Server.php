@@ -75,10 +75,10 @@ class Server
     /**
      * Attach features to incoming connection.
      *
-     * @param TcpConnection $connection
+     * @param Connection $connection
      * @return void
      */
-    protected function initConnection(TcpConnection $connection): void
+    protected function initConnection(Connection $connection): void
     {
         $connection->channels = new ConnectionChannels($connection);
     }
@@ -93,11 +93,11 @@ class Server
     {
         $this->getWorker()->onConnect = function (TcpConnection $connection) {
             // init connection vars and etc...
-            $this->initConnection($connection);
+            $this->initConnection(new Connection($connection));
         };
 
         $this->getWorker()->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($handler) {
-            call_user_func_array($handler, [$connection, $header]);
+            call_user_func_array($handler, [new Connection($connection), $header]);
         };
     }
 
@@ -115,7 +115,7 @@ class Server
                 $connection->channels->leaveAll();
             }
 
-            call_user_func_array($handler, [$connection]);
+            call_user_func_array($handler, [new Connection($connection)]);
         };
     }
 
@@ -128,7 +128,7 @@ class Server
     public function onError(callable $handler): void
     {
         $this->getWorker()->onError = function (TcpConnection $connection, $code, $message) use ($handler) {
-            call_user_func_array($handler, [$connection, $code, $message]);
+            call_user_func_array($handler, [new Connection($connection), $code, $message]);
         };
     }
 
@@ -237,6 +237,8 @@ class Server
     public function start(callable $callback = null): void
     {
         $this->getWorker()->onMessage = function (TcpConnection $connection, string $payload) use ($callback) {
+            $connection = new Connection($connection);
+
             // handle heartbeat implementation from client (ping & pong)
             if ($payload == 'ping') {
                 $connection->send('pong');
@@ -359,22 +361,32 @@ class Server
     /**
      * Get connection instance by id.
      *
-     * @param integer $connectionId
-     * @return TcpConnection|null
+     * @param integer $id
+     * @return Connection|null
      */
-    public function connection(int $connectionId): ?TcpConnection
+    public function connection(int $id): ?Connection
     {
-        return $this->getWorker()->connections[$connectionId] ?? null;
+        if (isset($this->getWorker()->connections[$id])) {
+            return new Connection($this->getWorker()->connections[$id]);
+        }
+
+        return null;
     }
 
     /**
      * Get all connections on server.
      *
-     * @return TcpConnection[]
+     * @return Connection[]
      */
     public function connections(): array
     {
-        return $this->getWorker()->connections;
+        $connections = [];
+
+        foreach ($this->getWorker()->connections as $connection) {
+            $connections[$connection->id] = new Connection($connection);
+        }
+
+        return $connections;
     }
 
     /**

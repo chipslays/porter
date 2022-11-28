@@ -1,20 +1,20 @@
 <?php
 
 use Porter\Terminal;
+use Porter\Connection;
 use Workerman\Worker;
-use Workerman\Connection\TcpConnection;
 
 require __DIR__ . '/bootstrap.php';
 
-server()->onConnected(function (TcpConnection $connection) {
+server()->onConnected(function (Connection $connection) {
     Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
 });
 
-server()->onDisconnected(function (TcpConnection $connection) {
+server()->onDisconnected(function (Connection $connection) {
     Terminal::print("{text:darkRed}Disconnected: " . $connection->getRemoteAddress());
 });
 
-server()->onError(function (TcpConnection $connection, $code, $message) {
+server()->onError(function (Connection $connection, $code, $message) {
     Terminal::print("{bg:red}{text:white}Error {$code} {$message}");
 });
 

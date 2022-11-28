@@ -2,16 +2,16 @@
 
 namespace Porter\Connection;
 
-use Porter\Channel;
 use Porter\Server;
-use Workerman\Connection\TcpConnection;
+use Porter\Channel;
+use Porter\Connection;
 
 class Channels
 {
     /** @var string[] */
     protected array $channels = [];
 
-    public function __construct(protected TcpConnection $connection)
+    public function __construct(protected Connection $connection)
     {
         //
     }
@@ -25,8 +25,8 @@ class Channels
     {
         $channels = [];
 
-        foreach ($this->channels as $channelId) {
-            $channels[] = Server::getInstance()->channel($channelId);
+        foreach ($this->channels as $id) {
+            $channels[] = Server::getInstance()->channel($id);
         }
 
         return $channels;

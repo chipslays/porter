@@ -3,6 +3,7 @@
 namespace Porter\Events;
 
 use Porter\Channel;
+use Porter\Connection;
 use Porter\Server;
 use Porter\Payload;
 use Porter\Support\Collection;
@@ -24,9 +25,9 @@ abstract class AbstractEvent
     /**
      * Available if client passed `targetId`.
      *
-     * @var TcpConnection|null
+     * @var Connection|null
      */
-    public ?TcpConnection $target;
+    public ?Connection $target;
 
     /**
      * @var Server
@@ -57,11 +58,11 @@ abstract class AbstractEvent
     /**
      * Constructor.
      *
-     * @param TcpConnection $connection
+     * @param Connection $connection
      * @param Payload $payload
      */
     public function __construct(
-        public TcpConnection $connection,
+        public Connection $connection,
         public Payload $payload,
     ) {
         $this->server = Server::getInstance();
@@ -88,17 +89,17 @@ abstract class AbstractEvent
      *
      * @return mixed
      */
-    abstract public function handle(TcpConnection $connection, Payload $payload, Server $server);
+    abstract public function handle(Connection $connection, Payload $payload, Server $server);
 
     /**
      * Send event to connection.
      *
-     * @param TcpConnection $connection
+     * @param TcpConnection|Connection $connection
      * @param string $event
      * @param array $data
      * @return bool|null
      */
-    public function to(TcpConnection $connection, string $event, array $data = []): ?bool
+    public function to(TcpConnection|Connection $connection, string $event, array $data = []): ?bool
     {
         return $this->server->to($connection, $event, $data);
     }
@@ -131,10 +132,10 @@ abstract class AbstractEvent
      *
      * @param string $event
      * @param array $data
-     * @param TcpConnection[] $excepts Connection instance or connection id.
+     * @param TcpConnection|Connection|int[] $excepts Connection instance or connection id.
      * @return void
      */
-    public function broadcast(string $event, array $data = [], array $excepts = []): void
+    public function broadcast(string $event, array $data = [], array|TcpConnection|Connection $excepts = []): void
     {
         $this->server->broadcast($event, $data, $excepts);
     }
@@ -152,9 +153,9 @@ abstract class AbstractEvent
     /**
      * Getter for target (available if client passed `targetId`).
      *
-     * @return TcpConnection|null
+     * @return Connection|null
      */
-    public function target(): ?TcpConnection
+    public function target(): ?Connection
     {
         return $this->target;
     }

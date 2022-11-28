@@ -2,8 +2,6 @@
 
 namespace Porter;
 
-use Workerman\Connection\TcpConnection;
-
 class Channels
 {
     /** @var Channel[] */
@@ -91,10 +89,10 @@ class Channels
      * Join or create and join to channel.
      *
      * @param string $id
-     * @param TcpConnection|TcpConnection[] $connections
+     * @param Connection|Connection[] $connections
      * @return Channel
      */
-    public function join(string $id, TcpConnection|array $connections): Channel
+    public function join(string $id, Connection|array $connections): Channel
     {
         if ($this->exists($id)) {
             $channel = $this->get($id)->join($connections);

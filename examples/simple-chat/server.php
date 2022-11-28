@@ -1,8 +1,8 @@
 <?php
 
-use Workerman\Worker;
-use Workerman\Connection\TcpConnection;
 use Porter\Server;
+use Porter\Connection;
+use Workerman\Worker;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
@@ -11,7 +11,7 @@ $worker = new Worker('websocket://0.0.0.0:3737');
 $server = Server::getInstance();
 $server->setWorker($worker);
 
-$server->onConnected(function (TcpConnection $connection) {
+$server->onConnected(function (Connection $connection) {
     $connection->nickname = 'Anonymous#' . $connection->id;
 
     server()->broadcast('chat message', [
@@ -20,7 +20,7 @@ $server->onConnected(function (TcpConnection $connection) {
     ]);
 });
 
-$server->onDisconnected(function (TcpConnection $connection) {
+$server->onDisconnected(function (Connection $connection) {
     server()->broadcast('chat message', [
         'nickname' => 'Notification',
         'message' => "{$connection->nickname} has left.",
