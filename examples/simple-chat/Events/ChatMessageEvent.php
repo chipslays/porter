@@ -21,8 +21,6 @@ class ChatMessageEvent extends AbstractEvent
             'nickname' => $connection->nickname,
             'message' => $payload->data['message'],
         ]);
-
-        dump($connection);
     }
 }
 
