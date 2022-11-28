@@ -525,17 +525,17 @@ server()->channels->join([$connection1, $connection2, $connection3, ...]);
 Join given connections to channel.
 
 ```php
-$channel = server()->channels->get('secret channel');
+$channel = server()->channel('secret channel');
 $channel->join($connection);
 $channel->join([$connection1, $connection2, $connection3, ...]);
 ```
 
 ### `leave(TcpConnection $connection): self`
 
-Delete given connection from channel.
+Remove given connection from channel.
 
 ```php
-$channel = server()->channels->get('secret channel');
+$channel = server()->channel('secret channel');
 $channel->leave($connection);
 ```
 
@@ -544,7 +544,7 @@ $channel->leave($connection);
 Checks if given connection exists in channel.
 
 ```php
-$channel = server()->channels->get('secret channel');
+$channel = server()->channel('secret channel');
 $channel->exists($connection);
 ```
 
@@ -555,7 +555,7 @@ Send an event to all connection on this channel.
 > `TcpConnection[] $excepts` Connection instance or connection id.
 
 ```php
-$channel = server()->channels->get('secret channel');
+$channel = server()->channel('secret channel');
 $channel->broadcast('welcome message', [
     'text' => 'Hello world',
 ]);
@@ -578,8 +578,8 @@ $channel->broadcast('welcome message', [
 Delete this channel from channels.
 
 ```php
-$channel = server()->channels->get('secret channel');
-$channel->desstoy();
+$channel = server()->channel('secret channel');
+$channel->destroy();
 
 // now if use $channel, you get an error
 $channel->data->get('foo');
@@ -602,7 +602,7 @@ $connection->channel = &$channel;
 A array of connections in this channel. Key is a `id` of connection, and value is a instance of connection `TcpConnection`.
 
 ```php
-$channel = server()->channels->get('secret channel');
+$channel = server()->channel('secret channel');
 
 foreach($channel->connections, as $connection) {
     $connection->lastMessageAt = time();
@@ -610,9 +610,9 @@ foreach($channel->connections, as $connection) {
 ```
 
 ```php
-$channel = server()->channels->get('secret channel');
+$channel = server()->channel('secret channel');
 
-$connection = $channel->connections[1337];
+$connection = $channel->connections[1337]; // get connection with 1337 id
 ```
 
 ### `$channel->data`
@@ -1254,13 +1254,14 @@ Server::getInstance()->getWorker()->connections;
 
 ```php
 $channel = channel('secret channel'); // get channel instance
+$channel = server()->channel('secret channel');
 $channel = server()->channels->get('secret channel');
 
 channel('secret channel', ['foo' => 'bar']); // set data for given channel (by id)
-server()->channels->set('secret channel')->set('foo', 'bar');
+server()->channel('secret channel')->set('foo', 'bar');
 
 channel('secret channel', 'foo', 'default value'); // get data from channel (by id)
-server()->channels->get('secret channel')->data->get('foo', 'default value');
+server()->channel('secret channel')->data->get('foo', 'default value');
 ```
 
 ## 🔹 Mappable methods (Macros)

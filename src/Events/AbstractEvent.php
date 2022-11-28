@@ -75,7 +75,7 @@ abstract class AbstractEvent
     protected function initMagicalVars(): void
     {
         // Get channel instance by `channelId` parameter.
-        $this->channel = $this->server->channels->get($this->payload->get('channelId', ''));
+        $this->channel = $this->server->channel($this->payload->get('channelId', ''));
 
         // Get target connection instance by `targetId` parameter.
         $this->target = $this->payload->has('targetId')
