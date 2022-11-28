@@ -66,19 +66,21 @@ abstract class AbstractEvent
     ) {
         $this->server = Server::getInstance();
         $this->data = &$this->payload->data;
-        $this->setMagicalVars();
+        $this->initMagicalVars();
     }
 
     /**
      * @return void
      */
-    protected function setMagicalVars(): void
+    protected function initMagicalVars(): void
     {
         // Get channel instance by `channelId` parameter.
-        $this->channel = $this->server->channels->get($this->payload->data['channelId'] ?? '');
+        $this->channel = $this->server->channels->get($this->payload->get('channelId', ''));
 
         // Get target connection instance by `targetId` parameter.
-        $this->target = isset($this->payload->data['targetId']) ? $this->server->connection((int) $this->payload->data['targetId']) : null;
+        $this->target = $this->payload->has('targetId')
+            ? $this->server->connection((int) $this->payload->get('targetId'))
+            : null;
     }
 
     /**

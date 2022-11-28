@@ -23,11 +23,11 @@ class Server
 
     protected Worker $worker;
 
-    public Channels $channels;
+    public readonly Channels $channels;
 
-    public Storage $storage;
+    public readonly Storage $storage;
 
-    public Validator $validator;
+    public readonly Validator $validator;
 
     /** @var string[] */
     protected array $events = [];
@@ -44,7 +44,7 @@ class Server
 
         // set default name for worker
         if (!$this->worker->name || $this->worker->name == 'none') {
-            $this->worker->name = 'Porter#' . mt_rand(1000, 9999);
+            $this->worker->name = 'Porter-' . date('d_m_Y-H_i_s');
         }
 
         $this->bootServer();
@@ -110,10 +110,11 @@ class Server
     public function onDisconnected(callable $handler): void
     {
         $this->getWorker()->onClose = function (TcpConnection $connection) use ($handler) {
-            // fix: ErrorException: Undefined property: Workerman\Connection\TcpConnection::$channels in /srv/naplenke.online/vendor/chipslays/porter/src/Server.php
+            // fix: ErrorException: Undefined property: Workerman\Connection\TcpConnection::$channels in /site/vendor/chipslays/porter/src/Server.php
             if (property_exists($this, 'channels')) {
                 $connection->channels->leaveAll();
             }
+
             call_user_func_array($handler, [$connection]);
         };
     }
@@ -230,46 +231,57 @@ class Server
     /**
      * Start server.
      *
+     * @param callable $callback Execute on every incoming message.
      * @return void
      */
-    public function start(): void
+    public function start(callable $callback = null): void
     {
-        $this->getWorker()->onMessage = function (TcpConnection $connection, string $payload) {
-            // handle heartbeat implementation (ping & pong)
+        $this->getWorker()->onMessage = function (TcpConnection $connection, string $payload) use ($callback) {
+            // handle heartbeat implementation from client (ping & pong)
             if ($payload == 'ping') {
                 $connection->send('pong');
                 return;
             }
 
+            // execute callback if exists
+            if ($callback) {
+                call_user_func_array($callback, [$connection, $payload]);
+            }
+
             $payloadData = @json_decode($payload, true);
 
-            if ($payloadData) {
-                $payload = new Payload($payloadData);
-            } else {
+            if (!$payloadData) {
+                // handle raw event
                 if ($this->onRawHandler) {
                     call_user_func_array($this->onRawHandler, [$payload, $connection]);
                 }
                 return;
             }
 
-            $event = $this->events[$payload->type] ?? null;
+            // handle porter event
+            $payload = new Payload($payloadData);
 
-            if (!$event) {
+            $eventClass = $this->events[$payload->type] ?? null;
+
+            if (!$eventClass) {
+                // if client pass wrong event type, skip. do not throw exception!
                 return;
             }
 
-            if (is_callable($event)) {
-                $handler = $event;
-                $event = new Event($connection, $payload);
-                $event->setHandler($handler);
-                $event->altHandle($event);
+            // if handler anonymous function
+            if (is_callable($eventClass)) {
+                $handler = $eventClass;
+
+                $eventClass = new Event($connection, $payload);
+                $eventClass->setHandler($handler);
+                $eventClass->altHandle($eventClass);
 
                 return;
             }
 
-            /** @var AbstractEvent */
-            $event = new $event($connection, $payload);
-            call_user_func_array([$event, 'handle'], [$connection, $payload, self::getInstance()]);
+            // if handler as event class
+            $eventClass = new $eventClass($connection, $payload);
+            call_user_func_array([$eventClass, 'handle'], [$connection, $payload, self::getInstance()]);
         };
 
         $this->getWorker()->runAll();
@@ -331,6 +343,17 @@ class Server
     public function channels(): Channels
     {
         return $this->channels;
+    }
+
+    /**
+     * Get channel.
+     *
+     * @param string $id
+     * @return Channel|null
+     */
+    public function channel(string $id): ?Channel
+    {
+        return $this->channels()->get($id);
     }
 
     /**
