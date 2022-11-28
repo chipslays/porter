@@ -27,7 +27,10 @@ class Event extends AbstractEvent
      */
     public function altHandle(Event $event): void
     {
-        if (!$this->handler) return;
+        if (!$this->handler) {
+            return;
+        }
+
         call_user_func_array($this->handler, [$event]);
     }
 
