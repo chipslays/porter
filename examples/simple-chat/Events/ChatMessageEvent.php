@@ -1,8 +1,8 @@
 <?php
 
-use Porter\Connection;
 use Porter\Server;
 use Porter\Payload;
+use Porter\Connection;
 use Porter\Events\AbstractEvent;
 
 class ChatMessageEvent extends AbstractEvent
