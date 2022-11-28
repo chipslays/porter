@@ -72,6 +72,7 @@ class Storage
     {
         if (!$this->path) {
             $this->data = new Collection;
+            return;
         }
 
         $path = rtrim($this->path, '/\\');
