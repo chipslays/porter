@@ -38,6 +38,10 @@ echo 'PORTER_LOCAL_PK=/etc/letsencrypt/live/example.com/privkey.pem' >> .env
 php websocket/server.php start
 ```
 
+```bash
+php websocket/server.php start -d # run in background as daemon
+```
+
 6. Create websocket client in views.
 
 ```html
