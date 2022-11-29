@@ -16,13 +16,13 @@ composer require chipslays/porter ^1.x
 <script src="https://cdn.jsdelivr.net/gh/chipslays/porter@latest/dist/porter.min.js"></script>
 ```
 
-1. Place template in root application folder.
+3. Place template in root application folder.
 
 ```bash
 php vendor/bin/porter template:laravel ./websocket
 ```
 
-Can also create a event class.
+3.1 Can also create a event class.
 
 ```bash
 php vendor/bin/porter make:event ./websocket/Events/Example.php "example event"
