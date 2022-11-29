@@ -35,7 +35,7 @@ $server->onRaw(function (string $payload, Connection $connection) {
 // $server->autoloadEvents(__DIR__ . '/Events');
 
 // Or manual
-$server->addEvent(require __DIR__ . '/Events/PingEvent.php');
-$server->addEvent(require __DIR__ . '/Events/HelloToEvent.php');
+// $server->addEvent(require __DIR__ . '/Events/Ping.php');
+// $server->addEvent(require __DIR__ . '/Events/HelloTo.php');
 
 $server->start();
