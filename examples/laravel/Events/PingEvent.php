@@ -5,7 +5,7 @@ use Porter\Payload;
 use Porter\Connection;
 use Porter\Events\AbstractEvent;
 
-class PingEvent extends AbstractEvent
+return new class extends AbstractEvent
 {
     public static string $type = 'ping';
 
@@ -15,6 +15,4 @@ class PingEvent extends AbstractEvent
     {
         $this->reply('pong');
     }
-}
-
-return PingEvent::class;
+};

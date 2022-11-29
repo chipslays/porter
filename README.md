@@ -240,7 +240,7 @@ Emitted when a socket connection is successfully established.
 use Porter\Terminal;
 use Porter\Connection;
 
-server()->onConnected(function (Connection $connection) {
+server()->onConnected(function (Connection $connection, string $header) {
     Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
 
     // Here also available vars: $_GET, $_COOKIE, $_SERVER.
@@ -716,10 +716,10 @@ Available only in events as `class`.
 ```php
 use Porter\Server;
 use Porter\Payload;
-use Porter\Events\AbstractEvent;
 use Porter\Connection;
+use Porter\Events\AbstractEvent;
 
-class HelloToEvent extends AbstractEvent
+return new class extends AbstractEvent
 {
     public static string $type = 'hello to';
 
@@ -737,7 +737,7 @@ class HelloToEvent extends AbstractEvent
         $username = $this->payload->data['username'];
         $this->reply(data: ['message' => "Hello, {$username}!"]);
     }
-}
+};
 ```
 
 ## 🔹 `Events`
@@ -910,14 +910,14 @@ if ($this->hasErrors()) {
 ]
 ```
 
-### `data(string $key, mixed $default = null): mixed`
+### `get(string $key, mixed $default = null): mixed`
 
 Yet another short cut for payload data.
 
 ```php
 public function handle(Connection $connection, Payload $payload, Server $server)
 {
-    $this->data('nickname');
+    $this->get('nickname');
 
     // as property
     $this->data['nickname'];

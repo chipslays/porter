@@ -5,9 +5,9 @@ use Porter\Payload;
 use Porter\Connection;
 use Porter\Events\AbstractEvent;
 
-class HelloToEvent extends AbstractEvent
+return new class extends AbstractEvent
 {
-    public static string $type = 'hello to';
+    public string $type = 'hello to';
 
     protected array $rules = [
         'username' => ['stringType', ['length', [4, 18]]],
@@ -22,6 +22,4 @@ class HelloToEvent extends AbstractEvent
         $username = $this->payload->data['username'];
         $this->reply(data: ['message' => "Hello, {$username}!"]);
     }
-}
-
-return HelloToEvent::class;
+};

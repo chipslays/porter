@@ -16,23 +16,37 @@ abstract class AbstractEvent
     use Payloadable;
 
     /**
+     * Incoming connection instance.
+     *
+     * @var Connection
+     */
+    public readonly Connection $connection;
+
+    /**
+     * Payload instance.
+     *
+     * @var Payload
+     */
+    public readonly Payload $payload;
+
+    /**
      * Available if client passed `channelId`.
      *
      * @var Channel|null
      */
-    public ?Channel $channel;
+    public readonly ?Channel $channel;
 
     /**
      * Available if client passed `targetId`.
      *
      * @var Connection|null
      */
-    public ?Connection $target;
+    public readonly ?Connection $target;
 
     /**
      * @var Server
      */
-    public Server $server;
+    public readonly Server $server;
 
     /**
      * Array of rules for payload data.
@@ -56,18 +70,22 @@ abstract class AbstractEvent
     public Collection $data;
 
     /**
-     * Constructor.
+     * Boot event class after create instance.
      *
      * @param Connection $connection
      * @param Payload $payload
+     * @return self
      */
-    public function __construct(
-        public Connection $connection,
-        public Payload $payload,
-    ) {
+    public function boot(Connection $connection, Payload $payload): self
+    {
+        $this->connection = $connection;
+        $this->payload = $payload;
         $this->server = Server::getInstance();
         $this->data = &$this->payload->data;
+
         $this->initMagicalVars();
+
+        return $this;
     }
 
     /**
@@ -207,7 +225,7 @@ abstract class AbstractEvent
      * @param mixed $default
      * @return mixed
      */
-    public function data(string $key, mixed $default = null): mixed
+    public function get(string $key, mixed $default = null): mixed
     {
         return $this->data->get($key, $default);
     }

@@ -5,9 +5,9 @@ use Porter\Payload;
 use Porter\Connection;
 use Porter\Events\AbstractEvent;
 
-class ChatMessageEvent extends AbstractEvent
+return new class extends AbstractEvent
 {
-    public static string $type = 'chat message';
+    public string $type = 'chat message';
 
     protected array $rules = [
         'message' => ['stringType', ['length', [1, 256]]],
@@ -22,6 +22,4 @@ class ChatMessageEvent extends AbstractEvent
             'message' => $payload->data['message'],
         ]);
     }
-}
-
-return ChatMessageEvent::class;
+};

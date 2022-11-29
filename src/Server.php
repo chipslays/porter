@@ -41,6 +41,7 @@ class Server
     public function setWorker(Worker $worker): void
     {
         $this->worker = $worker;
+        $this->worker->count = 1; // use only 1 worker process
 
         // set default name for worker
         if (!$this->worker->name || $this->worker->name == 'none') {
@@ -174,16 +175,18 @@ class Server
     /**
      * Add event handler.
      *
-     * @param string $className
+     * @param AbstractEvent|string $eventClass
      * @return self
      */
-    public function addEvent(string $className): self
+    public function addEvent(AbstractEvent|string $eventClass): self
     {
-        if (isset($this->events[$className::$type])) {
-            throw new PorterException("Event '{$className::$type}' already exists.");
+        $eventClass = $eventClass instanceof AbstractEvent ? $eventClass : new $eventClass;
+
+        if (isset($this->events[$eventClass->type])) {
+            throw new PorterException("Event class '{$eventClass->type}' already exists.");
         }
 
-        $this->events[$className::$type] = $className;
+        $this->events[$eventClass->type] = $eventClass;
 
         return $this;
     }
@@ -202,13 +205,13 @@ class Server
         }, $masks);
 
         foreach (call_user_func('array_merge', ...$files) as $file) {
-            $className = require $file;
+            $eventClass = require $file;
 
-            if ($className == 1) {
-                throw new PorterException("Event class must return class name when loading by 'autoloadEvents' method.");
+            if (!$eventClass instanceof AbstractEvent) {
+                throw new PorterException('Event must return anonymous class which extends AbstractEvent class: ' . $file);
             }
 
-            $this->addEvent($className);
+            $this->addEvent($eventClass);
         }
     }
 
@@ -274,7 +277,8 @@ class Server
             if (is_callable($eventClass)) {
                 $handler = $eventClass;
 
-                $eventClass = new Event($connection, $payload);
+                /** @var Event */
+                $eventClass = (new Event)->boot($connection, $payload);
                 $eventClass->setHandler($handler);
                 $eventClass->altHandle($eventClass);
 
@@ -282,7 +286,7 @@ class Server
             }
 
             // if handler as event class
-            $eventClass = new $eventClass($connection, $payload);
+            $eventClass = (new $eventClass)->boot($connection, $payload);
             call_user_func_array([$eventClass, 'handle'], [$connection, $payload, self::getInstance()]);
         };
 
