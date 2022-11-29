@@ -17,6 +17,38 @@ switch ($argv[1] ?? null) {
         Terminal::print('{bg:cyan}{text:white} 📁 ' . realpath($argv[2]));
         break;
 
+    case 'make:event':
+        if (file_exists($argv[2])) {
+            Terminal::print("{bg:red}{text:white}Event class '{$argv[2]}' already exists.");
+            break;
+        }
+
+        $type = $argv[3] ?? '';
+
+        $eventClass = <<<EOF
+        <?php
+
+        use Porter\Server;
+        use Porter\Payload;
+        use Porter\Connection;
+        use Porter\Events\AbstractEvent;
+
+        return new class extends AbstractEvent
+        {
+            public string \$type = '$type';
+
+            protected array \$rules = [];
+
+            public function handle(Connection \$connection, Payload \$payload, Server \$server)
+            {
+                //
+            }
+        };
+        EOF;
+
+        file_put_contents($argv[2], $eventClass);
+        break;
+
     default:
         Terminal::print('{text:darkGreen}List of commands:');
         Terminal::print('    {text:white}template:laravel [path] {reset}- Integration to Laravel project. [e.g. template:laravel ./websocket]');
