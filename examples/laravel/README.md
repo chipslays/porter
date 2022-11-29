@@ -22,6 +22,12 @@ composer require chipslays/porter ^1.x
 php vendor/bin/porter template:laravel ./websocket
 ```
 
+Can also create a event class.
+
+```bash
+php vendor/bin/porter make:event ./websocket/Events/Example.php "example event"
+```
+
 4. Add variables to `.env` file.
 
 ```bash
