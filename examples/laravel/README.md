@@ -22,7 +22,7 @@ composer require chipslays/porter ^1.x
 php vendor/bin/porter template:laravel ./websocket
 ```
 
-3.1 Can also create a event class.
+Tip: You can also create a event class.
 
 ```bash
 php vendor/bin/porter make:event ./websocket/Events/Example.php "example event"
