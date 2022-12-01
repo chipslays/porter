@@ -15,7 +15,7 @@ return new class extends AbstractEvent
 
     public function handle(Connection $connection, Payload $payload, Server $server)
     {
-        if ($this->validate()) {
+        if (!$this->validate()) {
             return $this->reply('bad request', ['errors' => $this->errors]);
         }
 

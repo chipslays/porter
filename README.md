@@ -677,14 +677,6 @@ Is a id of event, for example, `welcome message`.
 $payload->type; // string
 ```
 
-### `$payload->timestamp`
-
-A timestamp when event was came (server time and timezone).
-
-```php
-$payload->timestamp; // int
-```
-
 ### `$payload->data`
 
 An object of values passed from the client.
@@ -729,7 +721,7 @@ return new class extends AbstractEvent
 
     public function handle(Connection $connection, Payload $payload, Server $server): void
     {
-        if ($this->validate()) {
+        if (!$this->validate()) {
             $this->reply('bad request', ['errors' => $this->errors]);
             return;
         }
@@ -882,10 +874,10 @@ Validate payload data.
 
 Pass custom rules. Default use $rules class attribute.
 
-Returns True if has errors.
+Returns `false` if has errors.
 
 ```php
-if ($this->validate()) {
+if (!$this->validate()) {
     return $this->reply(/** ... */);
 }
 ```
@@ -1327,9 +1319,8 @@ client.close();
 
 // event handler
 client.on('ping', payload => {
-    // available property
+    // available properties
     payload.type;
-    payload.timestamp;
     payload.data;
 
     console.log(payload.data.foo) // bar
@@ -1341,7 +1332,7 @@ client.event('pong', {
 });
 
 // chain methods
-client.event('ping').on('pong', payload => console.log(payload.timestamp));
+client.event('ping').on('pong', payload => console.log(payload.type));
 
 // send event and handle answer in one method
 client.event('get online users', {/* ... */}, payload => {

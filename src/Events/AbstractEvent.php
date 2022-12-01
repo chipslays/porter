@@ -192,7 +192,7 @@ abstract class AbstractEvent
      * Validate payload data.
      *
      * @param array $rules Pass custom rules. Default use $rules class attribute.
-     * @return bool Returns True if has errors.
+     * @return bool Returns False if has errors.
      */
     protected function validate(array $rules = null): bool
     {
@@ -205,7 +205,7 @@ abstract class AbstractEvent
             }
         }
 
-        return $this->hasErrors();
+        return !$this->hasErrors();
     }
 
     /**

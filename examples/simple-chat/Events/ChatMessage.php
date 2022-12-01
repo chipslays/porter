@@ -15,7 +15,7 @@ return new class extends AbstractEvent
 
     public function handle(Connection $connection, Payload $payload, Server $server)
     {
-        if ($this->validate()) return;
+        if (!$this->validate()) return;
 
         $this->broadcast($payload->type, data: [
             'nickname' => $connection->nickname,
