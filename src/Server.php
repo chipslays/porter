@@ -47,7 +47,7 @@ class Server
             $this->worker->name = 'Porter-' . date('d_m_Y-H_i_s');
         }
 
-        $this->bootServer();
+        $this->boot();
     }
 
     /**
@@ -65,7 +65,7 @@ class Server
      *
      * @return void
      */
-    protected function bootServer(): void
+    protected function boot(): void
     {
         $this->storage = new Storage;
         $this->channels = new Channels($this);
@@ -76,79 +76,91 @@ class Server
      * Emitted when a socket connection is successfully established.
      *
      * @param callable $handler
-     * @return void
+     * @return self
      */
-    public function onConnected(callable $handler): void
+    public function onConnected(callable $handler): self
     {
         $this->getWorker()->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($handler) {
             call_user_func_array($handler, [new Connection($connection), $header]);
         };
+
+        return $this;
     }
 
     /**
      * Emitted when the other end of the socket sends a FIN packet.
      *
      * @param callable $handler
-     * @return void
+     * @return self
      */
-    public function onDisconnected(callable $handler): void
+    public function onDisconnected(callable $handler): self
     {
         $this->getWorker()->onClose = function (TcpConnection $connection) use ($handler) {
             $connection->channels->leaveAll();
             call_user_func_array($handler, [new Connection($connection)]);
         };
+
+        return $this;
     }
 
     /**
      * Emitted when an error occurs with connection.
      *
      * @param callable $handler
-     * @return void
+     * @return self
      */
-    public function onError(callable $handler): void
+    public function onError(callable $handler): self
     {
         $this->getWorker()->onError = function (TcpConnection $connection, $code, $message) use ($handler) {
             call_user_func_array($handler, [new Connection($connection), $code, $message]);
         };
+
+        return $this;
     }
 
     /**
      * Emitted when worker processes start.
      *
      * @param callable $handler
-     * @return void
+     * @return self
      */
-    public function onStart(callable $handler): void
+    public function onStart(callable $handler): self
     {
         $this->getWorker()->onWorkerStart = function (Worker $worker) use ($handler) {
             call_user_func_array($handler, [$worker]);
         };
+
+        return $this;
     }
 
     /**
      * Emitted when worker processes stoped.
      *
      * @param callable $handler
-     * @return void
+     * @return self
      */
-    public function onStop(callable $handler): void
+    public function onStop(callable $handler): self
     {
         $this->getWorker()->onWorkerStop = function (Worker $worker) use ($handler) {
             call_user_func_array($handler, [$worker]);
         };
+
+        return $this;
     }
 
     /**
      * Emitted when worker processes get reload signal.
      *
      * @param callable $handler
-     * @return void
+     * @return self
      */
-    public function onReload(callable $handler): void
+    public function onReload(callable $handler): self
     {
         $this->getWorker()->onReload = function (Worker $worker) use ($handler) {
             call_user_func_array($handler, [$worker]);
         };
+
+        return $this;
     }
 
     /**
@@ -175,9 +187,11 @@ class Server
      *
      * @param string $path
      * @param string|string[] $mask
-     * @return void
+     * @return self
+     *
+     * @throws PorterException
      */
-    public function autoloadEvents(string $path, string|array $masks = ['*.php', '**/*.php']): void
+    public function autoloadEvents(string $path, string|array $masks = ['*.php', '**/*.php']): self
     {
         $files = array_map(function ($mask) use ($path) {
             return glob(rtrim($path, '/\\') . '/' . ltrim($mask, '/\\'));
@@ -192,6 +206,8 @@ class Server
 
             $this->addEvent($eventClass);
         }
+
+        return $this;
     }
 
     /**
@@ -199,15 +215,17 @@ class Server
      *
      * @param string $type
      * @param callable $handler
-     * @return void
+     * @return self
      */
-    public function on(string $type, callable $handler): void
+    public function on(string $type, callable $handler): self
     {
         if (isset($this->events[$type])) {
             throw new PorterException("Event '{$type}' already exists.");
         }
 
         $this->events[$type] = $handler;
+
+        return $this;
     }
 
     /**
@@ -234,23 +252,24 @@ class Server
 
             $payloadData = @json_decode($payload, true);
 
-            if (!$payloadData) {
-                // handle raw event
+            if (!$payloadData || !isset($payloadData['type'])) {
+                // handle raw event (no json or no porter event)
                 if ($this->onRawHandler) {
                     call_user_func_array($this->onRawHandler, [$payload, $connection]);
                 }
+
                 return;
             }
 
             // handle porter event
-            $payload = new Payload($payloadData);
-
-            $eventClass = $this->events[$payload->type] ?? null;
+            $eventClass = $this->events[$payloadData['type']] ?? null;
 
             if (!$eventClass) {
                 // if client pass wrong event type, skip. do not throw exception!
                 return;
             }
+
+            $payload = new Payload($payloadData);
 
             // if handler anonymous function
             if (is_callable($eventClass)) {
@@ -291,9 +310,9 @@ class Server
      * @param string $event
      * @param array $data
      * @param int[]|TcpConnection[]|Connection[] $excepts TcpConnection, Connection instance or connection ids.
-     * @return void
+     * @return self
      */
-    public function broadcast(string $event, array $data = [], array|TcpConnection|Connection $excepts = []): void
+    public function broadcast(string $event, array $data = [], array|TcpConnection|Connection $excepts = []): self
     {
         foreach ((array) $excepts as &$value) {
             if ($value instanceof TcpConnection || $value instanceof Connection) {
@@ -308,6 +327,8 @@ class Server
 
             $this->to($connection, $event, $data);
         }
+
+        return $this;
     }
 
     /**
