@@ -10,7 +10,7 @@ class Channel
 {
     use Payloadable;
 
-    /** @var Connection[] */
+    /** @var array Of TcpConnection and Connection */
     public array $connections = [];
 
     public Collection $data;
@@ -29,16 +29,16 @@ class Channel
     /**
      * Join given connections to channel.
      *
-     * @param Connection|Connection[] $connections
+     * @param TcpConnection|TcpConnection[]|Connection|Connection[] $connections
      * @return self
      */
-    public function join(Connection|array $connections): self
+    public function join(TcpConnection|Connection|array $connections): self
     {
         $connections = is_array($connections) ?: [$connections];
 
         foreach ($connections as $connection) {
             $this->connections[$connection->id] = $connection;
-            $connection->channels->add($this->id);
+            $connection->channels->attach($this->id);
         }
 
         return $this;
@@ -47,15 +47,17 @@ class Channel
     /**
      * Delete given connection from channel.
      *
-     * @param Connection $connection
+     * @param TcpConnection|Connection $connection
      * @return self
      */
-    public function leave(Connection $connection): self
+    public function leave(TcpConnection|Connection $connection): self
     {
-        if (!$this->exists($connection)) return $this;
+        if (!$this->exists($connection)) {
+            return $this;
+        };
 
         unset($this->connections[$connection->id]);
-        $connection->channels->delete($this->id);
+        $connection->channels->detach($this->id);
 
         return $this;
     }
@@ -66,7 +68,7 @@ class Channel
      * @param Connection $connection
      * @return bool
      */
-    public function exists(Connection $connection): bool
+    public function exists(TcpConnection|Connection $connection): bool
     {
         return isset($this->connections[$connection->id]);
     }
