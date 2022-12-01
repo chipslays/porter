@@ -13,7 +13,6 @@ trait Payloadable
     {
         $payload = [
             'type' => $type,
-            'timestamp' => time(),
             'data' => $data,
         ];
 

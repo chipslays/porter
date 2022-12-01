@@ -8,8 +8,6 @@ class Payload
 {
     public readonly string $type;
 
-    public readonly int $timestamp;
-
     public Collection $data;
 
     /**
@@ -21,7 +19,6 @@ class Payload
     {
         $this->type = $payload['type'];
         $this->data = new Collection($payload['data'] ?? []);
-        $this->timestamp = $payload['timestamp'] ?? time();
     }
 
     /**

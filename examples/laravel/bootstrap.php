@@ -12,7 +12,7 @@ if (isset($_ENV['PORTER_SSL']) && $_ENV['PORTER_SSL'] == 'true') {
             'local_cert' => $_ENV['PORTER_LOCAL_CERT'],
             'local_pk' => $_ENV['PORTER_LOCAL_PK'],
             'verify_peer' => false,
-        ]
+        ],
     ];
 
     $worker = new Worker('websocket://0.0.0.0:3737', $context);

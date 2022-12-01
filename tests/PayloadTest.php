@@ -4,7 +4,6 @@ use Porter\Payload;
 
 $payload = new Payload([
     'type' => 'example event',
-    'timestamp' => time(),
     'data' => [
         'firstname' => 'John',
         'lastname' => 'Doe',
@@ -18,10 +17,6 @@ $payload = new Payload([
 
 it('event id', function () use ($payload) {
     expect($payload->type)->toEqual('example event');
-});
-
-it('event timestamp', function () use ($payload) {
-    expect($payload->timestamp)->toBeInt();
 });
 
 it('event data', function () use ($payload) {

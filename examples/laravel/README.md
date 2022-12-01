@@ -75,4 +75,4 @@ php artisan serve
 
 8. Go to http://127.0.0.1:8000 and open dev tools.
 
-If all ok, you can see console log: `{type: 'pong', timestamp: 1669092112, data: Array(0)}`
+If all ok, you can see console log: `{type: 'pong', data: Array(0)}`
