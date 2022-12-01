@@ -644,7 +644,7 @@ isset($channel->data['foo']);
 
 The payload is the object that came from the client.
 
-### `get(string $key, mixed $default = null): mixed`
+### `payload(string $key, mixed $default = null): mixed`
 
 Get value from data.
 
@@ -656,7 +656,7 @@ $payload->data->get('foo', 'default value');
 $payload->data['foo'] ?? 'default value';
 ```
 
-### `is(string|array $rule, string $property): bool`
+### `is(string|array $rule, string $key): bool`
 
 Validate payload data.
 
@@ -902,7 +902,7 @@ if ($this->hasErrors()) {
 ]
 ```
 
-### `get(string $key, mixed $default = null): mixed`
+### `payload(string $key, mixed $default = null): mixed`
 
 Yet another short cut for payload data.
 

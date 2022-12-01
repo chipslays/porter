@@ -6,7 +6,6 @@ use Porter\Events\Event;
 use Porter\Events\AbstractEvent;
 use Porter\Traits\Rawable;
 use Porter\Traits\Payloadable;
-use Porter\Connection\Channels as ConnectionChannels;
 use Porter\Exceptions\PorterException;
 use Sauce\Traits\Singleton;
 use Sauce\Traits\Mappable;
@@ -74,17 +73,6 @@ class Server
     }
 
     /**
-     * Attach features to incoming connection.
-     *
-     * @param Connection $connection
-     * @return void
-     */
-    protected function initConnection(Connection $connection): void
-    {
-        $connection->channels = new ConnectionChannels($connection);
-    }
-
-    /**
      * Emitted when a socket connection is successfully established.
      *
      * @param callable $handler
@@ -92,11 +80,6 @@ class Server
      */
     public function onConnected(callable $handler): void
     {
-        $this->getWorker()->onConnect = function (TcpConnection $connection) {
-            // init connection vars and etc...
-            $this->initConnection(new Connection($connection));
-        };
-
         $this->getWorker()->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($handler) {
             call_user_func_array($handler, [new Connection($connection), $header]);
         };
@@ -111,11 +94,7 @@ class Server
     public function onDisconnected(callable $handler): void
     {
         $this->getWorker()->onClose = function (TcpConnection $connection) use ($handler) {
-            // fix: ErrorException: Undefined property: Workerman\Connection\TcpConnection::$channels in /site/vendor/chipslays/porter/src/Server.php
-            if (property_exists($this, 'channels')) {
-                $connection->channels->leaveAll();
-            }
-
+            $connection->channels->leaveAll();
             call_user_func_array($handler, [new Connection($connection)]);
         };
     }

@@ -49,15 +49,15 @@ class Payload
      *
      * @see https://respect-validation.readthedocs.io/en/latest/ Documentation & Examples
      *
-     * @param string $method
-     * @param string $arguments
+     * @param string|array $rule
+     * @param string $key Payload key
      * @return bool
      */
-    public function is(string|array $rule, string $property): bool
+    public function is(string|array $rule, string $key): bool
     {
         $rule = (array) $rule;
         return Server::getInstance()->validator::create()
             ->__call($rule[0], isset($rule[1]) ? (array) $rule[1] : [])
-            ->validate($this->data->get($property));
+            ->validate($this->data->get($key));
     }
 }

@@ -225,7 +225,7 @@ abstract class AbstractEvent
      * @param mixed $default
      * @return mixed
      */
-    public function get(string $key, mixed $default = null): mixed
+    public function payload(string $key, mixed $default = null): mixed
     {
         return $this->data->get($key, $default);
     }

@@ -4,8 +4,14 @@ namespace Porter;
 
 use Porter\Connection\Channels;
 use Porter\Support\Collection;
+use Workerman\Connection\ConnectionInterface;
 use Workerman\Connection\TcpConnection;
 
+/**
+ * @property int $id
+ * @property Collection $data
+ * @property Channels $channels
+ */
 class Connection
 {
     /**
@@ -15,7 +21,13 @@ class Connection
      */
     public function __construct(protected TcpConnection $connection)
     {
-        $this->connection->__connection_class_data = new Collection;
+        if (!isset($this->connection->data)) {
+            $this->connection->data = new Collection;
+        }
+
+        if (!isset($this->connection->channels)) {
+            $this->connection->channels = new Channels($this->connection);
+        }
     }
 
     /**
@@ -31,105 +43,53 @@ class Connection
     }
 
     /**
-     * Set current channel for this connection.
-     *
-     * @param Channel $channel
-     * @return void
-     */
-    public function setChannel(Channel $channel): void
-    {
-        $this->connection->channel = &$channel;
-    }
-
-    /**
-     * Get current channel
-     *
-     * @return Channel|null
-     */
-    public function channel(): ?Channel
-    {
-        return $this->hasChannel() ? $this->connection->channel : null;
-    }
-
-    /**
-     * Returns true if channel is set.
-     *
-     * @return bool
-     */
-    public function hasChannel(): bool
-    {
-        return isset($this->connection->channel);
-    }
-
-    /**
-     * Remove channel from connection.
-     *
-     * @param bool $leaveChannel
-     * @return void
-     */
-    public function deleteChannel(bool $leaveChannel = false): void
-    {
-        if ($leaveChannel) {
-            $this->connection->channel->leave($this->connection);
-        }
-
-        unset($this->connection->channel);
-    }
-
-    /**
-     * Leave all channels for this connection.
-     *
-     * @return void
-     */
-    public function leaveAllChannels(): void
-    {
-        $this->channels()->leaveAll();
-    }
-
-    /**
      * Set value for this connection.
      *
-     * @param string $key
+     * @param mixed $key
      * @param mixed $value
-     * @return void
+     * @return self
      */
-    public function setValue(string $key, mixed $value): void
+    public function set(mixed $key, mixed $value): self
     {
-        $this->connection->__connection_class_data->set($key, $value);
+        $this->connection->data->set($key, $value);
+
+        return $this;
     }
 
     /**
      * Get value.
      *
-     * @param string $key
+     * @param mixed $key
      * @param mixed $default
      * @return mixed
      */
-    public function getValue(string $key, mixed $default = null): mixed
+    public function get(mixed $key, mixed $default = null): mixed
     {
-        return $this->connection->__connection_class_data->get($key, $default);
+        return $this->connection->data->get($key, $default);
     }
 
     /**
      * Returns true if key exists.
      *
-     * @param string $key
+     * @param mixed $key
      * @return bool
      */
-    public function hasValue(string $key): bool
+    public function has(mixed $key): bool
     {
-        return $this->connection->__connection_class_data->has($key);
+        return $this->connection->data->has($key);
     }
 
     /**
      * Remove private value.
      *
-     * @param string $key
-     * @return void
+     * @param mixed $key
+     * @return self
      */
-    public function removeValue(string $key): void
+    public function remove(mixed $key): self
     {
-        $this->connection->__connection_class_data = $this->connection->__connection_class_data->remove($key);
+        $this->connection->data = $this->connection->data->remove($key);
+
+        return $this;
     }
 
     /**

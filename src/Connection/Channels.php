@@ -5,13 +5,14 @@ namespace Porter\Connection;
 use Porter\Server;
 use Porter\Channel;
 use Porter\Connection;
+use Workerman\Connection\TcpConnection;
 
 class Channels
 {
     /** @var string[] */
     protected array $channels = [];
 
-    public function __construct(protected Connection $connection)
+    public function __construct(protected TcpConnection|Connection $connection)
     {
         //
     }
@@ -35,7 +36,7 @@ class Channels
     /**
      * Get channels count.
      *
-     * @return integer
+     * @return int
      */
     public function count(): int
     {
@@ -46,22 +47,26 @@ class Channels
      * When connection join to channel should attach channel id to connection.
      *
      * @param string $channelId
-     * @return void
+     * @return self
      */
-    public function add(string $channelId): void
+    public function attach(string $channelId): self
     {
         $this->channels[$channelId] = $channelId;
+
+        return $this;
     }
 
     /**
-     * Method for when connection join to channel should detach channel id from connection.
+     * Method for when connection leave the channel should detach channel id from connection.
      *
      * @param string $channelId
-     * @return void
+     * @return self
      */
-    public function delete(string $channelId): void
+    public function detach(string $channelId): self
     {
         unset($this->channels[$channelId]);
+
+        return $this;
     }
 
     /**
