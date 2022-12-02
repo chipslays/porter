@@ -78,7 +78,8 @@ class Storage
         $path = rtrim($this->path, '/\\');
 
         if (!file_exists($path)) {
-            throw new StorageException("Path not exists: {$path}");
+            $this->data = new Collection;
+            $this->saveData();
         }
 
         $this->data = new Collection(unserialize(file_get_contents($path)));
