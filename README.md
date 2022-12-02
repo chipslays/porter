@@ -97,7 +97,7 @@ Send `ping` event on established connection.
     const client = new Porter(ws);
 
     client.connected = () => {
-        client.event('ping');
+        client.send('ping');
     }
 
     client.on('pong', payload => {
@@ -826,7 +826,7 @@ To reply with the current `type`, pass only the `$data` parameter.
 
 **On front-end:**
 ```javascript
-client.event('hello to', {username: 'John Doe'}, payload => {
+client.send('hello to', {username: 'John Doe'}, payload => {
     console.log(payload.data.message); // Hello, John Doe!
 });
 ```
@@ -1327,21 +1327,21 @@ client.on('ping', payload => {
 });
 
 // send event to server
-client.event('pong', {
+client.send('pong', {
     foo: 'bar',
 });
 
 // chain methods
-client.event('ping').on('pong', payload => console.log(payload.type));
+client.send('ping').on('pong', payload => console.log(payload.type));
 
 // send event and handle answer in one method
-client.event('get online users', {/* ... */}, payload => {
+client.send('get online users', {/* ... */}, payload => {
     console.log(payload.type); // contains same event type 'get online users'
     console.log(payload.data.online); // and server answer e.g. '1337 users'
 });
 
 // pass channelId and targetId for magic properties on back-end server
-client.event('magical properties example', {
+client.send('magical properties example', {
     channelId: 'secret channel',
     targetId: 1337,
 
@@ -1349,15 +1349,15 @@ client.event('magical properties example', {
 });
 
 // send raw websocket data
-client.sendRaw('hello world');
+client.raw.send('hello world');
 
 // send raw websocket data as json
-client.sendRaw(JSON.stringify({
+client.raw.send(JSON.stringify({
     foo: 'bar',
 }));
 
 // handle raw websocket data from server
-client.onRaw('hello from server', data => {
+client.raw.on('hello from server', data => {
     console.log(data); // hello from server
 });
 
