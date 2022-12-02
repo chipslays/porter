@@ -1,6 +1,3 @@
+.vscode
 /composer.lock
 /vendor
-/examples/test.php
-/examples/basic/Storage/*
-/src_old
-/test
