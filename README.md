@@ -396,13 +396,13 @@ server()->to($connection, 'welcome message', [
 $connection = server()->getWorker()->connections[1337] ?? null;
 ```
 
-### `connections(): Connection[]`
+### `connections(): Collection[]`
 
-Get all connections on server.
+Get collection of all connections on server.
 
 ```php
 $connections = server()->connections();
-server()->broadcast('update users count', ['count' => count($connections)]);
+server()->broadcast('update users count', ['count' => $connections->count()]);
 
 // also can get like
 $connections = server()->getWorker()->connections;

@@ -6,6 +6,7 @@ use Porter\Events\Event;
 use Porter\Events\AbstractEvent;
 use Porter\Traits\Rawable;
 use Porter\Traits\Payloadable;
+use Porter\Support\Collection;
 use Porter\Exceptions\PorterException;
 use Sauce\Traits\Singleton;
 use Sauce\Traits\Mappable;
@@ -380,9 +381,9 @@ class Server
     /**
      * Get all connections on server.
      *
-     * @return Connection[]
+     * @return Collection
      */
-    public function connections(): array
+    public function connections(): Collection
     {
         $connections = [];
 
@@ -390,7 +391,7 @@ class Server
             $connections[$connection->id] = new Connection($connection);
         }
 
-        return $connections;
+        return new Collection($connections);
     }
 
     /**

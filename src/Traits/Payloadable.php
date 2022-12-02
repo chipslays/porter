@@ -9,7 +9,7 @@ trait Payloadable
      * @param array $data
      * @return string
      */
-    protected function makePayload(string $type, array $data): string
+    protected function makePayload(string $type, array $data = []): string
     {
         $payload = [
             'type' => $type,

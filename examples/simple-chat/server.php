@@ -30,7 +30,7 @@ $server->onDisconnected(function (Connection $connection) {
 $server->onStart(function (Worker $worker) {
     timer(1, function () {
         server()->broadcast('update users count', [
-            'count' => count(server()->connections()),
+            'count' => server()->connections()->count(),
         ]);
     });
 });

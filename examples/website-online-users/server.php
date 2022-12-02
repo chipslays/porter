@@ -11,7 +11,7 @@ server()->setWorker($worker);
 server()->onStart(function (Worker $worker) {
     timer(1, function () {
         server()->broadcast('online users', [
-            'count' => count(server()->connections()),
+            'count' => server()->connections()->count(),
         ]);
     });
 });
