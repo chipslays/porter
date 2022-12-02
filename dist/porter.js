@@ -1,33 +1,24 @@
-/**
- * @package Porter
- * @description An easy way to build real-time apps with a WebSocket server/client and channels.
- * @author chipslays
- * @license MIT
- * @link https://github.com/chipslays/porter
- */
 class Porter {
     /**
-     * Object with events.
+     * @param {object}
      */
-    events = {};
+    events = {
+        porter: {},
+        raw: {},
+    };
 
     /**
-     * Raw websocket events.
+     * @param {array}
      */
-    rawEvents = {};
+    queue = [];
 
     /**
-     * Options.
+     * @param {object}
      */
     options = {
         pingInterval: 30000,
         maxBodySize: 1e+6,
     };
-
-    /**
-     * Queue while WebSocket not connected.
-     */
-    shouldSend = [];
 
     /**
      * @param {function}
@@ -49,11 +40,20 @@ class Porter {
      */
     pong;
 
-    pingInterval;
+    /**
+     * @param {number}
+     */
+    __pingInterval;
 
     /**
-     * Constructor.
-     *
+     * @param {object}
+     */
+    raw = {
+        on: null,
+        send: null,
+    };
+
+    /**
      * @param {WebSocket} ws
      */
     constructor(ws, options) {
@@ -66,20 +66,33 @@ class Porter {
             };
         }
 
-        this.initPingPongEvent();
+        this.raw.on = (data, handler) => {
+            if (data == 'pong' && 'pong' in this.events.raw) {
+                throw new Error('You cannot override the "pong" service event. Use `porterInstance.pong = () => {...}` instead.');
+            }
+
+            this.events.raw[data] = handler;
+
+            return this;
+        }
+
+        this.raw.send = (data) => {
+            this.ws.send(data);
+        }
+
+        this.initPingPong();
     }
 
-    initPingPongEvent() {
-        this.pingInterval ?
-            clearInterval(this.pingInterval) :
-            this.pingInterval = setInterval(() => {
+    initPingPong() {
+        if (this.__pingInterval) {
+            clearInterval(this.__pingInterval);
+        } else {
+            this.__pingInterval = setInterval(() => {
                 this.sendRaw('ping');
             }, this.options.pingInterval);
+        }
 
-        this.onRaw('pong', payload => {
-            // code...
-
-            // exec user function for pong event
+        this.raw.on('pong', payload => {
             if (typeof this.pong == 'function') {
                 this.pong(payload);
             }
@@ -94,7 +107,7 @@ class Porter {
      * @returns {self}
      */
     on(type, handler) {
-        this.events[type] = handler;
+        this.events.porter[type] = handler;
         return this;
     }
 
@@ -106,62 +119,49 @@ class Porter {
      * @param {?function} handler opt_argument Alternative for `on` method.
      * @returns
      */
-    event(type, data, callback) {
+    send(type, data, callback) {
         if (callback) {
             this.on(type, callback);
         }
 
         if (this.ws.readyState !== WebSocket.OPEN) {
-            this.shouldSend.push({
+            this.queue.push({
                 type: type,
                 data: data
             });
+
             return this;
         }
 
-        let eventData = JSON.stringify({
+        let payload = JSON.stringify({
             type: type,
             data: data || {},
         });
 
-        var bodySize = new Blob([eventData]).size;
+        var bodySize = new Blob([payload]).size;
         if (bodySize / this.options.maxBodySize > 1) {
-            console.warn(
-                `The event was not dispatched because the body size (${bodySize}) exceeded the allowable value (${this.options.maxBodySize}).`
-            );
+            console.warn(`The event was not dispatched because the body size (${bodySize}) exceeded the allowable value (${this.options.maxBodySize}).`);
             return this;
         };
 
-        this.ws.send(eventData);
+        this.ws.send(payload);
 
         return this;
     }
 
-    onRaw(data, handler) {
-        if (data == 'pong' && 'pong' in this.rawEvents) {
-            throw new Error(
-                'You cannot override the "pong" service event. Use `porterInstance.pong = () => {...}` instead.'
-            );
-        }
-
-        this.rawEvents[data] = handler;
-        return this;
+    close() {
+        this.ws.close();
     }
 
-    sendRaw(data) {
-        this.ws.send(data);
-    }
-
-    /**
-     * Start listen events from server.
-     */
     listen() {
         this.ws.onopen = () => {
-            this.shouldSend.forEach(event => {
+            this.queue.forEach(event => {
                 this.event(event.type, event.data);
             });
 
-            this.connected && this.connected.call();
+            if (this.connected) {
+                this.connected.call()
+            };
         };
 
         this.ws.onclose = this.disconnected;
@@ -171,22 +171,15 @@ class Porter {
         this.ws.onmessage = event => {
             try {
                 var payload = JSON.parse(event.data);
-                var handler = this.events[payload.type] || null;
+                var handler = this.events.porter[payload.type] || null;
             } catch (error) {
                 var payload = event.data;
-                var handler = this.rawEvents[event.data] || null;
+                var handler = this.events.raw[event.data] || null;
             }
 
             if (typeof handler == 'function') {
                 handler(payload);
             }
         }
-    }
-
-    /**
-     * Close connection.
-     */
-    close() {
-        this.ws.close();
     }
 }

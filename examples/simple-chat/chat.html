@@ -47,7 +47,7 @@
         var message = document.getElementById('message');
         message.addEventListener('keypress', e => {
             if (e.key === 'Enter') {
-                client.event('chat message', {
+                client.send('chat message', {
                     message: document.getElementById('message').value,
                 });
                 message.value = '';

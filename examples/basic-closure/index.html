@@ -20,11 +20,11 @@
         const client = new Porter(ws);
 
         client.connected = () => {
-            client.event('ping').on('pong', payload => {
+            client.send('ping').on('pong', payload => {
                 console.log(payload);
             });
 
-            client.event('hello to', {username: 'John Doe'}, payload => {
+            client.send('hello to', {username: 'John Doe'}, payload => {
                 console.log(payload);
             });
         }
