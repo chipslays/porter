@@ -1248,12 +1248,6 @@ Server::getInstance()->getWorker()->connections;
 $channel = channel('secret channel'); // get channel instance
 $channel = server()->channel('secret channel');
 $channel = server()->channels->get('secret channel');
-
-channel('secret channel', ['foo' => 'bar']); // set data for given channel (by id)
-server()->channel('secret channel')->set('foo', 'bar');
-
-channel('secret channel', 'foo', 'default value'); // get data from channel (by id)
-server()->channel('secret channel')->data->get('foo', 'default value');
 ```
 
 ## 🔹 Mappable methods (Macros)

@@ -71,31 +71,14 @@ if (!function_exists('channels')) {
 
 if (!function_exists('channel')) {
     /**
-     * Get channel, set & get channel value.
+     * Get channel.
      *
      * @param string $id
-     * @param string|array|null $key Pass array for set channel value, or string for get channel value.
-     * @param mixed $default
-     * @return Channel|mixed
+     * @return Channel|null
      */
-    function channel(string $id, string|array $key = null, mixed $default = null): mixed
+    function channel(string $id): ?Channel
     {
-        if ($key === null) {
-            return Server::getInstance()->channel($id);
-        }
-
-        $channel = Server::getInstance()->channel($id);
-
-        if (!$channel) {
-            return null;
-        }
-
-        if (is_array($key)) {
-            $channel->data->set($key[0], $key[1]);
-            return null;
-        }
-
-        return $channel->data->get($key, $default);
+        return Server::getInstance()->channel($id);
     }
 }
 
