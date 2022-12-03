@@ -7,14 +7,13 @@ include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
 
 switch ($argv[1] ?? null) {
     case 'template:laravel':
-        if (!isset($argv[2])) {
-            return Terminal::print('{text:red}Error: Provide destination path for copy files.');
-        }
+        $path = realpath($argv[2] ?? './websocket');
 
-        copy_dir_to(__DIR__ . '/../examples/laravel', $argv[2]);
+        copy_dir_to(__DIR__ . '/../examples/laravel', $path);
 
-        Terminal::print('{text:darkGreen}✅ Successfuly copied!');
-        Terminal::print('{bg:cyan}{text:white} 📁 ' . realpath($argv[2]));
+        unlink($path . '/README.md');
+
+        Terminal::print('{bg:cyan}{text:white} 📁 Copied to ' . $path);
         break;
 
     case 'make:event':
@@ -23,7 +22,7 @@ switch ($argv[1] ?? null) {
             break;
         }
 
-        $type = $argv[3] ?? '';
+        $type = $argv[3] ?? mb_strtolower(basename($argv[2]));
 
         $eventClass = <<<EOF
         <?php
@@ -52,5 +51,6 @@ switch ($argv[1] ?? null) {
     default:
         Terminal::print('{text:darkGreen}List of commands:');
         Terminal::print('    {text:white}template:laravel [path] {reset}- Integration to Laravel project. [e.g. template:laravel ./websocket]');
+        Terminal::print('    {text:white}make:event [path] [?type] {reset}- Make event class. [e.g. make:event ./websocket/events/ping.php ping]');
         break;
 }

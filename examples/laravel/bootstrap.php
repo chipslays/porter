@@ -23,4 +23,4 @@ if (isset($_ENV['PORTER_SSL']) && $_ENV['PORTER_SSL'] == 'true') {
 
 server()->setWorker($worker);
 
-server()->autoloadEvents(__DIR__ . '/Events');
+server()->autoloadEvents(__DIR__ . '/events');
