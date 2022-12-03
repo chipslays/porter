@@ -30,7 +30,7 @@ switch ($argv[1] ?? null) {
             break;
         }
 
-        $type = $argv[3] ?? str_replace('php', '', mb_strtolower(basename($argv[2])));
+        $type = $argv[3] ?? str_replace('.php', '', mb_strtolower(basename($argv[2])));
 
         $eventClass = <<<EOF
         <?php
