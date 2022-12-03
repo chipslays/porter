@@ -21,12 +21,16 @@ switch ($argv[1] ?? null) {
         break;
 
     case 'make:event':
+        if (!str_ends_with($argv[2], '.php')) {
+            $argv[2] .= '.php';
+        }
+
         if (file_exists($argv[2])) {
             Terminal::print("{bg:red}{text:white}Event class '{$argv[2]}' already exists.");
             break;
         }
 
-        $type = $argv[3] ?? mb_strtolower(basename($argv[2]));
+        $type = $argv[3] ?? str_replace('php', '', mb_strtolower(basename($argv[2])));
 
         $eventClass = <<<EOF
         <?php
