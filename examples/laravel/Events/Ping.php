@@ -7,7 +7,7 @@ use Porter\Events\AbstractEvent;
 
 return new class extends AbstractEvent
 {
-    public static string $type = 'ping';
+    public string $type = 'ping';
 
     protected array $rules = [];
 

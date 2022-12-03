@@ -88,7 +88,7 @@ class Porter {
             clearInterval(this.__pingInterval);
         } else {
             this.__pingInterval = setInterval(() => {
-                this.sendRaw('ping');
+                this.raw.send('ping');
             }, this.options.pingInterval);
         }
 
