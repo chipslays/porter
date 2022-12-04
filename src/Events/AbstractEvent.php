@@ -112,14 +112,16 @@ abstract class AbstractEvent
     /**
      * Send event to connection.
      *
-     * @param TcpConnection|Connection $connection
+     * @param TcpConnection|Connection|array $connection
      * @param string $event
      * @param array $data
-     * @return bool|null
+     * @return self
      */
-    public function to(TcpConnection|Connection $connection, string $event, array $data = []): ?bool
+    public function to(TcpConnection|Connection|array $connection, string $event, array $data = []): self
     {
-        return $this->server->to($connection, $event, $data);
+        $this->server->to($connection, $event, $data);
+
+        return $this;
     }
 
     /**

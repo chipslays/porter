@@ -327,7 +327,7 @@ server()->onRaw(function (string $payload, Connection $connection) {
 });
 ```
 
-### `to(TcpConnection|Connection $connection, string $event, array $data = []): ?bool`
+### `to(TcpConnection|Connection|array $connection, string $event, array $data = []): self`
 
 Send event to connection.
 
@@ -803,7 +803,7 @@ $this->to($this->target, 'new message', [
 
 #### Methods
 
-#### `to(TcpConnection|Connection $connection, string $event, array $data = []): ?bool`
+#### `to(TcpConnection|Connection|array $connection, string $event, array $data = []): self`
 
 Send event to connection.
 
