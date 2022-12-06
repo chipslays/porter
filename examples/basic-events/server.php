@@ -9,6 +9,8 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 $worker = new Worker('websocket://0.0.0.0:3737');
 
+$worker::$logFile = __DIR__ . '/server.log';
+
 $server = Server::getInstance();
 $server->setWorker($worker);
 

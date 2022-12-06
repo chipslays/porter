@@ -23,4 +23,13 @@ if (isset($_ENV['PORTER_SSL']) && $_ENV['PORTER_SSL'] == 'true') {
 
 server()->setWorker($worker);
 
+$logFile = storage_path('logs/porter/' . $worker->name . '.log');
+$logDir = dirname($logFile);
+
+if (!file_exists($logDir)) {
+    mkdir($logDir, 0666);
+}
+
+$worker::$logFile = $logFile;
+
 server()->autoloadEvents(__DIR__ . '/events');
