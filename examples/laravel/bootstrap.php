@@ -15,10 +15,10 @@ if (isset($_ENV['PORTER_SSL']) && $_ENV['PORTER_SSL'] == 'true') {
         ],
     ];
 
-    $worker = new Worker('websocket://0.0.0.0:3737', $context);
+    $worker = new Worker('websocket://' . $_ENV['PORTER_HOST'] ?? '0.0.0.0' . ':' . $_ENV['PORTER_PORT'] ?? '3737', $context);
     $worker->transport = 'ssl';
 } else {
-    $worker = new Worker('websocket://0.0.0.0:3737');
+    $worker = new Worker('websocket://' . $_ENV['PORTER_HOST'] ?? '0.0.0.0' . ':' . $_ENV['PORTER_PORT'] ?? '3737');
 }
 
 server()->boot($worker);

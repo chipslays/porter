@@ -7,7 +7,7 @@ Primitive integration Porter to Laravel project.
 1. Install Porter via Composer.
 
 ```php
-composer require chipslays/porter ^1.x
+composer require chipslays/porter
 ```
 
 2. Put javascript file in `app.blade.php`
@@ -31,9 +31,12 @@ php vendor/bin/porter make:event ./websocket/Events/Example.php "example event"
 4. Add variables to `.env` file.
 
 ```bash
-echo 'PORTER_SSL=false' >> .env
-echo 'PORTER_LOCAL_CERT=/etc/letsencrypt/live/example.com/cert.pem' >> .env
-echo 'PORTER_LOCAL_PK=/etc/letsencrypt/live/example.com/privkey.pem' >> .env
+echo '' >> .env &&
+echo 'PORTER_HOST=0.0.0.0' >> .env &&
+echo 'PORTER_PORT=3737' >> .env &&
+echo 'PORTER_SSL=false' >> .env &&
+echo 'PORTER_LOCAL_CERT=/etc/letsencrypt/live/<YOUR_SITE.COM>/cert.pem' >> .env &&
+echo 'PORTER_LOCAL_PK=/etc/letsencrypt/live/<YOUR_SITE.COM>/privkey.pem' >> .env
 ```
 
 >**NOTE:** On VPS with SSL certificate set `PORTER_SSL=true` and provide path to certs in `PORTER_LOCAL_CERT` and `PORTER_LOCAL_PK`.
