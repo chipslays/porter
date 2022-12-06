@@ -18,7 +18,21 @@ class Payload
     public function __construct(public array $payload)
     {
         $this->type = $payload['type'];
-        $this->data = new Collection($payload['data'] ?? []);
+
+        if (isset($payload['data']) && is_array($payload['data'])) {
+            $this->data = new Collection($this->emptyStringsToNull($payload['data']));
+        } else {
+            $this->data = new Collection;
+        }
+    }
+
+    protected function emptyStringsToNull(array $data): array
+    {
+        array_walk_recursive($data, function(&$value) {
+            $value = trim($value) === '' ? null : $value;
+        });
+
+        return $data;
     }
 
     /**
