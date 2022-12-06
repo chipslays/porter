@@ -25,7 +25,7 @@ php vendor/bin/porter template:laravel ./websocket
 Tip: You can also create a event class.
 
 ```bash
-php vendor/bin/porter make:event ./websocket/Events/Example.php "example event"
+vendor/bin/porter make:event ./websocket/events/example.php "example event"
 ```
 
 4. Add variables to `.env` file.
