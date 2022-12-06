@@ -158,7 +158,7 @@ server()->on(...);
 ```
 
 
-### `setWorker(Worker $worker): void`
+#### `setWorker(Worker $worker): void`
 
 Set worker instance.
 
@@ -169,7 +169,7 @@ $worker = new Worker('websocket://0.0.0.0:3737');
 server()->setWorker($worker);
 ```
 
-### `getWorker(): Worker`
+#### `getWorker(): Worker`
 
 Get worker instance.
 
@@ -177,7 +177,7 @@ Get worker instance.
 server()->getWorker();
 ```
 
-### `addEvent(string $event): self`
+#### `addEvent(AbstractEvent|string $event): self`
 
 Add event class handler.
 
@@ -200,7 +200,7 @@ class Ping extends AbstractEvent
 server()->addEvent(Ping::class);
 ```
 
-### `autoloadEvents(string $path, string|array $masks = ['*.php', '**/*.php']): void`
+#### `autoloadEvents(string $path, string|array $masks = ['*.php', '**/*.php']): void`
 
 Autoload all events inside passed path.
 
@@ -210,7 +210,7 @@ Autoload all events inside passed path.
 server()->autoloadEvents(__DIR__ . '/Events');
 ```
 
-### `on(string $type, callable $handler): void`
+#### `on(string $type, callable $handler): void`
 
 
 
@@ -222,7 +222,7 @@ $server->on('ping', function (Event $event) {
 });
 ```
 
-### `start(): void`
+#### `start(): void`
 
 Start server.
 
@@ -230,7 +230,7 @@ Start server.
 server()->start();
 ```
 
-### `onConnected(callable $handler): void`
+#### `onConnected(callable $handler): void`
 
 Emitted when a socket connection is successfully established.
 
@@ -248,7 +248,7 @@ server()->onConnected(function (Connection $connection, string $header) {
 });
 ```
 
-### `onDisconnected(callable $handler): void`
+#### `onDisconnected(callable $handler): void`
 
 Emitted when the other end of the socket sends a FIN packet.
 
@@ -263,7 +263,7 @@ server()->onDisconnected(function (Connection $connection) {
 });
 ```
 
-### `onError(callable $handler): void`
+#### `onError(callable $handler): void`
 
 Emitted when an error occurs with connection.
 
@@ -276,7 +276,7 @@ server()->onError(function (Connection $connection, $code, $message) {
 });
 ```
 
-### `onStart(callable $handler): void`
+#### `onStart(callable $handler): void`
 
 Emitted when worker processes start.
 
@@ -289,7 +289,7 @@ server()->onStart(function (Worker $worker) {
 });
 ```
 
-### `onStop(callable $handler): void`
+#### `onStop(callable $handler): void`
 
 Emitted when worker processes stoped.
 
@@ -302,7 +302,7 @@ server()->onStop(function (Worker $worker) {
 });
 ```
 
-### `onReload(callable $handler): void`
+#### `onReload(callable $handler): void`
 
 Emitted when worker processes get reload signal.
 
@@ -315,7 +315,7 @@ server()->onReload(function (Worker $worker) {
 });
 ```
 
-### `onRaw(callable $handler): void`
+#### `onRaw(callable $handler): void`
 
 Handle non event messages (raw data).
 
@@ -327,7 +327,7 @@ server()->onRaw(function (string $payload, Connection $connection) {
 });
 ```
 
-### `to(TcpConnection|Connection|array $connection, string $event, array $data = []): self`
+#### `to(TcpConnection|Connection|array $connection, string $event, array $data = []): self`
 
 Send event to connection.
 
@@ -335,7 +335,7 @@ Send event to connection.
 server()->to($connection, 'ping');
 ```
 
-### `broadcast(string $event, array $data = [], array $excepts = []): void`
+#### `broadcast(string $event, array $data = [], array $excepts = []): void`
 
 Send event to all connections.
 
@@ -348,7 +348,7 @@ server()->broadcast('chat message', [
 ]);
 ```
 
-### `storage(): Storage`
+#### `storage(): Storage`
 
 Getter for Storage class.
 
@@ -365,7 +365,7 @@ server()->storage->put('foo', 'bar');
 $storage = server()->storage;
 ```
 
-### `channels(): Channels`
+#### `channels(): Channels`
 
 Getter for Channels class.
 
@@ -382,7 +382,7 @@ server()->channels->create('secret channel');
 $channels = server()->channels;
 ```
 
-### `connection(int $connectionId): ?Connection`
+#### `connection(int $connectionId): ?Connection`
 
 Get connection instance by id.
 
@@ -396,7 +396,7 @@ server()->to($connection, 'welcome message', [
 $connection = server()->getWorker()->connections[1337] ?? null;
 ```
 
-### `connections(): Collection[]`
+#### `connections(): Collection[]`
 
 Get collection of all connections on server.
 
@@ -408,7 +408,7 @@ server()->broadcast('update users count', ['count' => $connections->count()]);
 $connections = server()->getWorker()->connections;
 ```
 
-### `validator(): Validator`
+#### `validator(): Validator`
 
 Create validator instance.
 
@@ -445,7 +445,7 @@ server()->channels();
 server()->channels;
 ```
 
-### `create(string $id, array $data = []): Channel`
+#### `create(string $id, array $data = []): Channel`
 
 Create new channel.
 
@@ -459,7 +459,7 @@ $channel->join($connection)->broadcast('welcome message', [
 ]);
 ```
 
-### `get(string $id): ?Channel`
+#### `get(string $id): ?Channel`
 
 Get a channel.
 
@@ -470,7 +470,7 @@ $channel = server()->channels()->get('secret channel');
 $channel = server()->channels->get('secret channel');
 ```
 
-### `all(): Channel[]`
+#### `all(): Channel[]`
 
 Get array of channels (`Channel` instances).
 
@@ -480,7 +480,7 @@ foreach (server()->channels->all() as $id => $channel) {
 }
 ```
 
-### `count(): int`
+#### `count(): int`
 
 Get count of channels.
 
@@ -490,7 +490,7 @@ $count = server()->channels->count();
 echo "Total channels: {$count}";
 ```
 
-### `delete(string $id): void`
+#### `delete(string $id): void`
 
 Delete channel.
 
@@ -498,7 +498,7 @@ Delete channel.
 server()->channels->delete('secret channel');
 ```
 
-### `exists(string $id): bool`
+#### `exists(string $id): bool`
 
 Checks if given channel id exists already.
 
@@ -509,7 +509,7 @@ if (!server()->channels->exists($channelId)) {
 }
 ```
 
-### `join(string $id, Connection|Connection[]|int[] $connections): Channel`
+#### `join(string $id, Connection|Connection[]|int[] $connections): Channel`
 
 Join or create and join to channel.
 
@@ -520,7 +520,7 @@ server()->channels->join([$connection1, $connection2, $connection3, ...]);
 
 ## 🔹 `Channel`
 
-### `join(Connection|array $connections): self`
+#### `join(Connection|array $connections): self`
 
 Join given connections to channel.
 
@@ -530,7 +530,7 @@ $channel->join($connection);
 $channel->join([$connection1, $connection2, $connection3, ...]);
 ```
 
-### `leave(Connection $connection): self`
+#### `leave(Connection $connection): self`
 
 Remove given connection from channel.
 
@@ -539,7 +539,7 @@ $channel = server()->channel('secret channel');
 $channel->leave($connection);
 ```
 
-### `exists(Connection $connection): bool`
+#### `exists(Connection $connection): bool`
 
 Checks if given connection exists in channel.
 
@@ -548,7 +548,7 @@ $channel = server()->channel('secret channel');
 $channel->exists($connection);
 ```
 
-### `broadcast(string $event, array $data = [], array $excepts = []): void`
+#### `broadcast(string $event, array $data = [], array $excepts = []): void`
 
 Send an event to all connection on this channel.
 
@@ -573,7 +573,7 @@ $channel->broadcast('welcome message', [
 ], [$connection1, $connection2, ...]);
 ```
 
-### `destroy(): void`
+#### `destroy(): void`
 
 Delete this channel from channels.
 
@@ -597,7 +597,7 @@ $connection->channel = &$channel;
 
 ## Properties
 
-### `$channel->connections`
+#### `$channel->connections`
 
 A array of connections in this channel. Key is a `id` of connection, and value is a instance of connection `Connection`.
 
@@ -615,7 +615,7 @@ $channel = server()->channel('secret channel');
 $connection = $channel->connections[1337]; // get connection with 1337 id
 ```
 
-### `$channel->data`
+#### `$channel->data`
 
 Data is a simple implement of box for storage your data.
 
@@ -644,7 +644,7 @@ isset($channel->data['foo']);
 
 The payload is the object that came from the client.
 
-### `payload(string $key, mixed $default = null): mixed`
+#### `payload(string $key, mixed $default = null): mixed`
 
 Get value from data.
 
@@ -656,7 +656,7 @@ $payload->data->get('foo', 'default value');
 $payload->data['foo'] ?? 'default value';
 ```
 
-### `is(string|array $rule, string $key): bool`
+#### `is(string|array $rule, string $key): bool`
 
 Validate payload data.
 
@@ -669,7 +669,7 @@ $payload->is(['contains', 'john'], 'username'); // return true if $payload->data
 
 ## Properties
 
-### `$payload->type`
+#### `$payload->type`
 
 Is a id of event, for example, `welcome message`.
 
@@ -677,7 +677,7 @@ Is a id of event, for example, `welcome message`.
 $payload->type; // string
 ```
 
-### `$payload->data`
+#### `$payload->data`
 
 An object of values passed from the client.
 
@@ -699,7 +699,7 @@ isset($payload->data['foo']);
 // see more examples here: https://github.com/chipslays/collection
 ```
 
-### `$payload->rules` [protected]
+#### `$payload->rules` [protected]
 
 Auto validate payload data on incoming event.
 
@@ -764,7 +764,7 @@ server()->addEvent(Ping::class);
 >
 > This method handles the event. You can also create other methods.
 
-### `AbstractEvent`
+#### `AbstractEvent`
 
 #### Properties
 
@@ -803,7 +803,7 @@ $this->to($this->target, 'new message', [
 
 #### Methods
 
-#### `to(TcpConnection|Connection|array $connection, string $event, array $data = []): self`
+##### `to(TcpConnection|Connection|array $connection, string $event, array $data = []): self`
 
 Send event to connection.
 
@@ -811,7 +811,7 @@ Send event to connection.
 $this->to($connection, 'ping');
 ```
 
-#### `reply(string $event, array $data = []): ?bool`
+##### `reply(string $event, array $data = []): ?bool`
 
 Reply event to incoming connection.
 
@@ -837,7 +837,7 @@ $username = $this->payload->data['username'];
 $this->reply(data: ['message' => "Hello, {$username}!"]);
 ```
 
-#### `raw(string $string): bool|null`
+##### `raw(string $string): bool|null`
 
 Send raw data to connection. Not a event object.
 
@@ -847,7 +847,7 @@ $this->raw('ping');
 // now client will receive just a 'ping', not event object.
 ```
 
-#### `broadcast(string $event, array $data = [], array $excepts = []): void`
+##### `broadcast(string $event, array $data = [], array $excepts = []): void`
 
 Send event to all connections.
 
@@ -868,7 +868,7 @@ $this->broadcast('user join', [
 ], [$this->connection]);
 ```
 
-### `validate(): bool`
+#### `validate(): bool`
 
 Validate payload data.
 
@@ -882,7 +882,7 @@ if (!$this->validate()) {
 }
 ```
 
-### `hasErrors(): bool`
+#### `hasErrors(): bool`
 
 Returns `true` if has errors on validate payload data.
 
@@ -902,7 +902,7 @@ if ($this->hasErrors()) {
 ]
 ```
 
-### `payload(string $key, mixed $default = null): mixed`
+#### `payload(string $key, mixed $default = null): mixed`
 
 Yet another short cut for payload data.
 
@@ -927,7 +927,7 @@ public function handle(Connection $connection, Payload $payload, Server $server)
 
 
 
-### `Anonymous function`
+#### `Anonymous function`
 
 In anonymous function instead of `$this`, use `$event`.
 
@@ -1038,7 +1038,7 @@ Simple implementation of client.
 
 See basic example of client [here](/examples/client-php/client.php).
 
-#### `__construct(string $host, array $context = [])`
+##### `__construct(string $host, array $context = [])`
 
 Create client.
 
@@ -1047,17 +1047,17 @@ $client = new Client('ws://localhost:3737');
 $client = new Client('wss://example.com:3737');
 ```
 
-#### `setWorker(Worker $worker): void`
+##### `setWorker(Worker $worker): void`
 
 Set worker.
 
 > **NOTICE:** Worker instance auto init in constructor. Use this method if you need to define worker with specific settings.
 
-#### `getWorker(): Worker`
+##### `getWorker(): Worker`
 
 Get worker.
 
-#### `event(string $type, array $data = []): ?bool`
+##### `event(string $type, array $data = []): ?bool`
 
 Send event to server.
 
@@ -1067,7 +1067,7 @@ $client->on('ping', function (AsyncTcpConnection $connection, Payload $payload, 
 });
 ```
 
-#### `raw(string $payload): ?bool`
+##### `raw(string $payload): ?bool`
 
 Send raw payload to server.
 
@@ -1075,7 +1075,7 @@ Send raw payload to server.
 $client->raw('simple message');
 ```
 
-#### `onConnected(callable $handler): void`
+##### `onConnected(callable $handler): void`
 
 Emitted when a socket connection is successfully established.
 
@@ -1085,7 +1085,7 @@ $client->onConnected(function (AsynTcpConnection $connection) {
 });
 ```
 
-#### `onDisconnected(callable $handler): void`
+##### `onDisconnected(callable $handler): void`
 
 Emitted when the server sends a FIN packet.
 
@@ -1095,7 +1095,7 @@ $client->onDisconnected(function (AsynTcpConnection $connection) {
 });
 ```
 
-#### `onError(callable $handler): void`
+##### `onError(callable $handler): void`
 
 Emitted when an error occurs with connection.
 
@@ -1105,7 +1105,7 @@ $client->onError(function (AsyncTcpConnection $connection, $code, $message) {
 });
 ```
 
-#### `onRaw(callable $handler): void`
+##### `onRaw(callable $handler): void`
 
 Handle non event messages (raw data).
 
@@ -1117,7 +1117,7 @@ $client->onRaw(function (string $payload, AsyncTcpConnection $connection) {
 });
 ```
 
-#### `on(string $type, callable $handler): void`
+##### `on(string $type, callable $handler): void`
 
 Event handler as callable.
 
@@ -1127,7 +1127,7 @@ $client->on('pong', function (AsyncTcpConnection $connection, Payload $payload, 
 });
 ```
 
-#### `listen(): void`
+##### `listen(): void`
 
 Connect to server and listen.
 
@@ -1160,39 +1160,39 @@ server()->storage();
 
 > **WARNING:** If you not provide path or an incorrect path, data will be stored in RAM. After server restart you lose your data.
 
-### `setPath(?string $path = null): self`
+#### `setPath(?string $path = null): self`
 
 ```php
 server()->storage->setPath(__DIR__ . '/path/to/file'); // you can use any filename
 ```
 
-### `put(string $key, mixed $value): void`
+#### `put(string $key, mixed $value): void`
 
 ```php
 server()->storage->put('foo', 'bar');
 ```
 
-### `get(string $key, mixed $default = null): mixed`
+#### `get(string $key, mixed $default = null): mixed`
 
 ```php
 server()->storage->get('foo', 'default value'); // foo
 server()->storage->get('baz', 'default value'); // default value
 ```
 
-### `remove(string ...$keys): self`
+#### `remove(string ...$keys): self`
 
 ```php
 server()->storage->remove('foo'); // true
 ```
 
-### `has(string $key): bool`
+#### `has(string $key): bool`
 
 ```php
 server()->storage->has('foo'); // true
 server()->storage->has('baz'); // false
 ```
 
-### `deleteLocalFile(): bool`
+#### `deleteLocalFile(): bool`
 
 Remove storage file from disk.
 
@@ -1200,7 +1200,7 @@ Remove storage file from disk.
 server()->storage->deleteLocalFile();
 ```
 
-### `getPath(): ?string`
+#### `getPath(): ?string`
 
 Returns `string` if path not empty.
 
@@ -1222,7 +1222,7 @@ $storage3 = new Storage(__DIR__ . '/storage/storage3.data');
 
 ## 🔹 Helpers (functions)
 
-### `server(): Server`
+#### `server(): Server`
 
 ```php
 server()->on(...);
@@ -1232,7 +1232,7 @@ use Porter\Server;
 Server::getInstance()->on(...);
 ```
 
-### `worker(): Worker`
+#### `worker(): Worker`
 
 ```php
 worker()->connections;
@@ -1242,7 +1242,7 @@ use Porter\Server;
 Server::getInstance()->getWorker()->connections;
 ```
 
-### `channel(string $id, string|array $key = null, mixed $default = null): mixed`
+#### `channel(string $id, string|array $key = null, mixed $default = null): mixed`
 
 ```php
 $channel = channel('secret channel'); // get channel instance
