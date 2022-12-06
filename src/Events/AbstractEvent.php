@@ -51,6 +51,8 @@ abstract class AbstractEvent
     /**
      * Array of rules for payload data.
      *
+     * @see https://respect-validation.readthedocs.io/en/latest
+     *
      * @var array
      */
     protected array $rules = [];
@@ -129,9 +131,9 @@ abstract class AbstractEvent
      *
      * @param string|null $event If `null`, reply with current type.
      * @param array $data
-     * @return bool|null
+     * @return self
      */
-    public function reply(string $event = null, array $data = []): ?bool
+    public function reply(string $event = null, array $data = []): self
     {
         return $this->to($this->connection, $event ?? $this->payload->type, $data);
     }
