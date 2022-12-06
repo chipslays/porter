@@ -34,12 +34,12 @@ php vendor/bin/porter make:event ./websocket/Events/Example.php "example event"
 echo '' >> .env &&
 echo 'PORTER_HOST=0.0.0.0' >> .env &&
 echo 'PORTER_PORT=3737' >> .env &&
-echo 'PORTER_SSL=false' >> .env &&
-echo 'PORTER_LOCAL_CERT=/etc/letsencrypt/live/<YOUR_SITE.COM>/cert.pem' >> .env &&
-echo 'PORTER_LOCAL_PK=/etc/letsencrypt/live/<YOUR_SITE.COM>/privkey.pem' >> .env
+echo 'PORTER_TRANSPORT=tcp' >> .env &&
+echo 'PORTER_CERTIFICATE=/etc/letsencrypt/live/<YOUR_SITE.COM>/cert.pem' >> .env &&
+echo 'PORTER_PRIVATE_KEY=/etc/letsencrypt/live/<YOUR_SITE.COM>/privkey.pem' >> .env
 ```
 
->**NOTE:** On VPS with SSL certificate set `PORTER_SSL=true` and provide path to certs in `PORTER_LOCAL_CERT` and `PORTER_LOCAL_PK`.
+>**NOTE:** On VPS with SSL certificate set `PORTER_TRANSPORT=ssl` and provide path to certs in `PORTER_CERTIFICATE` and `PORTER_PRIVATE_KEY`.
 
 5. Run websocket server.
 

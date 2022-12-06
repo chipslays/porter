@@ -1,25 +1,38 @@
 <?php
 
-use Porter\Terminal;
-use Porter\Connection;
 use Workerman\Worker;
 
-require __DIR__ . '/bootstrap.php';
+require __DIR__.'/../vendor/autoload.php';
 
-server()->onStart(function (Worker $worker) {
-    Terminal::print("{text:darkGreen}Server started...");
-});
+$app = require_once __DIR__.'/../bootstrap/app.php';
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+$kernel->handle(Illuminate\Http\Request::capture());
 
-server()->onConnected(function (Connection $connection, string $header) {
-    Terminal::print('{text:darkGreen}User connected: ' . $connection->getRemoteAddress());
-});
+if (env('PORTER_TRANSPORT') == 'ssl') {
+    $context = [
+        'ssl' => [
+            'local_cert' => env('PORTER_CERTIFICATE'),
+            'local_pk' => env('PORTER_PRIVATE_KEY'),
+            'verify_peer' => false,
+        ],
+    ];
+}
 
-server()->onDisconnected(function (Connection $connection) {
-    Terminal::print("{text:darkRed}User disconnected: " . $connection->getRemoteAddress());
-});
+$worker = new Worker('websocket://' . env('PORTER_HOST', '0.0.0.0') . ':' . env('PORTER_PORT', '3737'), $context ?? []);
+$worker->transport = env('PORTER_TRANSPORT', 'tcp');
 
-server()->onError(function (Connection $connection, $code, $message) {
-    Terminal::print("{bg:red}{text:white}Error occurred {$code}: {$message}");
-});
+server()->boot($worker);
+
+$logFile = storage_path('logs/porter/' . $worker->name . '.log');
+
+if (!file_exists($logDir = dirname($logFile))) {
+    mkdir($logDir, 0666);
+}
+
+$worker::$logFile = $logFile;
+
+server()->autoloadEvents(__DIR__ . '/events');
+
+require_once __DIR__ . '/kernel.php';
 
 server()->start();
