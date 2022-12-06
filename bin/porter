@@ -30,6 +30,12 @@ switch ($argv[1] ?? null) {
             break;
         }
 
+        $dirPath = dirname($argv[2]);
+
+        if (!file_exists($dirPath)) {
+            mkdir($dirPath, 0666, true);
+        }
+
         $type = $argv[3] ?? str_replace('.php', '', mb_strtolower(basename($argv[2])));
 
         $eventClass = <<<EOF
