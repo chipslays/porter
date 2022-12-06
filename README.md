@@ -1186,7 +1186,7 @@ server()->storage;
 server()->storage();
 ```
 
-> **NOTICE:** Set path only after if you set worker instance (`server()->setWorker($worker)`).
+> **NOTICE:** Set path only after if you booting server by (`server()->boot($worker)` method.
 
 > **WARNING:** If you not provide path or an incorrect path, data will be stored in RAM. After server restart you lose your data.
 
