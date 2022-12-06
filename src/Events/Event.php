@@ -9,6 +9,9 @@ use Porter\Events\AbstractEvent;
 
 class Event extends AbstractEvent
 {
+    /**
+     * @var callable
+     */
     protected $handler;
 
     /**

@@ -189,7 +189,8 @@ if (!function_exists('copy_dir_to')) {
      * @param bool $withReplace
      * @return void
      */
-    function copy_dir_to(string $src, string $dist, bool $withReplace = false) {
+    function copy_dir_to(string $src, string $dist, bool $withReplace = false)
+    {
         $dir = opendir($src);
 
         @mkdir($dist);

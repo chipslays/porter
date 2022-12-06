@@ -96,11 +96,11 @@ abstract class AbstractEvent
     protected function initMagicalVars(): void
     {
         // Get channel instance by `channelId` parameter.
-        $this->channel = $this->server->channel($this->payload->get('channelId', ''));
+        $this->channel = $this->server->channel($this->payload('channelId', ''));
 
         // Get target connection instance by `targetId` parameter.
         $this->target = $this->payload->has('targetId')
-            ? $this->server->connection((int) $this->payload->get('targetId'))
+            ? $this->server->connection((int) $this->payload('targetId'))
             : null;
     }
 
@@ -135,7 +135,7 @@ abstract class AbstractEvent
      */
     public function reply(string $event = null, array $data = []): self
     {
-        return $this->to($this->connection, $event ?? $this->payload->type, $data);
+        return $this->to($this->connection, $event ?? $this->payload('type'), $data);
     }
 
     /**

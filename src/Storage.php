@@ -2,7 +2,6 @@
 
 namespace Porter;
 
-use Porter\Exceptions\StorageException;
 use Porter\Support\Collection;
 
 class Storage

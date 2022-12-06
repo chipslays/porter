@@ -5,6 +5,8 @@ namespace Porter;
 class Terminal
 {
     /**
+     * Print colorful text with auto reset styles on end.
+     *
      * @param mixed $text
      * @return void
      */
@@ -18,6 +20,8 @@ class Terminal
     }
 
     /**
+     * Print colorful text without auto reset styles on end.
+     *
      * @param string $text
      * @return void
      */
