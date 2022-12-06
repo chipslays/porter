@@ -10,7 +10,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 $worker = new Worker('websocket://0.0.0.0:3737');
 
 $server = Server::getInstance();
-$server->setWorker($worker);
+$server->boot($worker);
 
 // set path only after you set worker instance
 // *note: if you not provide path or an incorrect path, the data will be stored in RAM, and the data will be lost upon restart

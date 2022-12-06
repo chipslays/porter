@@ -21,7 +21,7 @@ if (isset($_ENV['PORTER_SSL']) && $_ENV['PORTER_SSL'] == 'true') {
     $worker = new Worker('websocket://0.0.0.0:3737');
 }
 
-server()->setWorker($worker);
+server()->boot($worker);
 
 $logFile = storage_path('logs/porter/' . $worker->name . '.log');
 $logDir = dirname($logFile);

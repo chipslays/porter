@@ -47,8 +47,6 @@ class Server
         if (!$this->worker->name || $this->worker->name == 'none') {
             $this->worker->name = 'Server-' . date('d_m_Y-H_i_s');
         }
-
-        $this->boot();
     }
 
     /**
@@ -62,15 +60,19 @@ class Server
     }
 
     /**
-     * Init classes.
+     * Booting websocket server (use this method instead of constructor).
      *
-     * @return void
+     * @return self
      */
-    protected function boot(): void
+    public function boot(Worker $worker): self
     {
+        $this->setWorker($worker);
+
         $this->storage = new Storage;
         $this->channels = new Channels($this);
         $this->validator = new Validator;
+
+        return $this;
     }
 
     /**

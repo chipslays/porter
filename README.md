@@ -41,7 +41,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 $worker = new Worker('websocket://0.0.0.0:3737');
 
-server()->setWorker($worker);
+server()->boot($worker);
 
 server()->on('ping', function (Event $event) {
     $event->reply('pong');
@@ -157,6 +157,36 @@ $server->on(...);
 server()->on(...);
 ```
 
+#### `boot(Worker $worker): self`
+
+Booting websocket server. It method init all needle classes inside.
+
+> Use this method instead of constructor.
+
+```php
+$server = Server::getInstance();
+$server->boot($worker);
+
+// by helper function
+server()->boot($worker);
+```
+
+#### `setWorker(Worker $worker): void`
+
+Set worker instance.
+
+```php
+use Workerman\Worker;
+
+$worker = new Worker('websocket://0.0.0.0:3737');
+server()->boot($worker); // booting server
+
+$worker = new Worker('websocket://0.0.0.0:3737');
+$worker->... // configure new worker
+
+// change worker in already booted server
+server()->setWorker($worker);
+```
 
 #### `setWorker(Worker $worker): void`
 
