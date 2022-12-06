@@ -1057,13 +1057,13 @@ Set worker.
 
 Get worker.
 
-##### `event(string $type, array $data = []): ?bool`
+##### `send(string $type, array $data = []): ?bool`
 
 Send event to server.
 
 ```php
 $client->on('ping', function (AsyncTcpConnection $connection, Payload $payload, Client $client) {
-    $client->event('pong', ['time' => time()]);
+    $client->send('pong', ['time' => time()]);
 });
 ```
 
