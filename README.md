@@ -988,7 +988,7 @@ public function all(): array
 /**
  * Get channels count.
  *
- * @return integer
+ * @return int
  */
 public function count(): int
 ```
@@ -1249,6 +1249,8 @@ $channel = channel('secret channel'); // get channel instance
 $channel = server()->channel('secret channel');
 $channel = server()->channels->get('secret channel');
 ```
+
+💡 See all helpers [here](/helpers.php).
 
 ## 🔹 Mappable methods (Macros)
 
