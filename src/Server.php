@@ -6,8 +6,8 @@ use Porter\Events\Event;
 use Porter\Events\AbstractEvent;
 use Porter\Traits\Rawable;
 use Porter\Traits\Payloadable;
-use Porter\Support\Collection;
 use Porter\Exceptions\PorterException;
+use Porter\Connections;
 use Sauce\Traits\Singleton;
 use Sauce\Traits\Mappable;
 use Workerman\Worker;
@@ -295,17 +295,23 @@ class Server
     /**
      * Send event to connection.
      *
-     * @param TcpConnection|Connection|array $connection
+     * @param TcpConnection|Connection|Connections|array $connection
      * @param string $event
      * @param array $data
      * @return self
      */
-    public function to(TcpConnection|Connection|array $connection, string $event, array $data = []): self
+    public function to(TcpConnection|Connection|Connections|array $connection, string $event, array $data = []): self
     {
-        $payload = $this->makePayload($event, $data);
+        if ($connection instanceof Connections) {
+            $connection = $connection->all();
+        }
 
-        foreach ((array) $connection as $target) {
-            $target->send($payload);
+        if (!is_array($connection)) {
+            $connection = [$connection];
+        }
+
+        foreach ($connection as $target) {
+            $target->send($this->makePayload($event, $data));
         }
 
         return $this;
@@ -316,7 +322,7 @@ class Server
      *
      * @param string $event
      * @param array $data
-     * @param int[]|TcpConnection[]|Connection[] $excepts TcpConnection, Connection instance or connection ids.
+     * @param int[]|TcpConnection[]|Connection[] $excepts TcpConnection, Connection instance or connection id (ids and instances can as array).
      * @return self
      */
     public function broadcast(string $event, array $data = [], array|TcpConnection|Connection $excepts = []): self
@@ -327,13 +333,11 @@ class Server
             }
         }
 
-        foreach ($this->getWorker()->connections as $connection) {
-            if (in_array($connection->id, $excepts)) {
-                continue;
-            }
+        $targets = $this
+            ->connections()
+            ->filter(fn (Connection $connection) => !in_array($connection->id, $excepts));
 
-            $this->to($connection, $event, $data);
-        }
+        $this->to($targets, $event, $data);
 
         return $this;
     }
@@ -372,7 +376,7 @@ class Server
     /**
      * Get connection instance by id.
      *
-     * @param integer $id
+     * @param int $id
      * @return Connection|null
      */
     public function connection(int $id): ?Connection
@@ -387,9 +391,9 @@ class Server
     /**
      * Get all connections on server.
      *
-     * @return Collection
+     * @return Connections
      */
-    public function connections(): Collection
+    public function connections(): Connections
     {
         $connections = [];
 
@@ -397,7 +401,7 @@ class Server
             $connections[$connection->id] = new Connection($connection);
         }
 
-        return new Collection($connections);
+        return new Connections($connections);
     }
 
     /**

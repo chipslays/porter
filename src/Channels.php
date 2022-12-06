@@ -30,7 +30,7 @@ class Channels
     /**
      * Get count of channels.
      *
-     * @return integer
+     * @return int
      */
     public function count(): int
     {
