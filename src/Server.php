@@ -45,7 +45,7 @@ class Server
 
         // set default name for worker
         if (!$this->worker->name || $this->worker->name == 'none') {
-            $this->worker->name = 'Porter-' . date('d_m_Y-H_i_s');
+            $this->worker->name = 'Server-' . date('d_m_Y-H_i_s');
         }
 
         $this->boot();

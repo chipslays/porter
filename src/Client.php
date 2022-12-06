@@ -28,6 +28,9 @@ class Client
     public function __construct(string $host, array $context = [])
     {
         $this->worker = new Worker;
+        $this->worker->count = 1; // use only 1 worker process
+        $this->worker->name = 'Client-' . date('d_m_Y-H_i_s');
+
         $this->connection = new AsyncTcpConnection($host, $context);
     }
 
@@ -59,7 +62,7 @@ class Client
      * @param array $data
      * @return bool|null
      */
-    public function event(string $type, array $data = []): ?bool
+    public function send(string $type, array $data = []): ?bool
     {
         return $this->connection->send($this->makePayload($type, $data));
     }
@@ -97,7 +100,6 @@ class Client
     public function onDisconnected(callable $handler): void
     {
         $this->connection->onClose = function (AsyncTcpConnection $connection) use ($handler) {
-            $connection->channels->leaveAll();
             call_user_func_array($handler, [$connection]);
         };
     }
