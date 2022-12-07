@@ -20,7 +20,7 @@ class Timer
     protected static $running = [];
 
     /**
-     * Create timer.
+     * Add timer.
      *
      * @param string $alias
      * @param float $interval
@@ -28,7 +28,7 @@ class Timer
      * @param array $args
      * @return void
      */
-    public static function create(string $alias, float $interval, callable $callback, array $args = [], bool $persistent = true): void
+    public static function add(string $alias, float $interval, callable $callback, array $args = [], bool $persistent = true): void
     {
         self::$timers[$alias] = [$interval, $callback, $args, $persistent];
     }
