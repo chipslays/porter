@@ -10,9 +10,18 @@ class Channel
 {
     use Payloadable;
 
-    /** @var array Of TcpConnection and Connection */
-    public array $connections = [];
+    /**
+     * Joined connections to channel.
+     *
+     * @var Connections
+     */
+    public Connections $connections;
 
+    /**
+     * Local channel data.
+     *
+     * @var Collection
+     */
     public Collection $data;
 
     /**
@@ -23,6 +32,7 @@ class Channel
      */
     public function __construct(public string $id, array $data = [])
     {
+        $this->connections = new Connections;
         $this->data = new Collection($data);
     }
 
@@ -34,10 +44,10 @@ class Channel
      */
     public function join(TcpConnection|Connection|array $connections): self
     {
-        $connections = is_array($connections) ?: [$connections];
+        $connections = is_array($connections) ? $connections : [$connections];
 
         foreach ($connections as $connection) {
-            $this->connections[$connection->id] = $connection;
+            $this->connections->add($connection);
             $connection->channels->attach($this->id);
         }
 
@@ -56,7 +66,7 @@ class Channel
             return $this;
         };
 
-        unset($this->connections[$connection->id]);
+        $this->connections->remove($connection);
         $connection->channels->detach($this->id);
 
         return $this;
@@ -65,12 +75,12 @@ class Channel
     /**
      * Checks if given connection exists in channel.
      *
-     * @param Connection $connection
+     * @param TcpConnection|Connection|int $connection
      * @return bool
      */
-    public function exists(TcpConnection|Connection $connection): bool
+    public function exists(TcpConnection|Connection|int $connection): bool
     {
-        return isset($this->connections[$connection->id]);
+        return $this->connections->has($connection);
     }
 
     /**
@@ -78,24 +88,14 @@ class Channel
      *
      * @param string $event
      * @param array $data
-     * @param Connection[] $excepts Connection instance or connection id.
-     * @return void
+     * @param array|TcpConnection|Connection $excepts Connection instance or connection id.
+     * @return self
      */
-    public function broadcast(string $event, array $data = [], TcpConnection|Connection|array $excepts = []): void
+    public function broadcast(string $event, array $data = [], array|TcpConnection|Connection $excepts = []): self
     {
-        foreach ((array) $excepts as &$value) {
-            if ($value instanceof Connection || $value instanceof TcpConnection) {
-                $value = $value->id;
-            }
-        }
+        $this->connections->broadcast($event, $data, $excepts);
 
-        foreach ($this->connections as $connection) {
-            if (in_array($connection->id, $excepts)) {
-                continue;
-            }
-
-            $connection->send($this->makePayload($event, $data));
-        }
+        return $this;
     }
 
     /**

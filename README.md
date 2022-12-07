@@ -550,7 +550,7 @@ server()->channels->join([$connection1, $connection2, $connection3, ...]);
 
 ## 🔹 `Channel`
 
-#### `join(Connection|array $connections): self`
+#### `join(TcpConnection|Connection|array $connections): self`
 
 Join given connections to channel.
 
@@ -560,7 +560,7 @@ $channel->join($connection);
 $channel->join([$connection1, $connection2, $connection3, ...]);
 ```
 
-#### `leave(Connection $connection): self`
+#### `leave(TcpConnection|Connection $connection): self`
 
 Remove given connection from channel.
 
@@ -569,7 +569,7 @@ $channel = server()->channel('secret channel');
 $channel->leave($connection);
 ```
 
-#### `exists(Connection $connection): bool`
+#### `exists(TcpConnection|Connection|int $connection): bool`
 
 Checks if given connection exists in channel.
 
@@ -582,7 +582,7 @@ $channel->exists($connection);
 
 Send an event to all connection on this channel.
 
-> `Connection[] $excepts` Connection instance or connection id.
+> `TcpConnection[]|Connection[]|int[] $excepts` Connection instance or connection id.
 
 ```php
 $channel = server()->channel('secret channel');
