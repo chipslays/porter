@@ -54,7 +54,7 @@ class Connections
     /**
      * Get connections count.
      *
-     * @return integer
+     * @return int
      */
     public function count(): int
     {
@@ -85,7 +85,7 @@ class Connections
      * Check connection exists in collection.
      *
      * @param integer $id
-     * @return boolean
+     * @return bool
      */
     public function has(int $id): bool
     {
