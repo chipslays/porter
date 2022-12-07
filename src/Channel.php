@@ -15,7 +15,7 @@ class Channel
      *
      * @var Connections
      */
-    public Connections $connections;
+    protected Connections $connections;
 
     /**
      * Local channel data.
@@ -106,5 +106,15 @@ class Channel
     public function destroy(): void
     {
         Server::getInstance()->channels->delete($this->id);
+    }
+
+    /**
+     * Get all connections in channel.
+     *
+     * @return Connections
+     */
+    public function connections(): Connections
+    {
+        return $this->connections;
     }
 }
