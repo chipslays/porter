@@ -114,6 +114,8 @@ Examples can be found [here](/examples).
 
 # 📚 Documentation
 
+> **NOTE:** The documentation may not contain the latest updates or may be out of date in places. See examples, code and comments on methods. The code is well documented.
+
 ## Basics
 
 ### Local development
@@ -391,7 +393,7 @@ $storage = server()->storage();
 $storage->get('foo');
 
 // can also be a get as propperty
-server()->storage->put('foo', 'bar');
+server()->storage()->put('foo', 'bar');
 $storage = server()->storage;
 ```
 
@@ -406,10 +408,6 @@ server()->channels()->create('secret channel');
 
 $channels = server()->channels();
 $channels->get('secret channel');
-
-// can also be a get as propperty
-server()->channels->create('secret channel');
-$channels = server()->channels;
 ```
 
 #### `connection(int $connectionId): ?Connection`
@@ -480,7 +478,7 @@ server()->channels;
 Create new channel.
 
 ```php
-$channel = server()->channels->create('secret channel', [
+$channel = server()->channels()->create('secret channel', [
     'foo' => 'bar',
 ]);
 
@@ -497,7 +495,6 @@ Get a channel.
 
 ```php
 $channel = server()->channels()->get('secret channel');
-$channel = server()->channels->get('secret channel');
 ```
 
 #### `all(): Channel[]`
@@ -505,8 +502,8 @@ $channel = server()->channels->get('secret channel');
 Get array of channels (`Channel` instances).
 
 ```php
-foreach (server()->channels->all() as $id => $channel) {
-    echo count($channel->connections) . ' connection(s) in channel: ' . $id . PHP_EOL;
+foreach (server()->channels()->all() as $id => $channel) {
+    echo $channel->connections()->count() . ' connection(s) in channel: ' . $id . PHP_EOL;
 }
 ```
 
@@ -515,7 +512,7 @@ foreach (server()->channels->all() as $id => $channel) {
 Get count of channels.
 
 ```php
-$count = server()->channels->count();
+$count = server()->channels()->count();
 
 echo "Total channels: {$count}";
 ```
@@ -525,7 +522,7 @@ echo "Total channels: {$count}";
 Delete channel.
 
 ```php
-server()->channels->delete('secret channel');
+server()->channels()->delete('secret channel');
 ```
 
 #### `exists(string $id): bool`
@@ -534,8 +531,8 @@ Checks if given channel id exists already.
 
 ```php
 $channelId = 'secret channel';
-if (!server()->channels->exists($channelId)) {
-    server()->channels->create($channelId);
+if (!server()->channels()->exists($channelId)) {
+    server()->channels()->create($channelId);
 }
 ```
 
@@ -544,8 +541,8 @@ if (!server()->channels->exists($channelId)) {
 Join or create and join to channel.
 
 ```php
-server()->channels->join($connection);
-server()->channels->join([$connection1, $connection2, $connection3, ...]);
+server()->channels()->join($connection);
+server()->channels()->join([$connection1, $connection2, $connection3, ...]);
 ```
 
 ## 🔹 `Channel`
@@ -576,6 +573,24 @@ Checks if given connection exists in channel.
 ```php
 $channel = server()->channel('secret channel');
 $channel->exists($connection);
+```
+
+#### `connections(): Connections`
+
+A array of connections in this channel. Key is a `id` of connection, and value is a instance of connection `Connection`.
+
+```php
+$channel = server()->channel('secret channel');
+
+foreach($channel->connections()->all()) as $connection) {
+    $connection->lastMessageAt = time();
+}
+```
+
+```php
+$channel = server()->channel('secret channel');
+
+$connection = $channel->connections()->get([1337]); // get connection with 1337 id
 ```
 
 #### `broadcast(string $event, array $data = [], array $excepts = []): void`
@@ -626,24 +641,6 @@ $connection->channel = &$channel;
 
 
 ## Properties
-
-#### `$channel->connections`
-
-A array of connections in this channel. Key is a `id` of connection, and value is a instance of connection `Connection`.
-
-```php
-$channel = server()->channel('secret channel');
-
-foreach($channel->connections, as $connection) {
-    $connection->lastMessageAt = time();
-}
-```
-
-```php
-$channel = server()->channel('secret channel');
-
-$connection = $channel->connections[1337]; // get connection with 1337 id
-```
 
 #### `$channel->data`
 
@@ -877,7 +874,7 @@ $this->raw('ping');
 // now client will receive just a 'ping', not event object.
 ```
 
-##### `broadcast(string $event, array $data = [], array $excepts = []): void`
+##### `broadcast(string $event, array $data = [], TcpConnection|Connection|array $excepts = []): void`
 
 Send event to all connections.
 
@@ -1176,78 +1173,66 @@ Storage is a part of server, all data stored in flat files.
 To get started you need set a path where files will be stored.
 
 ```php
-server()->storage->setPath(__DIR__ . '/server-storage.data'); // you can use any filename
+server()->storage()->load(__DIR__ . '/server-storage.data'); // you can use any filename
 ```
 
 You can get access to storage like property or method:
 
 ```php
-server()->storage;
 server()->storage();
 ```
 
-> **NOTICE:** Set path only after if you booting server by (`server()->boot($worker)` method.
+> **NOTICE:** Set path only after if you booting server by (`server()->boot($worker)` method, `Storage::class` can use anywhere and before booting server.
 
 > **WARNING:** If you not provide path or an incorrect path, data will be stored in RAM. After server restart you lose your data.
 
-#### `setPath(?string $path = null): self`
+#### `Storage::class`
 
 ```php
-server()->storage->setPath(__DIR__ . '/path/to/file'); // you can use any filename
+// as standalone use without server
+$store1 = new Porter\Storage(__DIR__ . '/path/to/file1');
+$store2 = new Porter\Storage(__DIR__ . '/path/to/file2');
+$store3 = new Porter\Storage(__DIR__ . '/path/to/file3');
+```
+
+#### `load(?string $path = null): self`
+
+```php
+server()->storage()->load(__DIR__ . '/path/to/file'); // you can use any filename
 ```
 
 #### `put(string $key, mixed $value): void`
 
 ```php
-server()->storage->put('foo', 'bar');
+server()->storage()->put('foo', 'bar');
 ```
 
 #### `get(string $key, mixed $default = null): mixed`
 
 ```php
-server()->storage->get('foo', 'default value'); // foo
-server()->storage->get('baz', 'default value'); // default value
+server()->storage()->get('foo', 'default value'); // foo
+server()->storage()->get('baz', 'default value'); // default value
 ```
 
 #### `remove(string ...$keys): self`
 
 ```php
-server()->storage->remove('foo'); // true
+server()->storage()->remove('foo'); // true
 ```
 
 #### `has(string $key): bool`
 
 ```php
-server()->storage->has('foo'); // true
-server()->storage->has('baz'); // false
+server()->storage()->has('foo'); // true
+server()->storage()->has('baz'); // false
 ```
 
-#### `deleteLocalFile(): bool`
+#### `filename(): string`
 
-Remove storage file from disk.
-
-```php
-server()->storage->deleteLocalFile();
-```
-
-#### `getPath(): ?string`
-
-Returns `string` if path not empty.
+Returns path to file.
 
 ```php
-server()->storage->getPath();
-```
-
-### Storage as standalone
-
-You can use `Storage` class as standalone anywhere.
-
-```php
-use Porter\Storage;
-
-$storage1 = new Storage(__DIR__ . '/storage/storage1.strg'); // any extension
-$storage2 = new Storage(__DIR__ . '/storage/storage2.txt');
-$storage3 = new Storage(__DIR__ . '/storage/storage3.data');
+server()->storage()->getPath();
 ```
 
 ## 🔹 Helpers (functions)
