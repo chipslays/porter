@@ -386,11 +386,7 @@ class Server
      */
     public function connection(int $id): ?Connection
     {
-        if (isset($this->getWorker()->connections[$id])) {
-            return new Connection($this->getWorker()->connections[$id]);
-        }
-
-        return null;
+        return $this->connections()->get($id);
     }
 
     /**
@@ -400,13 +396,7 @@ class Server
      */
     public function connections(): Connections
     {
-        $connections = [];
-
-        foreach ($this->getWorker()->connections as $connection) {
-            $connections[$connection->id] = new Connection($connection);
-        }
-
-        return new Connections($connections);
+        return new Connections($this->getWorker()->connections);
     }
 
     /**

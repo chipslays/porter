@@ -33,7 +33,7 @@ class Connections
      *
      * @param string $event
      * @param array $data
-     * @param array $excepts
+     * @param array|TcpConnection|Connection $excepts
      * @return self
      */
     public function broadcast(string $event, array $data = [], array|TcpConnection|Connection $excepts = []): self
@@ -84,12 +84,28 @@ class Connections
     /**
      * Check connection exists in collection.
      *
-     * @param integer $id
+     * @param TcpConnection|Connection|int $connection
      * @return bool
      */
-    public function has(int $id): bool
+    public function has(TcpConnection|Connection|int $connection): bool
     {
-        return array_key_exists($id, $this->connections);
+        if (!is_int($connection)) {
+            $connection = $connection->id;
+        }
+
+        return array_key_exists($connection, $this->connections);
+    }
+
+    /**
+     * Get connection.
+     *
+     * @param int $id
+     * @param mixed $default
+     * @return Connection|null
+     */
+    public function get(int $id, mixed $default = null): ?Connection
+    {
+        return $this->has($id) ? $this->connections[$id] : $default;
     }
 
     /**
@@ -160,8 +176,8 @@ class Connections
     }
 
     /**
-     * @param integer $count
-     * @param integer $offset
+     * @param int $count
+     * @param int $offset
      * @return static
      */
     public function limit(int $count, int $offset = 0): static
@@ -223,7 +239,7 @@ class Connections
     }
 
     /**
-     * @param integer $size
+     * @param int $size
      * @return array
      */
     public function split(int $size): array
