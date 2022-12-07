@@ -6,30 +6,55 @@ use Porter\Support\Collection;
 
 class Storage
 {
+    protected string $filename;
+
     public Collection $data;
 
-    /**
-     * Constructor.
-     *
-     * If you specify an incorrect path, the data will be
-     * stored in RAM, and the data will be lost upon restart.
-     *
-     * @param string $path
-     */
-    public function __construct(protected ?string $path = null)
+    public function __construct(string $filename = null)
     {
-        $this->loadData();
+        if (!$filename) {
+            $filename = rtrim(sys_get_temp_dir(), '/\\') . '/porter/server_storage.php';
+        }
+
+        $this->load($filename);
+    }
+
+    public function load(string $filename): self
+    {
+        $storageDir = dirname($filename);
+
+        if (!file_exists($storageDir)) {
+            mkdir($storageDir, recursive: true);
+        }
+
+        if (!file_exists($filename)) {
+            file_put_contents($filename, serialize([]));
+        }
+
+        $this->filename = $filename;
+
+        $this->data = new Collection(unserialize(file_get_contents($this->filename)));
+
+        return $this;
+    }
+
+    public function save(): self
+    {
+        file_put_contents($this->filename, serialize($this->data->toArray()));
+
+        return $this;
     }
 
     /**
      * @param string $key
      * @param mixed $value
-     * @return void
+     * @return self
      */
-    public function put(string $key, mixed $value): void
+    public function put(string $key, mixed $value): self
     {
         $this->data->set($key, $value);
-        $this->saveData();
+
+        return $this;
     }
 
     /**
@@ -50,7 +75,7 @@ class Storage
      */
     public function remove(string ...$keys): self
     {
-        $this->data->remove($keys);
+        $this->data->remove(...$keys);
 
         return $this;
     }
@@ -65,84 +90,10 @@ class Storage
     }
 
     /**
-     * @return void
+     * @return string
      */
-    protected function loadData(): void
+    public function filename(): string
     {
-        if (!$this->path) {
-            $this->data = new Collection;
-            return;
-        }
-
-        $path = rtrim($this->path, '/\\');
-
-        if (!file_exists($path)) {
-            $this->data = new Collection;
-            $this->saveData();
-        }
-
-        $this->data = new Collection(unserialize(file_get_contents($path)));
-    }
-
-    /**
-     * @return void
-     */
-    protected function saveData(): void
-    {
-        $path = $this->getPath();
-
-        if (!$path) {
-            return;
-        }
-
-        file_put_contents($path, serialize($this->data));
-    }
-
-    /**
-     * Remove storage file from disk.
-     *
-     * @return bool
-     */
-    public function deleteLocalFile(): bool
-    {
-        $path = $this->getPath();
-
-        if (!$path) {
-            return false;
-        }
-
-        return unlink($path);
-    }
-
-    /**
-     * Returns `string` if path not empty.
-     *
-     * @return string|null
-     */
-    public function getPath(): ?string
-    {
-        if (!$this->path) {
-            return null;
-        }
-
-        $path = rtrim($this->path, '/\\');
-
-        return $path;
-    }
-
-    /**
-     * Set storage path.
-     *
-     * Pass null for storage in RAM.
-     *
-     * @param string|null $path
-     * @return self
-     */
-    public function setPath(?string $path = null): self
-    {
-        $this->path = $path;
-        $this->loadData();
-
-        return $this;
+        return $this->filename;
     }
 }
