@@ -5,6 +5,7 @@ use Porter\Channels;
 use Porter\Connection;
 use Porter\Server;
 use Porter\Connections;
+use Porter\Terminal;
 use Respect\Validation\Validator;
 use Workerman\Timer;
 use Workerman\Worker;
@@ -177,6 +178,19 @@ if (!function_exists('timeout')) {
     function timeout(float $seconds, callable $callback, array $args = []): int|bool
     {
         return Timer::add($seconds, $callback, $args, false);
+    }
+}
+
+if (!function_exists('cprint')) {
+    /**
+     * Print colorful text with auto reset styles on end.
+     *
+     * @param mixed $text
+     * @return void
+     */
+    function cprint(mixed $text): void
+    {
+        Terminal::print($text);
     }
 }
 
