@@ -64,7 +64,7 @@ switch ($argv[1] ?? null) {
 
     default:
         Terminal::print('{text:darkGreen}List of commands:');
-        Terminal::print('    {text:white}template:laravel [destination] {reset}- Integration to Laravel project. [e.g. template:laravel ./websocket]');
+        Terminal::print('    {text:white}template:laravel [?destination] {reset}- Integration to Laravel project. [e.g. template:laravel ./websocket]');
         Terminal::print('    {text:white}make:event [path] [?type] {reset}- Make event class. [e.g. make:event ./websocket/events/ping.php ping]');
         break;
 }
