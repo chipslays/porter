@@ -99,7 +99,10 @@ class Server
     public function onDisconnected(callable $handler): self
     {
         $this->getWorker()->onClose = function (TcpConnection $connection) use ($handler) {
-            $connection->channels->leaveAll();
+            if (property_exists($connection, 'channels')) {
+                $connection->channels->leaveAll();
+            }
+
             call_user_func_array($handler, [new Connection($connection)]);
         };
 
