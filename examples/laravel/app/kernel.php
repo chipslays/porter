@@ -20,9 +20,3 @@ server()->on('laravel version', function (Event $event) {
         'version' => app()->version()],
     );
 });
-
-server()->on('how many online users', function (Event $event) {
-    $event->reply('online', [
-        'count' => server()->connections()->count(),
-    ]);
-});

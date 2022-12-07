@@ -52,6 +52,11 @@ foreach (glob(__DIR__ . '/app/server/*.php') as $file) {
     require_once $file;
 }
 
+// load timers
+foreach (glob(__DIR__ . '/app/timers/*.php') as $file) {
+    require_once $file;
+}
+
 // load app kernel (server start point)
 require_once __DIR__ . '/app/kernel.php';
 
