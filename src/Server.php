@@ -23,11 +23,11 @@ class Server
 
     protected Worker $worker;
 
-    public readonly Channels $channels;
+    protected readonly Channels $channels;
 
-    public readonly Storage $storage;
+    protected readonly Storage $storage;
 
-    public readonly Validator $validator;
+    protected readonly Validator $validator;
 
     /** @var string[] */
     protected array $events = [];
