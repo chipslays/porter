@@ -7,6 +7,35 @@ class Terminal
     /**
      * Print colorful text with auto reset styles on end.
      *
+     * Codes list:
+     * `{reset}`
+     * `{text:black}`
+     * `{text:white}`
+     * `{text:darkGrey}`
+     * `{text:darkGray}`
+     * `{text:grey}`
+     * `{text:gray}`
+     * `{text:darkRed}`
+     * `{text:red}`
+     * `{text:darkGreen}`
+     * `{text:green}`
+     * `{text:darkYellow}`
+     * `{text:yellow}`
+     * `{text:blue}`
+     * `{text:darkMagenta}`
+     * `{text:magenta}`
+     * `{text:darkCyan}`
+     * `{text:cyan}`
+     * `{bg:black}`
+     * `{bg:red}`
+     * `{bg:green}`
+     * `{bg:yellow}`
+     * `{bg:blue}`
+     * `{bg:magenta}`
+     * `{bg:cyan}`
+     * `{bg:grey}`
+     * `{bg:gray}`
+     *
      * @param mixed $text
      * @return void
      */
@@ -21,6 +50,35 @@ class Terminal
 
     /**
      * Print colorful text without auto reset styles on end.
+     *
+     * Codes list:
+     * `{reset}`
+     * `{text:black}`
+     * `{text:white}`
+     * `{text:darkGrey}`
+     * `{text:darkGray}`
+     * `{text:grey}`
+     * `{text:gray}`
+     * `{text:darkRed}`
+     * `{text:red}`
+     * `{text:darkGreen}`
+     * `{text:green}`
+     * `{text:darkYellow}`
+     * `{text:yellow}`
+     * `{text:blue}`
+     * `{text:darkMagenta}`
+     * `{text:magenta}`
+     * `{text:darkCyan}`
+     * `{text:cyan}`
+     * `{bg:black}`
+     * `{bg:red}`
+     * `{bg:green}`
+     * `{bg:yellow}`
+     * `{bg:blue}`
+     * `{bg:magenta}`
+     * `{bg:cyan}`
+     * `{bg:grey}`
+     * `{bg:gray}`
      *
      * @param string $text
      * @return void
@@ -45,6 +103,35 @@ class Terminal
 
     /**
      * Colorize text.
+     *
+     * Codes list:
+     * `{reset}`
+     * `{text:black}`
+     * `{text:white}`
+     * `{text:darkGrey}`
+     * `{text:darkGray}`
+     * `{text:grey}`
+     * `{text:gray}`
+     * `{text:darkRed}`
+     * `{text:red}`
+     * `{text:darkGreen}`
+     * `{text:green}`
+     * `{text:darkYellow}`
+     * `{text:yellow}`
+     * `{text:blue}`
+     * `{text:darkMagenta}`
+     * `{text:magenta}`
+     * `{text:darkCyan}`
+     * `{text:cyan}`
+     * `{bg:black}`
+     * `{bg:red}`
+     * `{bg:green}`
+     * `{bg:yellow}`
+     * `{bg:blue}`
+     * `{bg:magenta}`
+     * `{bg:cyan}`
+     * `{bg:grey}`
+     * `{bg:gray}`
      *
      * @param string|int $text
      * @return string
