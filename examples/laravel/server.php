@@ -45,10 +45,15 @@ foreach (glob($logDir . '/*.log') as $file) {
 $worker::$logFile = $logFile;
 
 // load event classes
-server()->autoloadEvents(__DIR__ . '/events');
+server()->autoloadEvents(__DIR__ . '/app/events');
 
-// load kernel (server start point)
-require_once __DIR__ . '/kernel.php';
+// load server system events
+foreach (glob(__DIR__ . '/app/server/*.php') as $file) {
+    require_once $file;
+}
+
+// load app kernel (server start point)
+require_once __DIR__ . '/app/kernel.php';
 
 // start server and handle events
 server()->start();
