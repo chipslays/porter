@@ -135,7 +135,7 @@ abstract class AbstractEvent
      */
     public function reply(string $event = null, array $data = []): self
     {
-        return $this->to($this->connection, $event ?? $this->type, $data);
+        return $this->to($this->connection, $event ?? $this->payload->type, $data);
     }
 
     /**
