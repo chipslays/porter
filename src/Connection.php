@@ -55,6 +55,20 @@ class Connection
     }
 
     /**
+     * Reply event to this connection.
+     *
+     * @param string|null $event
+     * @param array $data
+     * @return self
+     */
+    public function reply(string $event, array $data = []): self
+    {
+        Server::getInstance()->to($this->connection, $event, $data);
+
+        return $this;
+    }
+
+    /**
      * Get connection channels manager.
      *
      * Note: Attribute `channels` init in `onConnected` server method.
