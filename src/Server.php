@@ -408,4 +408,30 @@ class Server
     {
         return $this->validator::create();
     }
+
+    /**
+     * Set workerman log file.
+     *
+     * @param string $filename
+     * @return self
+     */
+    public function setLogFile(string $filename): self
+    {
+        $this->worker::$logFile = $filename;
+
+        return $this;
+    }
+
+    /**
+     * Put text to log file.
+     *
+     * @param string|array $text
+     * @return self
+     */
+    public function log(string|array $text): self
+    {
+        $this->worker::log(is_array($text) ? var_export($text, true) : $text);
+
+        return $this;
+    }
 }
