@@ -19,7 +19,7 @@ $server->onWebsocketConnected(function (Connection $connection, string $header) 
     Terminal::print("Query from client: {text:darkYellow}foo={$_GET['foo']}");
 });
 
-$server->onConnected(function (Connection $connection, string $header) {
+$server->onConnected(function (Connection $connection) {
     Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
 });
 
