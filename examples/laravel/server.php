@@ -42,7 +42,7 @@ foreach (glob($logDir . '/*.log') as $file) {
 }
 
 // set log file
-$worker::$logFile = $logFile;
+server()->setLogFile(__DIR__ . '/server.log');
 
 // load event classes
 server()->autoloadEvents(__DIR__ . '/app/events');

@@ -105,7 +105,7 @@ class Channel
      */
     public function destroy(): void
     {
-        Server::getInstance()->channels->delete($this->id);
+        Server::getInstance()->channels()->delete($this->id);
     }
 
     /**

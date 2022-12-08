@@ -811,7 +811,7 @@ If client pass in data `channelId` with channel id or `targetId` with id of conn
 $this->channel;
 $this->channel();
 
-$this->channel->broadcast('new message', [
+$this->channel()->broadcast('new message', [
     'text' => $this->payload->get('text'),
     'from' => $this->connection->nickname,
 ]);
@@ -969,7 +969,7 @@ server()->on('new message', function (Event $event) {
         'from' => $this->connection->nickname,
     ]);
 
-    $event->channel->broadcast('new message', [
+    $event->channel()->broadcast('new message', [
         'text' => $this->payload->get('text'),
         'from' => $this->connection->nickname,
     ]);
@@ -1262,7 +1262,7 @@ Server::getInstance()->getWorker()->connections;
 ```php
 $channel = channel('secret channel'); // get channel instance
 $channel = server()->channel('secret channel');
-$channel = server()->channels->get('secret channel');
+$channel = server()->channels()->get('secret channel');
 ```
 
 💡 See all helpers [here](/helpers.php).

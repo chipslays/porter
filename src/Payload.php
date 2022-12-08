@@ -70,7 +70,7 @@ class Payload
     public function is(string|array $rule, string $key): bool
     {
         $rule = (array) $rule;
-        return Server::getInstance()->validator::create()
+        return Server::getInstance()->validator()::create()
             ->__call($rule[0], isset($rule[1]) ? (array) $rule[1] : [])
             ->validate($this->data->get($key));
     }
