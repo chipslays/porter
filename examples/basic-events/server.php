@@ -14,11 +14,13 @@ $worker::$logFile = __DIR__ . '/server.log';
 $server = Server::getInstance();
 $server->boot($worker)->setLogFile(__DIR__ . '/server.log');
 
-$server->onConnected(function (Connection $connection, string $header) {
-    Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
-
+$server->onWebsocketConnected(function (Connection $connection, string $header) {
     // Here also available vars: $_GET, $_COOKIE, $_SERVER.
     Terminal::print("Query from client: {text:darkYellow}foo={$_GET['foo']}");
+});
+
+$server->onConnected(function (Connection $connection, string $header) {
+    Terminal::print('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
 });
 
 $server->onDisconnected(function (Connection $connection) {

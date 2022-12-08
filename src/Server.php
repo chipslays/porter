@@ -81,10 +81,25 @@ class Server
      * @param callable $handler
      * @return self
      */
-    public function onConnected(callable $handler): self
+    public function onWebsocketConnected(callable $handler): self
     {
         $this->getWorker()->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($handler) {
             call_user_func_array($handler, [new Connection($connection), $header]);
+        };
+
+        return $this;
+    }
+
+    /**
+     * Emitted when a socket connection is successfully established.
+     *
+     * @param callable $handler
+     * @return self
+     */
+    public function onConnected(callable $handler): self
+    {
+        $this->getWorker()->onConnect = function (TcpConnection $connection) use ($handler) {
+            call_user_func_array($handler, [new Connection($connection)]);
         };
 
         return $this;
