@@ -182,4 +182,14 @@ class Porter {
             }
         }
     }
+
+    remove(event) {
+        if (this.events.porter[event]) {
+            delete this.events.porter[event]
+        }
+    }
+
+    clear() {
+        this.events.porter = {};
+    }
 }
