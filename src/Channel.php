@@ -39,11 +39,15 @@ class Channel
     /**
      * Join given connections to channel.
      *
-     * @param TcpConnection|TcpConnection[]|Connection|Connection[] $connections
+     * @param TcpConnection|Connection|Connections|array $connections
      * @return self
      */
-    public function join(TcpConnection|Connection|array $connections): self
+    public function join(TcpConnection|Connection|Connections|array $connections): self
     {
+        if ($connections instanceof Connections) {
+            $connections = $connections->all();
+        }
+
         $connections = is_array($connections) ? $connections : [$connections];
 
         foreach ($connections as $connection) {
@@ -57,17 +61,25 @@ class Channel
     /**
      * Delete given connection from channel.
      *
-     * @param TcpConnection|Connection $connection
+     * @param TcpConnection|Connection|Connections|array $connection
      * @return self
      */
-    public function leave(TcpConnection|Connection $connection): self
+    public function leave(TcpConnection|Connection|Connections|array $connections): self
     {
-        if (!$this->exists($connection)) {
-            return $this;
-        };
+        if ($connections instanceof Connections) {
+            $connections = $connections->all();
+        }
 
-        $this->connections->remove($connection);
-        $connection->channels->detach($this->id);
+        $connections = is_array($connections) ? $connections : [$connections];
+
+        foreach ($connections as $connection) {
+            if (!$this->exists($connection)) {
+                continue;
+            };
+
+            $this->connections->remove($connection);
+            $connection->channels->detach($this->id);
+        }
 
         return $this;
     }
