@@ -10,7 +10,7 @@ $worker = new Worker('websocket://0.0.0.0:3737');
 
 server()->boot($worker)->setLogFile(__DIR__ . '/server.log');
 
-server()->onConnected(function (Connection $connection, string $header) {
+server()->onConnected(function (Connection $connection) {
     cprint('{text:darkGreen}Connected: ' . $connection->getRemoteAddress());
 });
 
