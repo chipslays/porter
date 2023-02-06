@@ -1,5 +1,5 @@
 # 🤵‍ Porter: PHP Websocket Server/Client
-![](https://img.shields.io/github/workflow/status/chipslays/porter/tests)
+![](https://img.shields.io/github/actions/status/chipslays/porter/.github/workflows/php.yml?branch=master)
 ![](https://img.shields.io/github/v/release/chipslays/porter)
 ![](https://img.shields.io/github/license/chipslays/porter?color=blue)
 ![](https://img.shields.io/packagist/dt/chipslays/porter)
