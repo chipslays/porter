@@ -33,11 +33,6 @@ class Porter {
     /**
      * @param {function}
      */
-    reconnected = null;
-
-    /**
-     * @param {function}
-     */
     error = null;
 
     /**
@@ -85,22 +80,16 @@ class Porter {
             this.ws.send(data);
         }
 
-        this.initPingPong();
+        this.startPingPong();
     }
 
-    initPingPong() {
-        if (this.__pingInterval) {
-            clearInterval(this.__pingInterval);
-        } else {
-            this.__pingInterval = setInterval(() => {
-                if (this.ws.readyState == WebSocket.OPEN) {
-                    this.raw.send('ping');
-                    console.log('ping');
-                } else {
-                    console.log('not ping');
-                }
-            }, this.options.pingInterval);
-        }
+    startPingPong() {
+        clearInterval(this.__pingInterval);
+
+        this.__pingInterval = setInterval(() => {
+            if (this.ws.readyState !== WebSocket.OPEN) return;
+            this.raw.send('ping');
+        }, this.options.pingInterval);
 
         this.raw.on('pong', payload => {
             if (typeof this.pong == 'function') {
@@ -204,11 +193,11 @@ class Porter {
     }
 
     reconnect(ws) {
+        if (this.ws.readyState == WebSocket.OPEN || this.ws.readyState == WebSocket.CONNECTING) {
+            return;
+        }
+
         this.ws = ws || new WebSocket(this.ws.url);
         this.listen();
-
-        if (this.reconnected) {
-            this.reconnected.call();
-        }
     }
 }
