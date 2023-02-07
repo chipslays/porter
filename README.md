@@ -804,10 +804,10 @@ Each child class get following properties:
 
 #### Magic properties & methods.
 
-If client pass in data `channelId` with channel id or `targetId` with id of connection, we got a magic properties and methods.
+If client pass in data `channel_i_d` with channel id or `target_id` with id of connection, we got a magic properties and methods.
 
 ```php
-// this is a object of Channel, getted by `channelId` from client.
+// this is a object of Channel, getted by `channel_id` from client.
 $this->channel;
 $this->channel();
 
@@ -818,7 +818,7 @@ $this->channel()->broadcast('new message', [
 ```
 
 ```php
-// this is a object of Channel, getted by `channelId` from client.
+// this is a object of Channel, getted by `target_id` from client.
 $this->target;
 $this->target();
 
@@ -1351,10 +1351,10 @@ client.send('get online users', {/* ... */}, payload => {
     console.log(payload.data.online); // and server answer e.g. '1337 users'
 });
 
-// pass channelId and targetId for magic properties on back-end server
+// pass channel_id and target_id for magic properties on back-end server
 client.send('magical properties example', {
-    channelId: 'secret channel',
-    targetId: 1337,
+    channel_id: 'secret channel',
+    target_id: 1337,
 
     // on backend php websocket server we can use $this->channel and $this->target magical properties.
 });
