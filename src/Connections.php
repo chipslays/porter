@@ -111,7 +111,7 @@ class Connections
     /**
      * Get specific connections.
      *
-     * @param array|integer $ids
+     * @param int[]|int $ids
      * @return static
      */
     public function only(array|int $ids): static
@@ -143,7 +143,7 @@ class Connections
     /**
      * Remove connection from collection.
      *
-     * @param TcpConnection|Connection|integer $connection
+     * @param TcpConnection|Connection|int $connection
      * @return self
      */
     public function remove(TcpConnection|Connection|int $connection): self
@@ -166,7 +166,7 @@ class Connections
     }
 
     /**
-     * Get last connection from connection.
+     * Get last connection in this collection.
      *
      * @return Connection|null
      */
@@ -176,6 +176,8 @@ class Connections
     }
 
     /**
+     * Get a limited collection of connections.
+     *
      * @param int $count
      * @param int $offset
      * @return static
@@ -186,6 +188,8 @@ class Connections
     }
 
     /**
+     * Get a filtered collection of connections.
+     *
      * @param callable|null $callback
      * @return static
      */
@@ -195,6 +199,8 @@ class Connections
     }
 
     /**
+     * Map each connection in collection.
+     *
      * @param callable $callback
      * @return static
      */
@@ -208,6 +214,8 @@ class Connections
     }
 
     /**
+     * Do something on over each connection in collection.
+     *
      * @param callable $callback
      * @return self
      */
@@ -223,6 +231,8 @@ class Connections
     }
 
     /**
+     * Get a empty collection of connections.
+     *
      * @return static
      */
     public function clear(): static
@@ -231,14 +241,18 @@ class Connections
     }
 
     /**
-     * @return Connection
+     * Get a first connection and remove this from collection.
+     *
+     * @return Connection|null
      */
-    public function shift(): Connection
+    public function shift(): ?Connection
     {
         return array_shift($this->connections);
     }
 
     /**
+     * Split a collection to array of chunks (each chunk is a collection of connections).
+     *
      * @param int $size
      * @return array
      */
@@ -269,21 +283,16 @@ class Connections
     }
 
     /**
-     * @param callable $callback
-     * @return mixed
-     */
-    public function pipe(callable $callback): mixed
-    {
-        return call_user_func($callback, $this);
-    }
-
-    /**
-     * Get random connection.
+     * Get a random connection.
      *
-     * @return Connection
+     * @return Connection|null
      */
-    public function random(): Connection
+    public function random(): ?Connection
     {
+        if ($this->count() == 0) {
+            return null;
+        }
+
         return $this->connections[array_rand($this->connections)];
     }
 }

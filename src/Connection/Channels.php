@@ -12,6 +12,11 @@ class Channels
     /** @var string[] */
     protected array $channels = [];
 
+    /**
+     * Constructor.
+     *
+     * @param TcpConnection|Connection $connection
+     */
     public function __construct(protected TcpConnection|Connection $connection)
     {
         //

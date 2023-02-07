@@ -10,8 +10,6 @@ use Porter\Events\AbstractEvent;
 class Event extends AbstractEvent
 {
     /**
-     * This method here is useless, but needed.
-     *
      * @return void
      */
     public function handle(Connection $connection, Payload $payload, Server $server): void

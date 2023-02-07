@@ -30,14 +30,14 @@ abstract class AbstractEvent
     public readonly Payload $payload;
 
     /**
-     * Available if client passed `channelId`.
+     * Available if client passed `channel_id_`.
      *
      * @var Channel|null
      */
     public readonly ?Channel $channel;
 
     /**
-     * Available if client passed `targetId`.
+     * Available if client passed `target_id`.
      *
      * @var Connection|null
      */
@@ -85,7 +85,7 @@ abstract class AbstractEvent
         $this->server = Server::getInstance();
         $this->data = &$this->payload->data;
 
-        $this->initMagicalVars();
+        $this->setMagicalVariables();
 
         return $this;
     }
@@ -93,15 +93,17 @@ abstract class AbstractEvent
     /**
      * @return void
      */
-    protected function initMagicalVars(): void
+    protected function setMagicalVariables(): void
     {
-        // Get channel instance by `channelId` parameter.
-        $this->channel = $this->server->channel($this->payload('channelId', ''));
+        // Get channel instance by `channel_id_` parameter.
+        if ($this->data->has('channel_id')) {
+            $this->channel = $this->server->channel($this->payload('channel_id'));
+        }
 
-        // Get target connection instance by `targetId` parameter.
-        $this->target = $this->payload->has('targetId')
-            ? $this->server->connection((int) $this->payload('targetId'))
-            : null;
+        // Get target connection instance by `target_id` parameter.
+        if ($this->data->has('target_id')) {
+            $this->target = $this->server->connection((int) $this->payload('target_id'));
+        }
     }
 
     /**
@@ -163,7 +165,7 @@ abstract class AbstractEvent
     }
 
     /**
-     * Getter for channel (available if client passed `channelId`).
+     * Getter for channel (available if client passed `channel_id_`).
      *
      * @return Channel|null
      */
@@ -173,7 +175,7 @@ abstract class AbstractEvent
     }
 
     /**
-     * Getter for target (available if client passed `targetId`).
+     * Getter for target (available if client passed `target_id`).
      *
      * @return Connection|null
      */
