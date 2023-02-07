@@ -266,12 +266,17 @@ class Server
                 return;
             }
 
+            $payloadData = @json_decode($payload, true);
+
             // execute callback if exists
             if ($callback) {
-                call_user_func_array($callback, [$connection, $payload]);
+                call_user_func_array(
+                    $callback, [
+                        $connection,
+                        !$payloadData || !isset($payloadData['type']) ? $payload : new Payload($payloadData)
+                    ]
+                );
             }
-
-            $payloadData = @json_decode($payload, true);
 
             if (!$payloadData || !isset($payloadData['type'])) {
                 // handle raw event (no json or no porter event)
@@ -296,17 +301,13 @@ class Server
             if (is_callable($eventClass)) {
                 $handler = $eventClass;
 
-                /** @var Event */
-                $eventClass = (new Event)->boot($connection, $payload);
-                $eventClass->setHandler($handler);
-                $eventClass->altHandle($eventClass);
-
-                return;
+                $event = (new Event)->boot($connection, $payload);
+                return call_user_func_array($handler, [$event]);
             }
 
             // if handler as event class
-            $eventClass = (new $eventClass)->boot($connection, $payload);
-            call_user_func_array([$eventClass, 'handle'], [$connection, $payload, self::getInstance()]);
+            $event = (new $eventClass)->boot($connection, $payload);
+            call_user_func_array([$event, 'handle'], [$connection, $payload, self::getInstance()]);
         };
 
         $this->getWorker()->runAll();
