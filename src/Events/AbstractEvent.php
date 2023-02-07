@@ -189,7 +189,7 @@ abstract class AbstractEvent
      */
     public function validator(): Validator
     {
-        return Server::getInstance()->validator::create();
+        return Server::getInstance()->validator();
     }
 
     /**
