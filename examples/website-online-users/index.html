@@ -21,8 +21,7 @@
     <script src="../../dist/porter.js"></script>
 
     <script>
-        const ws = new WebSocket('ws://localhost:3737');
-        const client = new Porter(ws);
+        const client = new Porter('ws://localhost:3737');
 
         client.on('online users', payload => {
             document.getElementById('onlineCount').innerHTML = payload.data.count;

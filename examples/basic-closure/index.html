@@ -16,10 +16,11 @@
     <!-- <script src="https://cdn.jsdelivr.net/gh/chipslays/porter@latest/dist/porter.min.js"></script> -->
 
     <script>
-        const ws = new WebSocket('ws://localhost:3737');
-        const client = new Porter(ws);
+        const client = new Porter('ws://localhost:3737');
 
         client.connected = () => {
+            console.info('Connected!');
+
             client.send('ping').on('pong', payload => {
                 console.log(payload);
             });
@@ -27,6 +28,14 @@
             client.send('hello to', {username: 'John Doe'}, payload => {
                 console.log(payload);
             });
+        }
+
+        client.disconnected = () => {
+            console.error('Disconnected...');
+            setTimeout(() => {
+                console.log('Try reconnect to server...');
+                client.reconnect();
+            }, 1000);
         }
 
         client.listen();

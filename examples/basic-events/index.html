@@ -16,8 +16,7 @@
     <!-- <script src="https://cdn.jsdelivr.net/gh/chipslays/porter@latest/dist/porter.min.js"></script> -->
 
     <script>
-        const ws = new WebSocket('ws://localhost:3737?foo=bar');
-        const client = new Porter(ws);
+        const client = new Porter('ws://localhost:3737?foo=bar');
 
         client.connected = () => {
             client.send('ping').on('pong', payload => {
