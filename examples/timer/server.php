@@ -11,7 +11,7 @@ server()->boot($worker)->setLogFile(__DIR__ . '/server.log');
 server()->onStart(function () {
     timer(1, function () {
         connections()->broadcast('update date', [
-            'date' => date('d.m.Y H:i:s')
+            'date' => date('d.m.Y H:i:s'),
         ]);
     });
 });
