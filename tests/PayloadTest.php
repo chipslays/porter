@@ -22,8 +22,11 @@ it('event id', function () use ($payload) {
 it('event data', function () use ($payload) {
     expect($payload->data['firstname'])->toEqual('John');
     expect($payload->data->firstname)->toEqual('John');
+    expect($payload->data->get('firstname'))->toEqual('John');
+    expect($payload->data->get('ThisFirstnameNotExists', 'John'))->toEqual('John');
 
     // nested
     expect($payload->data->photo['xl'])->toEqual('image-xl.jpg');
     expect($payload->data['photo']['xl'])->toEqual('image-xl.jpg');
+    expect($payload->data->get('photo.xl'))->toEqual('image-xl.jpg');
 });
