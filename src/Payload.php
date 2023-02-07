@@ -26,6 +26,10 @@ class Payload
         }
     }
 
+    /**
+     * @param array $data
+     * @return array
+     */
     protected function emptyStringsToNull(array $data): array
     {
         array_walk_recursive($data, function(&$value) {
