@@ -1,10 +1,10 @@
-# 🤵‍ Porter: PHP Websocket Server/Client
+# 🤵‍ Porter
 ![](https://img.shields.io/github/actions/status/chipslays/porter/.github/workflows/php.yml?branch=master)
 ![](https://img.shields.io/github/v/release/chipslays/porter)
 ![](https://img.shields.io/github/license/chipslays/porter?color=blue)
 ![](https://img.shields.io/packagist/dt/chipslays/porter)
 
-A simple wrapper over Workerman Websockets with channels and other stuff for PHP 8, can say this is a Socket IO alternative for PHP.
+A simple PHP 8 websocket server and client wrapper over Workerman with channels and other stuff, can say this is a Socket IO alternative for PHP.
 
 ![](/.github/images/porter.png)
 
