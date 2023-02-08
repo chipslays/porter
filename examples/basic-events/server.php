@@ -1,7 +1,6 @@
 <?php
 
 use Porter\Connection;
-use Workerman\Worker;
 use Porter\Terminal;
 
 use function porter\server;

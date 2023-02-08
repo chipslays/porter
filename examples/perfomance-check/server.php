@@ -2,7 +2,6 @@
 
 use Porter\Connection;
 use Porter\Events\Event;
-use Workerman\Worker;
 
 use function porter\cprint;
 use function porter\server;

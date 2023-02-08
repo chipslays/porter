@@ -1,10 +1,8 @@
 <?php
 
-use Workerman\Worker;
-
-use function porter\connections;
-use function porter\server;
 use function porter\timer;
+use function porter\server;
+use function porter\connections;
 
 require __DIR__ . '/../../vendor/autoload.php';
 

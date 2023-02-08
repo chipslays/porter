@@ -1,7 +1,6 @@
 <?php
 
 use Porter\Events\Event;
-use Workerman\Worker;
 
 use function porter\server;
 

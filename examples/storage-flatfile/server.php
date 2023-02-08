@@ -1,6 +1,5 @@
 <?php
 
-use Workerman\Worker;
 use Porter\Server;
 use Porter\Storage;
 use Porter\Terminal;
