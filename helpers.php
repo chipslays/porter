@@ -1,26 +1,16 @@
 <?php
 
+namespace porter;
+
+use Porter\Server;
 use Porter\Channel;
 use Porter\Channels;
 use Porter\Connection;
-use Porter\Server;
 use Porter\Connections;
 use Porter\Terminal;
-use Respect\Validation\Validator;
 use Workerman\Timer;
 use Workerman\Worker;
-
-if (!function_exists('porter')) {
-    /**
-     * Get server instance.
-     *
-     * @return Server
-     */
-    function porter(): Server
-    {
-        return Server::getInstance();
-    }
-}
+use Respect\Validation\Validator;
 
 if (!function_exists('server')) {
     /**
@@ -110,12 +100,14 @@ if (!function_exists('validator')) {
 
 if (!function_exists('timer')) {
     /**
-     * Create a timer. (Alias for `timer_add()`)
+     * Create a timer.
      *
-     * @param float $interval
-     * @param callable $function
-     * @param mixed $args
-     * @param bool $persistent
+     * Alias for `Workerman\Timer`.
+     *
+     * @param float $interval Interval in seconds.
+     * @param callable $function Execute every `$interval` seconds.
+     * @param mixed $args Callback arguments.
+     * @param bool $persistent Execute one time.
      * @return int|bool Returns timer id.
      */
     function timer(float $interval, callable $callback, mixed $args = [], bool $persistent = true): int|bool
@@ -124,27 +116,13 @@ if (!function_exists('timer')) {
     }
 }
 
-if (!function_exists('timer_add')) {
-    /**
-     * Create a timer.
-     *
-     * @param float $interval
-     * @param callable $function
-     * @param mixed $args
-     * @param bool $persistent
-     * @return int|bool Returns timer id.
-     */
-    function timer_add(float $interval, callable $callback, mixed $args = [], bool $persistent = true): int|bool
-    {
-        return Timer::add($interval, $callback, $args, $persistent);
-    }
-}
-
 if (!function_exists('timer_delete')) {
     /**
-     * Create a timer.
+     * Delete a timer by id.
      *
-     * @param int $id
+     * Alias for `Workerman\Timer`.
+     *
+     * @param int $id Timer id
      * @return bool
      */
     function timer_delete(int $id): bool
@@ -155,9 +133,10 @@ if (!function_exists('timer_delete')) {
 
 if (!function_exists('timer_delete_all')) {
     /**
-     * Create a timer.
+     * Delete all timers.
      *
-     * @param int $id
+     * Alias for `Workerman\Timer`.
+     *
      * @return bool
      */
     function timer_delete_all(): void

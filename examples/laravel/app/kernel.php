@@ -2,6 +2,8 @@
 
 use Porter\Events\Event;
 
+use function porter\server;
+
 /*
 |--------------------------------------------------------------------------
 | Application Kernel

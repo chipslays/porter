@@ -2,6 +2,8 @@
 
 use Workerman\Worker;
 
+use function porter\server;
+
 require __DIR__.'/../vendor/autoload.php';
 
 // setup laravel app

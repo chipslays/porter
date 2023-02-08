@@ -3,6 +3,8 @@
 use Workerman\Worker;
 use Workerman\Connection\AsyncTcpConnection;
 
+use function porter\cprint;
+
 require __DIR__ . '/../../vendor/autoload.php';
 
 $worker = new Worker();

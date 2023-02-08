@@ -2,6 +2,10 @@
 
 use Workerman\Worker;
 
+use function porter\connections;
+use function porter\server;
+use function porter\timer;
+
 require __DIR__ . '/../../vendor/autoload.php';
 
 $worker = new Worker('websocket://0.0.0.0:3737');
