@@ -7,10 +7,8 @@ use Porter\Terminal;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-$worker = new Worker('websocket://0.0.0.0:3737');
-
 $server = Server::getInstance();
-$server->boot($worker);
+$server->create('0.0.0.0:3737');
 
 // set path only after booting server
 $server->storage()->load(__DIR__ . '/storage/storage.hub');

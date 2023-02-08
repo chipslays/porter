@@ -76,6 +76,25 @@ class Server
     }
 
     /**
+     * Create a server.
+     *
+     * It syntax sugar, for avoid create Worker instance and manual booting.
+     *
+     * @param string $address
+     * @param array $context
+     * @return self
+     */
+    public function create(string $address, array $context = []): self
+    {
+        $worker = new Worker(
+            'websocket://' . str_replace('websocket://', '', $address),
+            $context
+        );
+
+        return $this->boot($worker);
+    }
+
+    /**
      * Emitted when a socket connection is successfully established.
      *
      * @param callable $handler

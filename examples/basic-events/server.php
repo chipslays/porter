@@ -8,11 +8,7 @@ use function porter\server;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-$worker = new Worker('websocket://0.0.0.0:3737');
-
-$worker::$logFile = __DIR__ . '/server.log';
-
-server()->boot($worker)->setLogFile(__DIR__ . '/server.log');
+server()->create('0.0.0.0:3737')->setLogFile(__DIR__ . '/server.log');
 
 server()->onWebsocketConnected(function (Connection $connection, string $header) {
     // Here also available vars: $_GET, $_COOKIE, $_SERVER.
