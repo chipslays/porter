@@ -4,10 +4,11 @@
 ![](https://img.shields.io/github/license/chipslays/porter?color=blue)
 ![](https://img.shields.io/packagist/dt/chipslays/porter)
 
+A simple wrapper over Workerman Websockets with channels and other stuff for PHP 8, can say this is a Socket IO alternative for PHP.
 
-A simple wrapper over Workerman Websockets with channels and other stuff for PHP 8.1.
-
-Can say this is a Socket IO alternative for PHP.
+> **Note**
+>
+> This library production ready, maintenance only bug fixes, no breaking changes updates.
 
 # 🧰 Installation
 
