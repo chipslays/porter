@@ -17,7 +17,7 @@ A simple wrapper over Workerman Websockets with channels and other stuff for PHP
 1. Install Porter via Composer:
 
 ```bash
-composer require chipslays/porter ^1.x
+composer require chipslays/porter
 ```
 
 2. Put javascript code in views:
