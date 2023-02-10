@@ -37,14 +37,11 @@ composer require chipslays/porter
 Simplest ping-pong server.
 
 ```php
-use Workerman\Worker;
 use Porter\Events\Event;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$worker = new Worker('websocket://0.0.0.0:3737');
-
-server()->boot($worker);
+server()->create('0.0.0.0:3737');
 
 server()->on('ping', function (Event $event) {
     $event->reply('pong');
@@ -59,13 +56,14 @@ Run server.
 php server.php start
 ```
 
-Run server in background as daemon process.
+Or run server in background as daemon process.
 
 ```bash
 php server.php start -d
 ```
 
-List of all available commands.
+<details>
+  <summary>List of all available commands</summary>
 
 `php server.php start`
 
@@ -86,7 +84,7 @@ List of all available commands.
 `php server.php reload`
 
 `php server.php reload -g`
-
+</details>
 
 ### Client (Javascript)
 
@@ -96,8 +94,7 @@ Send `ping` event on established connection.
 <script src="https://cdn.jsdelivr.net/gh/chipslays/porter@latest/dist/porter.min.js"></script>
 
 <script>
-    const ws = new WebSocket(`ws://${location.hostname}:3737`);
-    const client = new Porter(ws);
+    const client = new Porter(`ws://${location.hostname}:3737`);
 
     client.connected = () => {
         client.send('ping');
