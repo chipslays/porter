@@ -71,7 +71,7 @@ class Connection
     /**
      * Get connection channels manager.
      *
-     * Note: Attribute `channels` init in `onConnected` server method.
+     * Note: Attribute `channels` setted in `onConnected` server method.
      *
      * @return Channels
      */
@@ -128,6 +128,78 @@ class Connection
         $this->connection->data = $this->connection->data->remove($key);
 
         return $this;
+    }
+
+    /**
+     * Get value as string.
+     *
+     * @param mixed $key
+     * @param string $default
+     * @return string
+     */
+    public function string(mixed $key, string $default = null): string
+    {
+        return (string) $this->get($key, $default);
+    }
+
+    /**
+     * Get value as integer.
+     *
+     * @param mixed $key
+     * @param integer $default
+     * @return integer
+     */
+    public function integer(mixed $key, int $default = null): int
+    {
+        return (int) $this->get($key, $default);
+    }
+
+    /**
+     * Get value as integer.
+     *
+     * @param mixed $key
+     * @param integer $default
+     * @return integer
+     */
+    public function int(mixed $key, int $default = null): int
+    {
+        return $this->integer($key, $default);
+    }
+
+    /**
+     * Get value as float.
+     *
+     * @param mixed $key
+     * @param float $default
+     * @return float
+     */
+    public function float(mixed $key, float $default = null): float
+    {
+        return (float) $this->get($key, $default);
+    }
+
+    /**
+     * Get value as array.
+     *
+     * @param mixed $key
+     * @param array $default
+     * @return array
+     */
+    public function array(mixed $key, array $default = null): array
+    {
+        return (array) $this->get($key, $default);
+    }
+
+    /**
+     * Get value as object.
+     *
+     * @param mixed $key
+     * @param array $default
+     * @return object
+     */
+    public function object(mixed $key, object $default = null): object
+    {
+        return (object) $this->get($key, $default);
     }
 
     /**
