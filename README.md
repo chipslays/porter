@@ -1,5 +1,4 @@
 # Porter 🤵‍
-![](https://img.shields.io/github/v/release/chipslays/porter)
 ![](https://img.shields.io/github/license/chipslays/porter?color=blue)
 ![](https://img.shields.io/packagist/dt/chipslays/porter)
 
