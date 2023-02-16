@@ -10,8 +10,7 @@ use Workerman\Worker;
 
 class Client
 {
-    use Rawable;
-    use Payloadable;
+    use Rawable, Payloadable;
 
     public AsyncTcpConnection $connection;
 

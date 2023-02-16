@@ -16,10 +16,7 @@ use Respect\Validation\Validator;
 
 class Server
 {
-    use Rawable;
-    use Mappable;
-    use Singleton;
-    use Payloadable;
+    use Rawable, Mappable, Singleton, Payloadable;
 
     protected Worker $worker;
 
@@ -104,24 +101,7 @@ class Server
     /**
      * Emitted when a socket connection is successfully established.
      *
-     * @param callable|null $handler
-     * @return self
-     */
-    public function onWebsocketConnected(?callable $handler = null): self
-    {
-        if (!$handler) {
-            return $this;
-        }
-
-        $this->getWorker()->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($handler) {
-            call_user_func_array($handler, [new Connection($connection), $header]);
-        };
-
-        return $this;
-    }
-
-    /**
-     * Emitted when a socket connection is successfully established.
+     * Fire before `onWebsocketConnected`.
      *
      * @param callable|null $handler
      * @return self
@@ -134,6 +114,27 @@ class Server
 
         $this->getWorker()->onConnect = function (TcpConnection $connection) use ($handler) {
             call_user_func_array($handler, [new Connection($connection)]);
+        };
+
+        return $this;
+    }
+
+    /**
+     * Emitted when a socket connection is successfully established.
+     *
+     * Fire after `onConnected`.
+     *
+     * @param callable|null $handler
+     * @return self
+     */
+    public function onWebsocketConnected(?callable $handler = null): self
+    {
+        if (!$handler) {
+            return $this;
+        }
+
+        $this->getWorker()->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($handler) {
+            call_user_func_array($handler, [new Connection($connection), $header]);
         };
 
         return $this;
