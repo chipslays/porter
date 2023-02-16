@@ -91,17 +91,28 @@ class Server
             $context
         );
 
-        return $this->boot($worker);
+        // Boot server.
+        $this->boot($worker);
+
+        // Register required events.
+        $this->onDisconnected();
+        $this->onError();
+
+        return $this;
     }
 
     /**
      * Emitted when a socket connection is successfully established.
      *
-     * @param callable $handler
+     * @param callable|null $handler
      * @return self
      */
-    public function onWebsocketConnected(callable $handler): self
+    public function onWebsocketConnected(?callable $handler = null): self
     {
+        if (!$handler) {
+            return $this;
+        }
+
         $this->getWorker()->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($handler) {
             call_user_func_array($handler, [new Connection($connection), $header]);
         };
@@ -112,11 +123,15 @@ class Server
     /**
      * Emitted when a socket connection is successfully established.
      *
-     * @param callable $handler
+     * @param callable|null $handler
      * @return self
      */
-    public function onConnected(callable $handler): self
+    public function onConnected(?callable $handler = null): self
     {
+        if (!$handler) {
+            return $this;
+        }
+
         $this->getWorker()->onConnect = function (TcpConnection $connection) use ($handler) {
             call_user_func_array($handler, [new Connection($connection)]);
         };
@@ -127,17 +142,19 @@ class Server
     /**
      * Emitted when the other end of the socket sends a FIN packet.
      *
-     * @param callable $handler
+     * @param callable|null $handler
      * @return self
      */
-    public function onDisconnected(callable $handler): self
+    public function onDisconnected(?callable $handler = null): self
     {
         $this->getWorker()->onClose = function (TcpConnection $connection) use ($handler) {
             if (property_exists($connection, 'channels')) {
                 $connection->channels->leaveAll();
             }
 
-            call_user_func_array($handler, [new Connection($connection)]);
+            if ($handler) {
+                call_user_func_array($handler, [new Connection($connection)]);
+            }
         };
 
         return $this;
@@ -146,13 +163,19 @@ class Server
     /**
      * Emitted when an error occurs with connection.
      *
-     * @param callable $handler
+     * @param callable|null $handler
      * @return self
      */
-    public function onError(callable $handler): self
+    public function onError(?callable $handler = null): self
     {
         $this->getWorker()->onError = function (TcpConnection $connection, $code, $message) use ($handler) {
-            call_user_func_array($handler, [new Connection($connection), $code, $message]);
+            if (property_exists($connection, 'channels')) {
+                $connection->channels->leaveAll();
+            }
+
+            if ($handler) {
+                call_user_func_array($handler, [new Connection($connection), $code, $message]);
+            }
         };
 
         return $this;
@@ -161,11 +184,15 @@ class Server
     /**
      * Emitted when worker processes start.
      *
-     * @param callable $handler
+     * @param callable|null $handler
      * @return self
      */
-    public function onStart(callable $handler): self
+    public function onStart(?callable $handler = null): self
     {
+        if (!$handler) {
+            return $this;
+        }
+
         $this->getWorker()->onWorkerStart = function (Worker $worker) use ($handler) {
             call_user_func_array($handler, [$worker]);
         };
@@ -176,11 +203,15 @@ class Server
     /**
      * Emitted when worker processes stoped.
      *
-     * @param callable $handler
+     * @param callable|null $handler
      * @return self
      */
-    public function onStop(callable $handler): self
+    public function onStop(?callable $handler = null): self
     {
+        if (!$handler) {
+            return $this;
+        }
+
         $this->getWorker()->onWorkerStop = function (Worker $worker) use ($handler) {
             call_user_func_array($handler, [$worker]);
         };
@@ -191,11 +222,15 @@ class Server
     /**
      * Emitted when worker processes get reload signal.
      *
-     * @param callable $handler
+     * @param callable|null $handler
      * @return self
      */
-    public function onReload(callable $handler): self
+    public function onReload(?callable $handler = null): self
     {
+        if (!$handler) {
+            return $this;
+        }
+
         $this->getWorker()->onReload = function (Worker $worker) use ($handler) {
             call_user_func_array($handler, [$worker]);
         };
