@@ -205,12 +205,21 @@ abstract class AbstractEvent
     /**
      * Validate payload data.
      *
-     * @param array $rules Pass custom rules. Default use $rules class attribute.
-     * @return bool Returns False if has errors.
+     * @param array $rules Default use $rules class attribute.
+     * @param array $messages Default use $message class attribute.
+     * @return bool Returns `false` if has any validation error.
      */
-    public function validate(array $rules = null): bool
+    public function validate(array $rules = null, array $messages = null): bool
     {
-        foreach ($rules ?? $this->rules as $property => $rules) {
+        if ($rules) {
+            $this->rules = $rules;
+        }
+
+        if ($messages) {
+            $this->messages = $messages;
+        }
+
+        foreach ($this->rules as $property => $rules) {
             foreach ($rules as $rule) {
                 if (!$this->payload->is($rule, $property)) {
                     // get a rule name
