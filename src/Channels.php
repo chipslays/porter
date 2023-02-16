@@ -62,6 +62,10 @@ class Channels
      */
     public function delete(string $id): void
     {
+        if (!$this->exists($id)) {
+            return;
+        }
+
         unset($this->channels[$id]);
     }
 
