@@ -2,12 +2,12 @@
 
 namespace Porter;
 
+use Porter\Connections;
 use Porter\Events\Event;
 use Porter\Events\AbstractEvent;
 use Porter\Traits\Rawable;
 use Porter\Traits\Payloadable;
 use Porter\Exceptions\PorterException;
-use Porter\Connections;
 use Sauce\Traits\Singleton;
 use Sauce\Traits\Mappable;
 use Workerman\Worker;
@@ -410,8 +410,10 @@ class Server
             $connection = [$connection];
         }
 
+        $payload = $this->makePayload($event, $data);
+
         foreach ($connection as $target) {
-            $target->send($this->makePayload($event, $data));
+            $target->send($payload);
         }
 
         return $this;
