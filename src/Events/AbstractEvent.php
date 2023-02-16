@@ -58,11 +58,18 @@ abstract class AbstractEvent
     protected array $rules = [];
 
     /**
-     * Array of validate errors.
+     * Array of validation custom messages.
      *
      * @var array
      */
-    public array $errors = [];
+    protected array $messages = [];
+
+    /**
+     * Errors bag for validation.
+     *
+     * @var ErrorBag
+     */
+    public ErrorBag $errorBag;
 
     /**
      * Short cut for payload data (as &link).
@@ -84,6 +91,7 @@ abstract class AbstractEvent
         $this->payload = $payload;
         $this->server = Server::getInstance();
         $this->data = &$this->payload->data;
+        $this->errorBag = new ErrorBag;
 
         $this->setMagicalVariables();
 
@@ -200,18 +208,36 @@ abstract class AbstractEvent
      * @param array $rules Pass custom rules. Default use $rules class attribute.
      * @return bool Returns False if has errors.
      */
-    protected function validate(array $rules = null): bool
+    public function validate(array $rules = null): bool
     {
         foreach ($rules ?? $this->rules as $property => $rules) {
             foreach ($rules as $rule) {
                 if (!$this->payload->is($rule, $property)) {
+                    // get a rule name
                     $rule = ((array) $rule)[0];
-                    $this->errors[$property][$rule] = "{$property} failed validation: {$rule}";
+
+                    // get a message
+                    $message = @$this->messages[$property][$rule]
+                        ?  str_replace(['%prop%', '%property%'], $property, $this->messages[$property][$rule])
+                        : "Property {$property} failed validation {$rule} rule.";
+
+                    // add error to errors bag
+                    $this->errorBag()->add($property, $rule, $message);
                 }
             }
         }
 
         return !$this->hasErrors();
+    }
+
+    /**
+     * Get a errors bag.
+     *
+     * @return ErrorBag
+     */
+    public function errorBag(): ErrorBag
+    {
+        return $this->errorBag;
     }
 
     /**
@@ -221,7 +247,7 @@ abstract class AbstractEvent
      */
     public function hasErrors(): bool
     {
-        return count($this->errors) > 0;
+        return $this->errorBag()->any();
     }
 
     /**
