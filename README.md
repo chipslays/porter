@@ -8,7 +8,7 @@ A simple PHP 8 websocket server and client wrapper over Workerman with events, c
 
 > **Note**
 >
-> This library production ready, maintenance only bug fixes, no breaking changes updates.
+> Latest version 1.2 is production ready, maintenance only small features, fix bugs  and has **no breaking changes** updates.
 
 # 🧰 Installation
 

@@ -22,11 +22,14 @@ composer require chipslays/porter
 php vendor/bin/porter template:laravel ./websocket
 ```
 
-Tip: You can also create a event class.
+> **Note** 
+> 
+> You can also create a event class by command:
+> ```bash
+> vendor/bin/porter make:event ./websocket/events/example.php "example event"
+> ```
 
-```bash
-vendor/bin/porter make:event ./websocket/events/example.php "example event"
-```
+
 
 4. Add variables to `.env` file.
 
@@ -39,7 +42,9 @@ echo 'PORTER_CERTIFICATE=/etc/letsencrypt/live/<YOUR_SITE.COM>/cert.pem' >> .env
 echo 'PORTER_PRIVATE_KEY=/etc/letsencrypt/live/<YOUR_SITE.COM>/privkey.pem' >> .env
 ```
 
->**NOTE:** On VPS with SSL certificate set `PORTER_TRANSPORT=ssl` and provide path to certs in `PORTER_CERTIFICATE` and `PORTER_PRIVATE_KEY`.
+> **Warning**
+> 
+> On VPS with SSL certificate set `PORTER_TRANSPORT=ssl` and provide path to certs in `PORTER_CERTIFICATE` and `PORTER_PRIVATE_KEY`.
 
 5. Run websocket server.
 
