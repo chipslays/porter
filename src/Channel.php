@@ -205,6 +205,9 @@ class Channel
         return $this;
     }
 
+    /**
+     * Fire on destruct object.
+     */
     public function __destruct()
     {
         $this->leave($this->connections);
