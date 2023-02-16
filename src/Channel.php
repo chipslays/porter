@@ -5,6 +5,7 @@ namespace Porter;
 use Porter\Traits\Payloadable;
 use Porter\Support\Collection;
 use Workerman\Connection\TcpConnection;
+use Closure;
 
 class Channel
 {
@@ -23,6 +24,21 @@ class Channel
      * @var Collection
      */
     public Collection $data;
+
+    /**
+     * @var Closure|null
+     */
+    protected ?Closure $onJoinHandler = null;
+
+    /**
+     * @var Closure|null
+     */
+    protected ?Closure $onLeaveHandler = null;
+
+    /**
+     * @var Closure|null
+     */
+    protected ?Closure $onDestroyHandler = null;
 
     /**
      * Constructor.
@@ -53,6 +69,13 @@ class Channel
         foreach ($connections as $connection) {
             $this->connections->add($connection);
             $connection->channels->attach($this->id);
+
+            if ($this->onJoinHandler) {
+                call_user_func_array($this->onJoinHandler, [
+                    $connection instanceof TcpConnection ? new Connection($connection) : $connection,
+                    $this
+                ]);
+            }
         }
 
         return $this;
@@ -79,6 +102,13 @@ class Channel
 
             $this->connections->remove($connection);
             $connection->channels->detach($this->id);
+
+            if ($this->onLeaveHandler) {
+                call_user_func_array($this->onLeaveHandler, [
+                    $connection instanceof TcpConnection ? new Connection($connection) : $connection,
+                    $this
+                ]);
+            }
         }
 
         return $this;
@@ -117,7 +147,13 @@ class Channel
      */
     public function destroy(): void
     {
+        if ($this->onDestroyHandler) {
+            call_user_func_array($this->onDestroyHandler, [$this]);
+        }
+
         Server::getInstance()->channels()->delete($this->id);
+
+        $this->__destruct();
     }
 
     /**
@@ -128,5 +164,49 @@ class Channel
     public function connections(): Connections
     {
         return $this->connections;
+    }
+
+    /**
+     * Fire callback after any connection joining to channel.
+     *
+     * @param callable $callback
+     * @return self
+     */
+    public function onJoin(callable $callback): self
+    {
+        $this->onJoinHandler = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Fire callback after any connection leaving channel.
+     *
+     * @param callable $callback
+     * @return self
+     */
+    public function onLeave(callable $callback): self
+    {
+        $this->onLeaveHandler = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Fire callback before channel destroy.
+     *
+     * @param callable $callback
+     * @return self
+     */
+    public function onDestroy(callable $callback): self
+    {
+        $this->onDestroyHandler = $callback;
+
+        return $this;
+    }
+
+    public function __destruct()
+    {
+        $this->leave($this->connections);
     }
 }
