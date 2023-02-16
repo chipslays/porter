@@ -10,8 +10,11 @@ require __DIR__ . '/../../vendor/autoload.php';
 server()->create('0.0.0.0:3737')->setLogFile(__DIR__ . '/server.log');
 
 server()->onWebsocketConnected(function (Connection $connection, string $header) {
-    // Here also available vars: $_GET, $_COOKIE, $_SERVER.
-    Terminal::print("Query from client: {text:darkYellow}foo={$_GET['foo']}");
+    /** Here also available vars: $_GET, $_COOKIE, $_SERVER. */
+
+    $foo = $_GET['foo'] ?? null;
+
+    Terminal::print("Query from client: {text:darkYellow}foo={$foo}");
 });
 
 server()->onConnected(function (Connection $connection) {
