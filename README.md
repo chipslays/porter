@@ -244,7 +244,9 @@ server()->autoloadEvents(__DIR__ . '/Events');
 
 
 
-> **Notice:** `Event $event` class extends and have all methods & properties of `AbstractEvent`.
+> **Note** 
+>
+> `Event $event` class extends and have all methods & properties of `AbstractEvent`.
 
 ```php
 $server->on('ping', function (Event $event) {
