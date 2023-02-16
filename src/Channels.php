@@ -6,7 +6,11 @@ use Workerman\Connection\TcpConnection;
 
 class Channels
 {
-    /** @var Channel[] */
+    /**
+     * Array of channels.
+     *
+     * @var Channel[]
+     */
     public array $channels = [];
 
     /**

@@ -10,11 +10,15 @@ use Workerman\Timer as WorkermanTimer;
 class Timer
 {
     /**
+     * Array of all defined timers.
+     *
      * @var array[]
      */
     protected static $timers = [];
 
     /**
+     * Array of running timers.
+     *
      * @var int[]
      */
     protected static $running = [];

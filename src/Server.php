@@ -18,15 +18,39 @@ class Server
 {
     use Rawable, Mappable, Singleton, Payloadable;
 
+    /**
+     * Worker instance.
+     *
+     * @var Worker
+     */
     protected Worker $worker;
 
+    /**
+     * Channels instance.
+     *
+     * @var Channels
+     */
     protected readonly Channels $channels;
 
+    /**
+     * Storage instance.
+     *
+     * @var Storage
+     */
     protected readonly Storage $storage;
 
+    /**
+     * Validator instance.
+     *
+     * @var Validator
+     */
     protected readonly Validator $validator;
 
-    /** @var string[] */
+    /**
+     * Array of event listeners.
+     *
+     * @var string[]
+     */
     protected array $events = [];
 
     /**

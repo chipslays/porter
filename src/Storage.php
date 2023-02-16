@@ -6,8 +6,18 @@ use Porter\Support\Collection;
 
 class Storage
 {
+    /**
+     * Path to file.
+     *
+     * @var string
+     */
     protected string $filename;
 
+    /**
+     * Collection of data.
+     *
+     * @var Collection
+     */
     public Collection $data;
 
     public function __construct(string $filename = null)

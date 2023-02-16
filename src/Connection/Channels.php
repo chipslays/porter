@@ -9,7 +9,9 @@ use Workerman\Connection\TcpConnection;
 
 class Channels
 {
-    /** @var string[] */
+    /**
+     * @var string[]
+     */
     protected array $channels = [];
 
     /**

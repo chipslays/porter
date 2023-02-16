@@ -6,8 +6,19 @@ use Porter\Support\Collection;
 
 class Payload
 {
+
+    /**
+     * Type of event.
+     *
+     * @var string
+     */
     public readonly string $type;
 
+    /**
+     * Event data.
+     *
+     * @var Collection
+     */
     public Collection $data;
 
     /**

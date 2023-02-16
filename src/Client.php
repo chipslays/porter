@@ -12,10 +12,25 @@ class Client
 {
     use Rawable, Payloadable;
 
+    /**
+     * Current connection instance.
+     *
+     * @var AsyncTcpConnection
+     */
     public AsyncTcpConnection $connection;
 
+    /**
+     * Worker instance.
+     *
+     * @var Worker
+     */
     public Worker $worker;
 
+    /**
+     * Array of events.
+     *
+     * @var array
+     */
     protected array $events = [];
 
     /**
