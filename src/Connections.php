@@ -38,13 +38,7 @@ class Connections
      */
     public function broadcast(string $event, array $data = [], array|TcpConnection|Connection $excepts = []): self
     {
-        foreach ((array) $excepts as &$value) {
-            if ($value instanceof TcpConnection || $value instanceof Connection) {
-                $value = $value->id;
-            }
-        }
-
-        $targets = $this->filter(fn (Connection $connection) => !in_array($connection->id, $excepts));
+        $targets = $this->except($excepts);
 
         Server::getInstance()->to($targets, $event, $data);
 
@@ -294,5 +288,30 @@ class Connections
         }
 
         return $this->connections[array_rand($this->connections)];
+    }
+
+    /**
+     * Get connections without excepted connections.
+     *
+     * @param TcpConnection|Connection|array $connections
+     * @return static
+     */
+    public function except(TcpConnection|Connection|Connections|array $connections): static
+    {
+        if ($connections instanceof Connections) {
+            $connections = $connections->all();
+        }
+
+        if (!is_array($connections)) {
+            $connections = [$connections];
+        }
+
+        foreach ($connections as &$value) {
+            if ($value instanceof TcpConnection || $value instanceof Connection) {
+                $value = $value->id;
+            }
+        }
+
+        return $this->filter(fn (Connection $connection) => !in_array($connection->id, $connections));
     }
 }
