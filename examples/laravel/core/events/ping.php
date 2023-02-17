@@ -9,8 +9,6 @@ return new class extends AbstractEvent
 {
     public string $type = 'ping';
 
-    protected array $rules = [];
-
     public function handle(Connection $connection, Payload $payload, Server $server)
     {
         $this->reply('pong');

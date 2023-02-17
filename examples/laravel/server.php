@@ -47,20 +47,20 @@ foreach (glob($logDir . '/*.log') as $file) {
 server()->setLogFile(__DIR__ . '/server.log');
 
 // load event classes
-server()->autoloadEvents(__DIR__ . '/app/events');
+server()->autoloadEvents(__DIR__ . '/core/events');
 
-// load server system events
-foreach (glob(__DIR__ . '/app/server/*.php') as $file) {
+// load server actions
+foreach (glob(__DIR__ . '/core/actions/*.php') as $file) {
     require_once $file;
 }
 
 // load timers
-foreach (glob(__DIR__ . '/app/timers/*.php') as $file) {
+foreach (glob(__DIR__ . '/core/timers/*.php') as $file) {
     require_once $file;
 }
 
-// load app kernel (server start point)
-require_once __DIR__ . '/app/kernel.php';
+// load handler (server start point)
+require_once __DIR__ . '/core/handler.php';
 
 // start server and handle events
 server()->start();
