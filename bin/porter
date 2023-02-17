@@ -17,7 +17,7 @@ switch ($argv[1] ?? null) {
 
         unlink($path . '/README.md');
 
-        Terminal::print('{bg:cyan}{text:white} 📁 Copied to ' . $path);
+        Terminal::print('{bg:cyan}{text:white} 📁 Placed to ' . $path);
         break;
 
     case 'make:event':
