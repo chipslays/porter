@@ -54,6 +54,13 @@ class Server
     protected array $events = [];
 
     /**
+     * Origins whitelist.
+     *
+     * @var array
+     */
+    protected array $whitelist = [];
+
+    /**
      * Set worker.
      *
      * @param Worker $worker
@@ -116,6 +123,7 @@ class Server
         $this->boot($worker);
 
         // Register required events.
+        $this->onWebsocketConnected();
         $this->onDisconnected();
         $this->onError();
 
@@ -153,12 +161,14 @@ class Server
      */
     public function onWebsocketConnected(?callable $handler = null): self
     {
-        if (!$handler) {
-            return $this;
-        }
-
         $this->getWorker()->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($handler) {
-            call_user_func_array($handler, [new Connection($connection), $header]);
+            if (count($this->whitelist) > 0 && !in_array($_SERVER['HTTP_ORIGIN'], $this->whitelist)) {
+                $connection->destroy();
+            }
+
+            if ($handler) {
+                call_user_func_array($handler, [new Connection($connection), $header]);
+            }
         };
 
         return $this;
@@ -528,6 +538,19 @@ class Server
     public function log(string|array $text): self
     {
         $this->worker::log(is_array($text) ? var_export($text, true) : $text);
+
+        return $this;
+    }
+
+    /**
+     * Add array of origins to whitelist.
+     *
+     * @param array $origins
+     * @return self
+     */
+    public function whitelist(array $origins): self
+    {
+        $this->whitelist = $origins;
 
         return $this;
     }
