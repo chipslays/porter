@@ -3,6 +3,8 @@
 
 use Porter\Terminal;
 
+use function porter\copy_dir_to;
+
 include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
 
 switch ($argv[1] ?? null) {
