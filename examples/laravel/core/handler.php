@@ -6,7 +6,7 @@ use function porter\server;
 
 /*
 |--------------------------------------------------------------------------
-| Application Kernel
+| Events Handler
 |--------------------------------------------------------------------------
 |
 | The place where you do your awesome things.
