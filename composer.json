@@ -1,20 +1,16 @@
 {
     "name": "chipslays/porter",
     "type": "library",
-    "keywords": ["websocket", "realtime", "chat", "sockets"],
+    "keywords": ["websocket", "realtime", "sockets"],
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "workerman/workerman": "^4.0",
-        "chipslays/sauce": "^1.0",
-        "chipslays/collection": "^1.1",
-        "respect/validation": "^2.2"
+        "workerman/workerman": "^4.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^6.0",
         "pestphp/pest": "^1.21 || ^2.0"
     },
-    "bin": ["bin/porter"],
     "autoload": {
         "psr-4": {
             "Porter\\": "src/"
