@@ -31,8 +31,11 @@ class Connections
      * @param TcpConnection|Connection|TcpConnection[]|Connection[]|array $excepts
      * @return self
      */
-    public function broadcast(string $id, array|Closure|Payload $data = [], TcpConnection|Connection|array $excepts = []): self
-    {
+    public function broadcast(
+        string $id,
+        array|Closure|Payload $data = [],
+        TcpConnection|Connection|array $excepts = []
+    ): self {
         $targets = $this->except($excepts);
 
         foreach ($targets->all() as $connection) {

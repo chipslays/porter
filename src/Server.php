@@ -397,8 +397,11 @@ class Server
      * @param TcpConnection|Connection|TcpConnection[]|Connection[]|array $excepts
      * @return void
      */
-    public function broadcast(string $id, array|Closure|Payload $data = [], TcpConnection|Connection|array $excepts = []): void
-    {
+    public function broadcast(
+        string $id,
+        array|Closure|Payload $data = [],
+        TcpConnection|Connection|array $excepts = []
+    ): void {
         $this->getConnections()->broadcast($id, $data, $excepts);
     }
 }
