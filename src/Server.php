@@ -3,13 +3,13 @@
 namespace Porter;
 
 use Porter\Events\Event;
+use Porter\Events\Payload;
 use Porter\Events\Bus as EventBus;
 use Porter\Server\Connection;
+use Porter\Server\Connections;
 use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
 use Closure;
-use Porter\Events\Payload;
-use Porter\Server\Connections;
 
 class Server
 {
