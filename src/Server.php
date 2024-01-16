@@ -43,9 +43,7 @@ class Server
     protected function createWorkerInstance(string $ip, int $port, array $context = [], int $processes = 1): void
     {
         $this->worker = new Worker('websocket://' . $ip . ':' . $port, $context);
-
         $this->worker->count = $processes;
-
         $this->worker->name = 'Server-' . date('d-m-Y_H-i-s');
     }
 
@@ -73,13 +71,25 @@ class Server
     }
 
     /**
+     * Gets a event bus.
+     *
+     * @return EventBus
+     */
+    public function getEventBus(): EventBus
+    {
+        return $this->eventBus;
+    }
+
+    /**
      * The callback function triggered when the client establishes
      * a connection with Workerman (after the TCP three-way handshake is completed).
      *
      * The callback will only be triggered once per connection.
      *
      * Event only represents that the client and Workerman have completed
-     * the TCP three-way handshake. At this time, the client has not sent any data.
+     * the TCP three-way handshake.
+     *
+     * At this time, the client has not sent any data.
      *
      * @see https://www.workerman.net/doc/workerman/worker/on-connect.html
      *

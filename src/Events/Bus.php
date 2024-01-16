@@ -58,4 +58,16 @@ class Bus
 
         return call_user_func_array('array_merge', $events);
     }
+
+    /**
+     * Clear all events.
+     *
+     * @return self
+     */
+    public function clear(): self
+    {
+        $this->events = [];
+
+        return $this;
+    }
 }
