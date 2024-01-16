@@ -384,24 +384,8 @@ class Server
      *
      * @return Connections
      */
-    public function getConnections(): Connections
+    public function connections(): Connections
     {
         return new Connections($this->worker->connections);
-    }
-
-    /**
-     * Send events to all connetions in this collection.
-     *
-     * @param string $id
-     * @param array|Closure|Payload $data
-     * @param TcpConnection|Connection|TcpConnection[]|Connection[]|array $excepts
-     * @return void
-     */
-    public function broadcast(
-        string $id,
-        array|Closure|Payload $data = [],
-        TcpConnection|Connection|array $excepts = []
-    ): void {
-        $this->getConnections()->broadcast($id, $data, $excepts);
     }
 }
