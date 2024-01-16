@@ -3,3 +3,5 @@
 /vendor
 *.log
 /examples/test.php
+/examples/server.php
+/examples/client.php

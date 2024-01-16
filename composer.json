@@ -5,7 +5,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "workerman/workerman": "^4.0"
+        "workerman/workerman": "^4.0",
+        "illuminate/collections": "^10.40"
     },
     "require-dev": {
         "symfony/var-dumper": "^6.0",

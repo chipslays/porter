@@ -4,9 +4,12 @@ namespace Porter;
 
 use Porter\Events\Event;
 use Porter\Events\Bus as EventBus;
+use Porter\Server\Connection;
 use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
 use Closure;
+use Porter\Events\Payload;
+use Porter\Server\Connections;
 
 class Server
 {
@@ -99,7 +102,7 @@ class Server
     public function onConnect(Closure $callback): self
     {
         $this->worker->onConnect = function (TcpConnection $connection) use ($callback) {
-            call_user_func_array($callback, [$connection]);
+            call_user_func_array($callback, [new Connection($connection)]);
         };
 
         return $this;
@@ -117,7 +120,7 @@ class Server
     public function onConnected(Closure $callback): self
     {
         $this->worker->onWebSocketConnect = function (TcpConnection $connection, string $header) use ($callback) {
-            call_user_func_array($callback, [$connection, $header]);
+            call_user_func_array($callback, [new Connection($connection), $header]);
         };
 
         return $this;
@@ -136,7 +139,7 @@ class Server
     public function onDisconnected(Closure $callback): self
     {
         $this->worker->onClose = function (TcpConnection $connection) use ($callback) {
-            call_user_func_array($callback, [$connection]);
+            call_user_func_array($callback, [new Connection($connection)]);
         };
 
         return $this;
@@ -153,7 +156,7 @@ class Server
     public function onError(Closure $callback): self
     {
         $this->worker->onError = function (TcpConnection $connection, int $code, string $message) use ($callback) {
-            call_user_func_array($callback, [$connection, $code, $message]);
+            call_user_func_array($callback, [new Connection($connection), $code, $message]);
         };
 
         return $this;
@@ -232,7 +235,7 @@ class Server
     public function onBufferFull(Closure $callback): self
     {
         $this->worker->onBufferFull = function (TcpConnection $connection) use ($callback) {
-            call_user_func_array($callback, [$connection]);
+            call_user_func_array($callback, [new Connection($connection)]);
         };
 
         return $this;
@@ -255,7 +258,7 @@ class Server
     public function onBufferDrain(Closure $callback): self
     {
         $this->worker->onBufferDrain = function (TcpConnection $connection) use ($callback) {
-            call_user_func_array($callback, [$connection]);
+            call_user_func_array($callback, [new Connection($connection)]);
         };
 
         return $this;
@@ -272,7 +275,7 @@ class Server
      */
     public function onMessage(Closure $callback): self
     {
-        $this->messageCallback = function (TcpConnection $connection, mixed $data) use ($callback) {
+        $this->messageCallback = function (Connection $connection, mixed $data) use ($callback) {
             call_user_func_array($callback, [$connection, $data]);
         };
 
@@ -320,28 +323,28 @@ class Server
     {
         $this->worker->onMessage = function (TcpConnection $connection, string $data) {
             // Try decode incoming data.
-            $payload = json_decode($data, true);
+            $event = json_decode($data, true);
 
             if (json_last_error() === JSON_ERROR_NONE) {
                 // Handle as Event.
-                $this->handleEvent($connection, (array) $payload, $data);
+                $this->handleEvent(new Connection($connection), (array) $event, $data);
             } else {
                 // Handle as raw message.
-                $this->handleMessage($connection, $data);
+                $this->handleMessage(new Connection($connection), $data);
             }
         };
     }
 
     /**
-     * @param TcpConnection $connection
+     * @param Connection $connection
      * @param array $payload
      * @param string $data
      * @return void
      */
-    protected function handleEvent(TcpConnection $connection, array $payload, string $data): void
+    protected function handleEvent(Connection $connection, array $event, string $data): void
     {
         // If it not valid a event ID.
-        if (empty($payload['id']) || trim($payload['id']) === '') {
+        if (empty($event['id']) || trim($event['id']) === '') {
             // Try handle as raw message data.
             $this->handleMessage($connection, $data);
 
@@ -349,23 +352,23 @@ class Server
         }
 
         // Find event by ID.
-        $event = $this->eventBus->find($payload['id']);
+        $eventInstance = $this->eventBus->find($event['id']);
 
         // If event not found.
-        if (!$event) {
+        if (!$eventInstance) {
             return;
         }
 
         // Trigger event callback.
-        $event($connection, $payload);
+        $eventInstance($connection, new Payload((array) @$event['data']));
     }
 
     /**
-     * @param TcpConnection $connection
+     * @param Connection $connection
      * @param string $data
      * @return void
      */
-    protected function handleMessage(TcpConnection $connection, string $data): void
+    protected function handleMessage(Connection $connection, string $data): void
     {
         // If message callback not set.
         if (!$this->messageCallback) {
@@ -374,5 +377,28 @@ class Server
 
         // Trigger message callback.
         call_user_func_array($this->messageCallback, [$connection, $data]);
+    }
+
+    /**
+     * Returns collection of connections.
+     *
+     * @return Connections
+     */
+    public function getConnections(): Connections
+    {
+        return new Connections($this->worker->connections);
+    }
+
+    /**
+     * Send events to all connetions in this collection.
+     *
+     * @param string $id
+     * @param array|Closure|Payload $data
+     * @param TcpConnection|Connection|TcpConnection[]|Connection[]|array $excepts
+     * @return void
+     */
+    public function broadcast(string $id, array|Closure|Payload $data = [], TcpConnection|Connection|array $excepts = []): void
+    {
+        $this->getConnections()->broadcast($id, $data, $excepts);
     }
 }

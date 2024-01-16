@@ -2,7 +2,7 @@
 
 namespace Porter\Events;
 
-use Workerman\Connection\TcpConnection;
+use Porter\Server\Connection;
 use Closure;
 
 class Event
@@ -11,6 +11,11 @@ class Event
      * @var string
      */
     protected string $id;
+
+    /**
+     * @var array
+     */
+    protected array $data = [];
 
     /**
      * @var Closure|null
@@ -44,13 +49,26 @@ class Event
         return $this;
     }
 
-    public function __invoke(TcpConnection $connection, array $payload): void
+    /**
+     * Get the event data.
+     *
+     * @return array
+     */
+    public function getData(): array
     {
-        $callback = $this->getCallback();
+        return $this->data;
+    }
 
-        if ($callback) {
-            call_user_func_array($callback, [$connection, $payload]);
-        }
+    /**
+     * Set the event data.
+     *
+     * @return self
+     */
+    public function setData(array $data): self
+    {
+        $this->data = $data;
+
+        return $this;
     }
 
     /**
@@ -97,5 +115,22 @@ class Event
         $this->order = $order;
 
         return $this;
+    }
+
+    public function __invoke(Connection $connection, Payload $payload): void
+    {
+        $callback = $this->getCallback();
+
+        if ($callback) {
+            call_user_func_array($callback, [$connection, $payload]);
+        }
+    }
+
+    public function __toString()
+    {
+        return json_encode([
+            'id' => $this->id,
+            'data' => $this->data,
+        ]);
     }
 }
