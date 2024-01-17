@@ -66,6 +66,7 @@ class Channel
 
         $connections = is_array($connections) ? $connections : [$connections];
 
+        /** @var Connection $connection */
         foreach ($connections as $connection) {
             $this->connections->add($connection);
 
@@ -93,6 +94,7 @@ class Channel
 
         $connections = is_array($connections) ? $connections : [$connections];
 
+        /** @var Connection $connection */
         foreach ($connections as $connection) {
             if (!$this->exists($connection)) {
                 continue;
