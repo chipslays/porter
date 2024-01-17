@@ -5,6 +5,7 @@ namespace Porter;
 use Porter\Events\Event;
 use Porter\Events\Payload;
 use Porter\Events\Bus as EventBus;
+use Porter\Server\Channels;
 use Porter\Server\Connection;
 use Porter\Server\Connections;
 use Workerman\Worker;
@@ -24,6 +25,11 @@ class Server
     protected EventBus $eventBus;
 
     /**
+     * @var Channels
+     */
+    protected Channels $channels;
+
+    /**
      * @var Closure|null
      */
     protected ?Closure $messageCallback = null;
@@ -41,6 +47,7 @@ class Server
         $this->registerEventAndMessageCallbacks();
 
         $this->eventBus = new EventBus;
+        $this->channels = new Channels;
     }
 
     protected function createWorkerInstance(string $ip, int $port, array $context = [], int $processes = 1): void
@@ -78,9 +85,19 @@ class Server
      *
      * @return EventBus
      */
-    public function getEventBus(): EventBus
+    public function events(): EventBus
     {
         return $this->eventBus;
+    }
+
+    /**
+     * Gets a channels.
+     *
+     * @return Channels
+     */
+    public function channels(): Channels
+    {
+        return $this->channels;
     }
 
     /**
@@ -139,7 +156,11 @@ class Server
     public function onDisconnected(Closure $callback): self
     {
         $this->worker->onClose = function (TcpConnection $connection) use ($callback) {
-            call_user_func_array($callback, [new Connection($connection)]);
+            $connection = new Connection($connection);
+
+            call_user_func_array($callback, [$connection]);
+
+            $connection->disconnect();
         };
 
         return $this;

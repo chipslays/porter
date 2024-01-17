@@ -11,7 +11,7 @@ class Connections
     /**
      * @var Connection[]
      */
-    protected array $connections;
+    protected array $connections = [];
 
     public function __construct(array $connections = [])
     {

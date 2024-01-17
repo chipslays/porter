@@ -2,14 +2,13 @@
 
 namespace Porter\Server;
 
-use Closure;
 use Porter\Events\Event;
 use Porter\Events\Payload;
+use Porter\Support\Store;
 use Workerman\Connection\TcpConnection;
+use Closure;
 
 /**
- * @property int $id
- *
  * @method int|string getStatus(bool $raw_output = true)
  * @method bool|null send(mixed $send_buffer, bool $raw = false)
  * @method string getRemoteIp()
@@ -44,7 +43,93 @@ class Connection
      */
     public function __construct(protected TcpConnection $connection)
     {
-        //
+        $this->attachMagicVariablesIfNotExists();
+    }
+
+    public function attachMagicVariablesIfNotExists(): void
+    {
+        if (!property_exists($this->connection, '__store')) {
+            $this->connection->__store = new Store;
+        }
+
+        if (!property_exists($this->connection, '__channels')) {
+            $this->connection->__channels = new Channels;
+        }
+    }
+
+    public function dettachMagicVariables(): void
+    {
+        unset($this->connection->__store);
+
+        foreach ($this->channels()->all() as $channel) {
+            $channel->leave($this);
+        }
+    }
+
+    public function store(): Store
+    {
+        return $this->connection->__store;
+    }
+
+    public function channels(): Channels
+    {
+        return $this->connection->__channels;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return Store
+     */
+    public function set(string $key, mixed $value): Store
+    {
+        return $this->store()->set(...func_get_args());
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return $this->store()->get(...func_get_args());
+    }
+
+    /**
+     * @param string $key
+     * @return Store
+     */
+    public function remove(string $key): Store
+    {
+        return $this->store()->remove(...func_get_args());
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function has(string $key): bool
+    {
+        return $this->store()->has(...func_get_args());
+    }
+
+    /**
+     * Returns connection ID.
+     *
+     * @return int
+     */
+    public function id(): int
+    {
+        return $this->connection->id;
+    }
+
+    /**
+     * @return void
+     */
+    public function disconnect(): void
+    {
+        $this->dettachMagicVariables();
     }
 
     /**
