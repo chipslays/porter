@@ -153,7 +153,7 @@ class Server
      * @param Closure $callback
      * @return self
      */
-    public function onDisconnected(Closure $callback): self
+    public function onDisconnect(Closure $callback): self
     {
         $this->worker->onClose = function (TcpConnection $connection) use ($callback) {
             $connection = new Connection($connection);

@@ -77,44 +77,6 @@ class Connection
     }
 
     /**
-     * @param string $key
-     * @param mixed $value
-     * @return Store
-     */
-    public function set(string $key, mixed $value): Store
-    {
-        return $this->store()->set(...func_get_args());
-    }
-
-    /**
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     */
-    public function get(string $key, mixed $default = null): mixed
-    {
-        return $this->store()->get(...func_get_args());
-    }
-
-    /**
-     * @param string $key
-     * @return Store
-     */
-    public function remove(string $key): Store
-    {
-        return $this->store()->remove(...func_get_args());
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    public function has(string $key): bool
-    {
-        return $this->store()->has(...func_get_args());
-    }
-
-    /**
      * Returns connection ID.
      *
      * @return int
@@ -129,7 +91,7 @@ class Connection
      */
     public function disconnect(): void
     {
-        $this->dettachMagicVariables();
+        //
     }
 
     /**
