@@ -164,7 +164,10 @@ class Channel
      */
     public function __destruct()
     {
-        dump('destruct: ' . $this->id());
+        if ($this->connections->count() === 0) {
+            return;
+        }
+
         $this->leave($this->connections);
     }
 }

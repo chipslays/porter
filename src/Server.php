@@ -4,13 +4,14 @@ namespace Porter;
 
 use Porter\Events\Event;
 use Porter\Events\Payload;
-use Porter\Events\Bus as EventBus;
+use Porter\Events\Dispatcher as EventDispatcher;
 use Porter\Server\Channels;
 use Porter\Server\Connection;
 use Porter\Server\Connections;
 use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
 use Closure;
+use Porter\Exceptions\PorterException;
 
 class Server
 {
@@ -20,9 +21,9 @@ class Server
     protected Worker $worker;
 
     /**
-     * @var EventBus
+     * @var EventDispatcher
      */
-    protected EventBus $eventBus;
+    protected EventDispatcher $eventDispatcher;
 
     /**
      * @var Channels
@@ -32,7 +33,12 @@ class Server
     /**
      * @var Closure|null
      */
-    protected ?Closure $messageCallback = null;
+    protected ?Closure $onMessage = null;
+
+    /**
+     * @var Closure|null
+     */
+    protected ?Closure $onDisconnected = null;
 
     /**
      * Constructor.
@@ -46,7 +52,7 @@ class Server
         $this->createWorkerInstance(...func_get_args());
         $this->registerEventAndMessageCallbacks();
 
-        $this->eventBus = new EventBus;
+        $this->eventDispatcher = new EventDispatcher;
         $this->channels = new Channels;
     }
 
@@ -83,11 +89,11 @@ class Server
     /**
      * Gets a event bus.
      *
-     * @return EventBus
+     * @return EventDispatcher
      */
-    public function events(): EventBus
+    public function events(): EventDispatcher
     {
-        return $this->eventBus;
+        return $this->eventDispatcher;
     }
 
     /**
@@ -144,7 +150,8 @@ class Server
     }
 
     /**
-     * The callback function triggered when the client connection is disconnected from the server.
+     * The callback function triggered when the client connection
+     * is disconnected from the server.
      *
      * This will only be triggered once per connection.
      *
@@ -161,7 +168,27 @@ class Server
             call_user_func_array($callback, [$connection]);
 
             $connection->disconnect();
+
+            if ($this->onDisconnected) {
+                call_user_func_array($this->onDisconnected, [$connection]);
+            }
         };
+
+        return $this;
+    }
+
+    /**
+     * The callback function triggered when the client connection
+     * is already disconnected from the server and left all their channels.
+     *
+     * Store data is available.
+     *
+     * @param Closure|null $callback
+     * @return self
+     */
+    public function onDisconnected(?Closure $callback = null): self
+    {
+        $this->onDisconnected = $callback;
 
         return $this;
     }
@@ -296,7 +323,7 @@ class Server
      */
     public function onMessage(Closure $callback): self
     {
-        $this->messageCallback = function (Connection $connection, mixed $data) use ($callback) {
+        $this->onMessage = function (Connection $connection, mixed $data) use ($callback) {
             call_user_func_array($callback, [$connection, $data]);
         };
 
@@ -306,19 +333,27 @@ class Server
     /**
      * Add the custom event (message).
      *
-     * @param string $id
+     * @param Event|string $id
      * @param Closure $callback
      * @param integer $order
      * @return self
      */
-    public function on(string $id, Closure $callback, int $order = 500): Event
+    public function on(Event|string $id, ?Closure $callback = null, int $order = 500): Event
     {
-        $event = (new Event)
-            ->setId($id)
-            ->setCallback($callback)
-            ->setOrder($order);
+        if (!$id instanceof Event) {
+            if ($callback === null) {
+                throw new PorterException('Callback is required');
+            }
 
-        $this->eventBus->add($event);
+            $event = (new Event)
+                ->setId($id)
+                ->setCallback($callback)
+                ->setOrder($order);
+        } else {
+            $event = $id;
+        }
+
+        $this->eventDispatcher->add($event);
 
         return $event;
     }
@@ -343,61 +378,8 @@ class Server
     protected function registerEventAndMessageCallbacks(): void
     {
         $this->worker->onMessage = function (TcpConnection $connection, string $data) {
-            // Try decode incoming data.
-            $event = json_decode($data, true);
-
-            if (json_last_error() === JSON_ERROR_NONE) {
-                // Handle as Event.
-                $this->handleEvent(new Connection($connection), (array) $event, $data);
-            } else {
-                // Handle as raw message.
-                $this->handleMessage(new Connection($connection), $data);
-            }
+            $this->eventDispatcher->dispatch($connection, $data, $this->onMessage);
         };
-    }
-
-    /**
-     * @param Connection $connection
-     * @param array $payload
-     * @param string $data
-     * @return void
-     */
-    protected function handleEvent(Connection $connection, array $event, string $data): void
-    {
-        // If it not valid a event ID.
-        if (empty($event['id']) || trim($event['id']) === '') {
-            // Try handle as raw message data.
-            $this->handleMessage($connection, $data);
-
-            return;
-        }
-
-        // Find event by ID.
-        $eventInstance = $this->eventBus->find($event['id']);
-
-        // If event not found.
-        if (!$eventInstance) {
-            return;
-        }
-
-        // Trigger event callback.
-        $eventInstance($connection, new Payload((array) @$event['data']));
-    }
-
-    /**
-     * @param Connection $connection
-     * @param string $data
-     * @return void
-     */
-    protected function handleMessage(Connection $connection, string $data): void
-    {
-        // If message callback not set.
-        if (!$this->messageCallback) {
-            return;
-        }
-
-        // Trigger message callback.
-        call_user_func_array($this->messageCallback, [$connection, $data]);
     }
 
     /**

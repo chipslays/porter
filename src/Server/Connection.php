@@ -57,15 +57,6 @@ class Connection
         }
     }
 
-    public function dettachMagicVariables(): void
-    {
-        unset($this->connection->__store);
-
-        foreach ($this->channels()->all() as $channel) {
-            $channel->leave($this);
-        }
-    }
-
     public function store(): Store
     {
         return $this->connection->__store;
@@ -91,7 +82,12 @@ class Connection
      */
     public function disconnect(): void
     {
-        //
+        // Leave all channels where connection exists
+        foreach ($this->channels()->all() as $channel) {
+            $channel->leave($this);
+        }
+
+        $this->connection->close();
     }
 
     /**

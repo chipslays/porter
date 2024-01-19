@@ -1,0 +1,17 @@
+{
+  "name": "@chipslays/porter",
+  "version": "1.0.11",
+  "description": "A front-end client adapter for Porter PHP library.",
+  "main": "./dist/porter.js",
+  "types": "./dist/porter.d.ts",
+  "type": "module",
+  "keywords": [
+    "websocket",
+    "client"
+  ],
+  "author": "chipslays",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

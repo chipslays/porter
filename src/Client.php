@@ -4,7 +4,7 @@ namespace Porter;
 
 use Porter\Events\Event;
 use Porter\Events\Payload;
-use Porter\Events\Bus as EventBus;
+use Porter\Events\Dispatcher as EventDispatcher;
 use Workerman\Connection\AsyncTcpConnection;
 use Workerman\Worker;
 use Closure;
@@ -26,9 +26,9 @@ class Client
     public Worker $worker;
 
     /**
-     * @var EventBus
+     * @var EventDispatcher
      */
-    protected EventBus $eventBus;
+    protected EventDispatcher $eventDispatcher;
 
     /**
      * @var Closure|null
@@ -47,7 +47,7 @@ class Client
 
         $this->createConnectionInstance(...func_get_args());
 
-        $this->eventBus = new EventBus;
+        $this->eventDispatcher = new EventDispatcher;
     }
 
     protected function createWorkerInstance(): void
@@ -86,11 +86,11 @@ class Client
     /**
      * Gets a event bus.
      *
-     * @return EventBus
+     * @return EventDispatcher
      */
-    public function events(): EventBus
+    public function events(): EventDispatcher
     {
-        return $this->eventBus;
+        return $this->eventDispatcher;
     }
 
     /**
@@ -228,7 +228,7 @@ class Client
             ->setCallback($callback)
             ->setOrder($order);
 
-        $this->eventBus->add($event);
+        $this->eventDispatcher->add($event);
 
         return $event;
     }
@@ -256,64 +256,10 @@ class Client
     {
         $this->worker->onWorkerStart = function () {
             $this->connection->onMessage = function (AsyncTcpConnection $connection, string $data) {
-                // Try decode incoming data.
-                $event = json_decode($data, true);
-
-                if (json_last_error() === JSON_ERROR_NONE) {
-                    // Handle as Event.
-                    $this->handleEvent($connection, (array) $event, $data);
-                } else {
-                    // Handle as raw message.
-                    $this->handleMessage($connection, $data);
-                }
+                $this->eventDispatcher->dispatch($connection, $data, $this->messageCallback);
             };
 
             $this->connection->connect();
-
         };
-    }
-
-    /**
-     * @param AsyncTcpConnection $connection
-     * @param array $payload
-     * @param string $data
-     * @return void
-     */
-    protected function handleEvent(AsyncTcpConnection $connection, array $event, string $data): void
-    {
-        // If it not valid a event ID.
-        if (empty($event['id']) || trim($event['id']) === '') {
-            // Try handle as raw message data.
-            $this->handleMessage($connection, $data);
-
-            return;
-        }
-
-        // Find event by ID.
-        $eventInstance = $this->eventBus->find($event['id']);
-
-        // If event not found.
-        if (!$eventInstance) {
-            return;
-        }
-
-        // Trigger event callback.
-        $eventInstance($connection, new Payload((array) @$event['data']));
-    }
-
-    /**
-     * @param Connection $connection
-     * @param string $data
-     * @return void
-     */
-    protected function handleMessage(AsyncTcpConnection $connection, string $data): void
-    {
-        // If message callback not set.
-        if (!$this->messageCallback) {
-            return;
-        }
-
-        // Trigger message callback.
-        call_user_func_array($this->messageCallback, [$connection, $data]);
     }
 }

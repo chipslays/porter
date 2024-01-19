@@ -1,10 +1,10 @@
 <?php
 
-namespace Porter;
+namespace Porter\Timer;
 
-use Workerman\Timer as WorkermanTimer;
+use Workerman\Timer;
 
-class Timer
+class Interval
 {
     /**
      * Array of all defined timers.
@@ -21,18 +21,19 @@ class Timer
     protected static $running = [];
 
     /**
-     * Add timer.
+     * Add a new timer with alias.
      *
      * @param string $alias
-     * @param float $interval
      * @param callable $callback
+     * @param float $interval
      * @param array $args
+     * @param bool $persistent True - trigger interval callback, False - trigger once callback
      * @return void
      */
-    public static function add(
+    public static function set(
         string $alias,
-        float $interval,
         callable $callback,
+        float $interval,
         array $args = [],
         bool $persistent = true
     ): void {
@@ -40,12 +41,32 @@ class Timer
     }
 
     /**
-     * Run timer.
+     * Run a timer immediately.
+     *
+     * @param string $alias
+     * @param callable $callback
+     * @param float $interval
+     * @param array $args
+     * @return void
+     */
+    public static function run(
+        string $alias,
+        callable $callback,
+        float $interval,
+        array $args = [],
+        bool $persistent = true
+    ): void {
+        self::set(...func_get_args());
+        self::start($alias);
+    }
+
+    /**
+     * Start a timer.
      *
      * @param string $alias
      * @return bool
      */
-    public static function run(string $alias): bool
+    public static function start(string $alias): bool
     {
         if (!isset(self::$timers[$alias])) {
             return false;
@@ -53,7 +74,7 @@ class Timer
 
         $timer = self::$timers[$alias];
 
-        $id = WorkermanTimer::add(...$timer);
+        $id = Timer::add(...$timer);
 
         if (!$id) {
             return false;
@@ -70,7 +91,7 @@ class Timer
      * @param string $alias
      * @return bool
      */
-    public static function stop(string $alias): bool
+    public static function clear(string $alias): bool
     {
         if (!isset(self::$running[$alias])) {
             return false;
@@ -78,7 +99,7 @@ class Timer
 
         $id = self::$running[$alias];
 
-        $result = WorkermanTimer::del($id);
+        $result = Timer::del($id);
 
         if ($result) {
             unset(self::$running[$alias]);
